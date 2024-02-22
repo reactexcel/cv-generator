@@ -1,12 +1,19 @@
-import React from 'react'
-import { Outlet } from 'react-router'
-
+import React, { useEffect } from "react";
+import MiniDrawer from "../../components/ui/MiniDrawer";
+import { Outlet, useNavigate } from "react-router-dom";
 const Layout = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/", { replace: true });
+    }
+  }, []);
   return (
     <>
-    <Outlet/>
+      <MiniDrawer pages={<Outlet />} />
     </>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

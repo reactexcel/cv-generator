@@ -4,15 +4,32 @@ import SignInImage from '../../assets/sigin.svg'
 import { useFormik } from 'formik'
 import { SignInScheema } from '../../validation/validationScheema'
 import ApiFetching from '../../services/ApiFetching'
+import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 const SignIn = () => {
+  const navigate=useNavigate()
   const formik=useFormik({
     initialValues:{
       email:'',
       password:''
     },
     onSubmit:async (values)=>{
-      const data=await ApiFetching('POST','signin',values)
-      console.log(data);
+     
+        const response=await ApiFetching('POST','signin',values)
+        // console.log(response.response);
+        if(response?.response?.status===404){
+          toast.error(response?.response?.data?.message)
+        }
+        if(response.statusText==='OK' && response.status==200){
+          const token=response.data?.accessToken;
+          if(token){
+            toast.success('Login SuccessFully')
+            localStorage.setItem( "token", JSON.stringify(token))
+          navigate('/home')
+          }
+        }
+        // if(response)
+      
     },
     validationSchema:SignInScheema
   })
@@ -29,9 +46,10 @@ const SignIn = () => {
     >
       <div className="absolute bg-black opacity-60 inset-0 z-0" />
       <div className="w-full px-24 z-10">
-        <h1 className="text-5xl font-bold text-left tracking-wide">
-          Keep it special
-        </h1>
+        <Typography variant='h3' className="font-bold text-left tracking-wide">
+          {/* Keep it special */}
+          C.V Creator
+        </Typography>
         <p className="text-3xl my-4">
           Capture your personal memory in unique way, anywhere.
         </p>
