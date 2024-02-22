@@ -1,10 +1,11 @@
+import SignIn from "./components/Auth/SignIn";
 
 const App = () => {
   return (
-    <div>
-    Cv genrator 
-    </div>
-  )
-}
+    <>
+      <SignIn />
+    </>
+  );
+};
 
-export default App
+export default App;

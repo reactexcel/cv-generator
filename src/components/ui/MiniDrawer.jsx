@@ -19,7 +19,7 @@ import ListItemText from "@mui/material/ListItemText";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import { Button } from "@mui/material";
-import AddCv from "../components/AddCv";
+import AddCv from "../AddCv";
 
 const drawerWidth = 240;
 
@@ -119,8 +119,8 @@ export default function MiniDrawer() {
             CV Mangement System
           </Typography>
           <div className="absolute right-20 ">
-            <Button variant="contained" sx={{ backgroundColor: "#4d70d1" }}>
-              Add CV
+            <Button variant="contained" sx={{ backgroundColor: "#FF0000" }}>
+              Sign Out
             </Button>
           </div>
         </Toolbar>
@@ -171,7 +171,6 @@ export default function MiniDrawer() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <div className=""> Welcome to Library Management Sysytem</div>
         <AddCv />
       </Box>
     </Box>
