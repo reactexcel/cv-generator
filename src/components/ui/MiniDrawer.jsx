@@ -19,6 +19,8 @@ import ListItemText from "@mui/material/ListItemText";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import { Button } from "@mui/material";
+import { useHref, useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -87,6 +89,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function MiniDrawer({pages}) {
+  const navigate=useNavigate()
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -118,7 +121,10 @@ export default function MiniDrawer({pages}) {
             CV Mangement System
           </Typography>
           <div className="absolute right-20 ">
-            <Button variant="contained" sx={{ backgroundColor: "#FF0000" }}>
+            <Button onClick={()=>{
+              localStorage.clear()
+              navigate('/',{replace:true})
+            }} variant="contained" color="error">
               Sign Out
             </Button>
           </div>
@@ -137,11 +143,12 @@ export default function MiniDrawer({pages}) {
         <Divider />
         <List>
           {[
-            { path: "/library", pathName: "Library" },
-            { path: "/cvgenerator", pathName: " CV Generator" },
+            { path: "../library", pathName: "Library" },
+            { path: "../cvgenerator", pathName: " CV Generator" },
           ].map((text, index) => (
+            <Link to={text.path}  key={text.pathName}>
             <ListItem
-              key={text.pathName}
+
               disablePadding
               sx={{ display: "block" }}>
               <ListItemButton
@@ -164,14 +171,13 @@ export default function MiniDrawer({pages}) {
                 />
               </ListItemButton>
             </ListItem>
+            </Link>
           ))}
         </List>
         <Divider />
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        {/* <div className=""> Welcome to Library Management Sysytem</div>
-        <AddCv /> */}
         {pages}
       </Box>
     </Box>

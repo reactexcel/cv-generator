@@ -6,6 +6,7 @@ import ApiFetching from "../../services/ApiFetching";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import LoginIcon from "@mui/icons-material/Login";
+import { useEffect } from "react";
 const SignIn = () => {
   const navigate = useNavigate();
   const formik = useFormik({
@@ -13,23 +14,32 @@ const SignIn = () => {
       email: "",
       password: "",
     },
-    onSubmit: async (values) => {
-      const response = await ApiFetching("POST", "signin", values);
-      // console.log(response.response);
-      if (response?.response?.status === 404) {
-        toast.error(response?.response?.data?.message);
-      }
-      if (response.statusText === "OK" && response.status == 200) {
-        const token = response.data?.accessToken;
-        if (token) {
-          toast.success("Login SuccessFully");
-          localStorage.setItem("token", JSON.stringify(token));
-          navigate("/home");
+    onSubmit:async (values)=>{
+     
+        const response=await ApiFetching('POST','user/auth/signin',values)
+        // console.log(response.response);
+        if(response?.response?.status===404){
+          toast.error(response?.response?.data?.message)
         }
-      }
+        if(response.statusText==='OK' && response.status==200){
+          const token=response.data?.accessToken;
+          if(token){
+            toast.success('Login SuccessFully')
+            localStorage.setItem( "token", token)
+          navigate('/home')
+          }
+        }
+        // if(response)
+      
     },
-    validationSchema: SignInScheema,
-  });
+    validationSchema:SignInScheema
+  })
+  useEffect(()=>{
+    const token=localStorage.getItem('token')
+    if(token){
+      navigate( '/home')
+    }
+  },[])
   return (
     <>
       {/* component */}
