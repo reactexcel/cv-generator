@@ -18,8 +18,8 @@ const AddCv = () => {
     <div className="w-full">
       <div className="text-blue-500 font-poppins font-medium text-center text-2xl m-4">
         How do you want to Start ?
-        <div className="flex w-full justify-center gap-2 mt-6 ">
-          <div className="w-[35%] h-[200px] pt-16 font-medium text-sm text-black bg-slate-100 rounded-lg border-2">
+        <div className="flex w-full flex-col md:flex-row justify-center gap-2 mt-6 ">
+          <div className="md:w-[35%] w-full h-[200px] pt-16 font-medium text-sm text-black bg-slate-100 rounded-lg border-2">
             Create a new CV
             <p>We will help you create a new Cv</p>
             <p className="text-md">-step by step</p>
@@ -27,12 +27,12 @@ const AddCv = () => {
           <div
             onDrop={handleDrop}
             onDragOver={(e) => e.preventDefault()}
-            className="w-[35%] h-[200px] pt-12 font-medium text-sm bg-slate-100  rounded-lg  border-2">
+            className="md:w-[35%] w-full h-[200px] pt-12 font-medium text-sm bg-slate-100  rounded-lg  border-2">
             <CloudUploadIcon />
-            <p> Already have a cv ?</p>
+            <p className="mt-2"> Already have a cv ?</p>
             <p>Drag and Drop file here </p>
             <input
-              className=""
+              className="mt-2"
               type="file"
               onChange={handleFileInputChange}
               multiple
