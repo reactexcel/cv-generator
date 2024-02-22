@@ -1,10 +1,11 @@
+import SignIn from "./components/Auth/SignIn";
 
 const App = () => {
   return (
-    <div className="bg-black">
-    Cv genrator 
-    </div>
-  )
-}
+    <>
+      <SignIn />
+    </>
+  );
+};
 
-export default App
+export default App;

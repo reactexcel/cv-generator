@@ -1,20 +1,48 @@
-import React from 'react'
+import { useState } from "react";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+
 const AddCv = () => {
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const files = Array.from(e.dataTransfer.files);
+    setUploadedFiles([...uploadedFiles, ...files]);
+  };
+
+  const handleFileInputChange = (e) => {
+    const files = Array.from(e.target.files);
+    setUploadedFiles([...uploadedFiles, ...files]);
+  };
   return (
     <div className="w-full">
-      <div className="text-blue-500 text-center text-2xl m-4">
-        How do you want to Start
-        <div className="flex h-1/2 gap-2 mt-6 ">
-          <div className="w-full p-20 bg-slate-100 rounded-lg border-2">
+      <div className="text-blue-500 font-poppins font-medium text-center text-2xl m-4">
+        How do you want to Start ?
+        <div className="flex w-full justify-center gap-2 mt-6 ">
+          <div className="w-[35%] h-[200px] pt-16 font-medium text-sm text-black bg-slate-100 rounded-lg border-2">
             Create a new CV
             <p>We will help you create a new Cv</p>
             <p className="text-md">-step by step</p>
           </div>
-          <div className="w-full p-20 bg-slate-100  rounded-lg  border-2">
-            I Already have a cv{" "}
-            <p>We will reformat it and fill in your information </p>
-            <p>so you don't have to </p>
+          <div
+            onDrop={handleDrop}
+            onDragOver={(e) => e.preventDefault()}
+            className="w-[35%] h-[200px] pt-12 font-medium text-sm bg-slate-100  rounded-lg  border-2">
+            <CloudUploadIcon />
+            <p> Already have a cv ?</p>
+            <p>Drag and Drop file here </p>
+            <input
+              className=""
+              type="file"
+              onChange={handleFileInputChange}
+              multiple
+            />
           </div>
+        </div>
+        <div>
+          {uploadedFiles.map((file, index) => (
+            <div key={index}>{file.name}</div>
+          ))}
         </div>
       </div>
     </div>

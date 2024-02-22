@@ -118,8 +118,8 @@ export default function MiniDrawer({pages}) {
             CV Mangement System
           </Typography>
           <div className="absolute right-20 ">
-            <Button variant="contained" sx={{ backgroundColor: "#4d70d1" }}>
-              Add CV
+            <Button variant="contained" sx={{ backgroundColor: "#FF0000" }}>
+              Sign Out
             </Button>
           </div>
         </Toolbar>
