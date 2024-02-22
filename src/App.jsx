@@ -1,7 +1,11 @@
-import SignIn from "./components/Auth/SignIn"
+import SignIn from "./components/Auth/SignIn";
 
 const App = () => {
-  return <SignIn/>
-}
+  return (
+    <>
+      <SignIn />
+    </>
+  );
+};
 
-export default App
+export default App;

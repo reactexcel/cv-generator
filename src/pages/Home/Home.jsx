@@ -4,7 +4,7 @@ import SignIn from '../../components/Auth/SignIn'
 const Home = () => {
   return (
     <div>
-      <SignIn/>
+      {/* <SignIn/> */}
     </div>
   )
 }
