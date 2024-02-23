@@ -1,31 +1,34 @@
-import { useEffect } from "react"
-import ApiFetching from "../../services/ApiFetching"
-import { useDispatch, useSelector } from "react-redux"
-import { setCvData } from "../../redux/slices/CvSlice"
+import React, { useEffect, useState } from "react";
+import ApiFetching from "../../services/ApiFetching";
+import { useDispatch, useSelector } from "react-redux";
+import { setCvData } from "../../redux/slices/CvSlice";
 
 const Library = () => {
-    const dispatch=useDispatch()
-    const data=useSelector(state=>state.CvSlice.getCvData)
-    console.log(data,';asfasfd');
-    useEffect(()=>{
-        const getData=async ()=>{
-            try {
-                const response= await ApiFetching('GET','user/get',null)
-                const data=response.data
-                if(data.success===true){ 
-                    console.log(response.data);
-                    dispatch(setCvData(data.user))
-                }
-                
-            } catch (error) {
-                console.log(error,'afsasd');         
-            }
-            }
-        getData()
-     },[])
-  return (<>
-  <h1>Library</h1>
-  </>)
-}
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
+  const data = useSelector((state) => state.CvSlice.getCvData);
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await ApiFetching("GET", "user/get", null);
+        const responseData = response.data;
+        if (responseData.success === true) {
+          dispatch(setCvData(responseData.user));
+        }
+      } catch (error) {
+        console.log(error, "afsasd");
+      } finally {
+        setLoading(false);
+      }
+    };
+    getData();
+  }, []);
 
-export default Library
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  return <>{/* Your JSX to render the component */}</>;
+};
+
+export default Library;

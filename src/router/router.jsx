@@ -3,8 +3,7 @@ import Layout from "../pages/Home/Layout";
 import SignIn from "../components/Auth/SignIn";
 import AddCV from "../pages/Home/add-cv/AddCV";
 import CvGenerator from "../pages/Home/cv-generator/CvGenerator";
-import Library from "../components/library/Library";
-
+import LibraryPage from "../pages/Home/librarypage/LibraryPage";
 export const router=createBrowserRouter([
     {path:'/',element:<SignIn/>},
     {
@@ -17,7 +16,7 @@ export const router=createBrowserRouter([
         {path:"cvGenerator",element:<CvGenerator/>},
     {
         path:'library',
-        element:<Library/>
+        element:<LibraryPage/>
     }]
     }
 ])
