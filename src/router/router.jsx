@@ -2,7 +2,8 @@ import { createBrowserRouter } from "react-router-dom";
 import Layout from "../pages/Home/Layout";
 import SignIn from "../components/Auth/SignIn";
 import AddCV from "../pages/Home/add-cv/AddCV";
-import CvCreatorForm from "../components/cv-creatorform/CvCreatorForm";
+import CvGenerator from "../pages/Home/cv-generator/CvGenerator";
+import Library from "../components/library/Library";
 
 export const router=createBrowserRouter([
     {path:'/',element:<SignIn/>},
@@ -13,10 +14,10 @@ export const router=createBrowserRouter([
             path:'',
             element:<AddCV/>   
         },
-        {path:"cvForm",element:<CvCreatorForm/>},
+        {path:"cvGenerator",element:<CvGenerator/>},
     {
         path:'library',
-        element:<h2>hello</h2>
+        element:<Library/>
     }]
     }
 ])
