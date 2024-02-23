@@ -1,76 +1,110 @@
-import { useState } from "react";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-// import { Link } from "react-router-dom";
-import { Button } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import ApiFetching from "../services/ApiFetching";
-import { Link } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { toast } from "react-toastify";
+import { Box } from "@mui/system";
+
+
 
 const AddCv = () => {
-  const [uploadedFile, setUploadedFile] = useState(null);
+  const formik = useFormik({
+    initialValues: {
+      file: null,
+    },
+    validationSchema: Yup.object({
+      file: Yup.mixed().required("A file is required"),
+    }),
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
+      try {
+        const formData = new FormData();
+        formData.append("resume", values.file);
+        const response = await ApiFetching("POST", "/user/upload", formData);
+        console.log("Upload response:", response);
+        toast.success('Your File has been Uploaded Successfully');
+        resetForm(); // Clear form data
+      } catch (error) {
+        console.error("Upload error:", error);
+      }
+      setSubmitting(false);
+    },
+  });
 
-  const handleDrop = (e) => {
+  const handleFileDrop = (e) => {
     e.preventDefault();
-    const file = e.dataTransfer.files[0]; // Only take the first file
-    setUploadedFile(file);
-  };
-
-  const handleFileInputChange = (e) => {
-    const file = e.target.files[0]; // Only take the first file
-    setUploadedFile(file);
-  };
-
-  const handleUpload = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("resume", uploadedFile);
-      // formData.append("token", token);
-      const response = await ApiFetching("POST", "/user/upload", formData);
-      console.log("Upload response:", response);
-    } catch (error) {
-      console.error("Upload error:", error);
-    }
+    const file = e.dataTransfer.files[0];
+    formik.setFieldValue("file", file);
   };
 
   return (
-    <div className="w-full">
-      <div className="text-blue-500 font-poppins font-medium text-center text-2xl m-4">
-        How do you want to Start ?
-        <div className="flex w-full flex-col md:flex-row justify-center gap-2 mt-6 ">
-          <Link to={'cvForm'} className="md:w-[35%] w-full h-[200px] pt-16 font-medium text-sm text-black bg-slate-100 rounded-lg border-2" >
-          <div >
-            Create a new CV
-            <p>We will help you create a new Cv</p>
-            <p className="text-md">-step by step</p>
+    <div
+    // id="h "
+    //  className="relative min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 bg-gray-500 bg-no-repeat bg-cover "
+     >
+      <Stack sx={{justifyContent:'center',alignItems:"center", width:'100%'}} 
+      // className="absolute bg-black opacity-60 inset-0 z-0"
+       />
+      <div className="sm:max-w-lg m-auto p-10 bg-white rounded-xl z-10">
+        <div className="text-center">
+          <h2 className="mt-5 text-3xl font-bold text-gray-900">Please Upload C.V</h2>
+          {/* <p className="mt-2 text-sm text-gray-400">Lorem ipsum is placeholder text.</p> */}
+        </div>
+        <form className="mt-8 space-y-3" onSubmit={formik.handleSubmit} method="POST">
+          <div className="grid grid-cols-1 space-y-2">
+            <label 
+            htmlFor="h"
+              className="text-sm font-bold text-gray-500 tracking-wide"
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={handleFileDrop}
+            >
+              Attach Document
+            </label>
+            <div className="flex items-center justify-center w-full">
+              <label className="flex flex-col rounded-lg border-4 border-dashed w-full h-60 p-10 group text-center">
+                <div className="h-full w-full text-center flex flex-col items-center justify-center ">
+                  <Box sx={{display:'flex',alignItems:'center'}}>
+                    {/* <img
+                      className="has-mask h-36 object-center"
+                      src="https://img.freepik.com/free-vector/image-upload-concept-landing-page_52683-27130.jpg?size=338&ext=jpg"
+                      alt="freepik image"
+                    /> */}
+                    <CloudUploadIcon/>
+                  </Box>
+                  <p className="pointer-none text-gray-500 ">
+                    <span className="text-sm">Drag and drop</span> files here <br /> or{" "}
+                    <a href="" id="" className="text-blue-600 hover:underline">
+                      select a file
+                    </a>{" "}
+                    from your computer
+                  </p>
+                </div>
+                <input
+                  type="file"
+                  className="hidden"
+                  onChange={(e) => {
+                    formik.setFieldValue("file", e.target.files[0] || null);
+                  }}
+                />
+              </label>
+            </div>
+            {formik.errors.file && (
+              <p className="text-red-500">{formik.errors.file}</p>
+            )}
           </div>
-          </Link>
-          <div
-            onDrop={handleDrop}
-            onDragOver={(e) => e.preventDefault()}
-            className="md:w-[35%] w-full h-[200px] pt-12 font-medium text-sm bg-slate-100  rounded-lg  border-dashed border-2 border-sky-200"
-          >
-            <CloudUploadIcon />
-            <p className="mt-2"> Already have a cv ?</p>
-            <p>Drag and Drop file here </p>
-            <input
-              className="mt-2"
-              type="file"
-              onChange={handleFileInputChange}
-              multiple
-            />
-                  <Button
-              variant="contained"
-              onClick={handleUpload}
-              sx={{ mt: "10px" }}
+          <p className="text-sm text-gray-300">
+            <span>File type: doc, pdf, types of images</span>
+          </p>
+          <div>
+
+            <Button variant="contained"
+            fullWidth
+              type="submit"
             >
               Upload
             </Button>
           </div>
-        </div>
-        <div>
-          {/* {uploadedFiles.map((file, index) => (
-            <div key={index}>{file.name}</div>
-          ))} */}
-        </div>
+        </form>
       </div>
     </div>
   );

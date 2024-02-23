@@ -117,17 +117,16 @@ export default function MiniDrawer({pages}) {
             }}>
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography sx={{width:'45%'}} variant="h6" noWrap component="div">
             CV Mangement System
           </Typography>
-          <div className="absolute right-20 ">
-            <Button onClick={()=>{
+
+            <Button  sx={{ml:"auto"}} onClick={()=>{
               localStorage.clear()
               navigate('/',{replace:true})
             }} variant="contained" color="error">
               Sign Out
             </Button>
-          </div>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -143,8 +142,8 @@ export default function MiniDrawer({pages}) {
         <Divider />
         <List>
           {[
-            { path: "../library", pathName: "Library" },
-            { path: "../cvgenerator", pathName: " CV Generator" },
+            { path: "library", pathName: "Library" },
+            { path: "cvgenerator", pathName: " CV Generator" },
           ].map((text, index) => (
             <Link to={text.path}  key={text.pathName}>
             <ListItem
