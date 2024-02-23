@@ -5,10 +5,10 @@ import { setCvData } from "../../redux/slices/CvSlice";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DownloadIcon from "@mui/icons-material/Download";
-import { Document, Page } from "react-pdf";
-import { pdfjs } from "react-pdf";
+import { Document, Page, pdfjs } from "react-pdf";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import ModalComponent from "./ModalComponent";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -18,21 +18,6 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 const Library = () => {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.CvSlice.getCvData);
-  const [pdfLink, setPdfLink] = useState(null);
-  const [numPages, setNumPages] = useState();
-  const [pageNumber, setPageNumber] = useState(1);
-
-  function onDocumentLoadSuccess({ numPages }) {
-    setNumPages(numPages);
-  }
-
-  const handleViewPdf = async (link) => {
-    try {
-      setPdfLink(link);
-    } catch (error) {
-      console.log(error, "afsasd");
-    }
-  };
 
   const handleDownloadPdf = (link) => {
     const anchor = document.createElement("a");
@@ -82,49 +67,26 @@ const Library = () => {
             {data &&
               data.cvLink &&
               data.cvLink.map((link, index) => (
-                <>
-                  <div
-                    className="flex flex-col gap-1 w-full border-2 border-gray-400 p-2 rounded-md"
-                    key={index}>
-                    <div className="flex font-medium  justify-between">
-                      <div className="flex gap-2 leading-0">
-                        <div> {index + 1}.</div> <div>{link}</div>{" "}
-                      </div>{" "}
-                      <div className="h-fit flex gap-2">
-                        <Button variant="contained">
-                          <VisibilityIcon onClick={() => handleViewPdf(link)} />
-                        </Button>
-                        <Button variant="contained">
-                          <DownloadIcon
-                            onClick={() => handleDownloadPdf(link)}
-                          />
-                        </Button>
-                      </div>
+                <div
+                  className="flex flex-col gap-1 w-full border-2 border-gray-400 p-2 rounded-md"
+                  key={index}
+                >
+                  <div className="flex font-medium  justify-between">
+                    <div className="flex gap-2 leading-0">
+                      <div> {index + 1}.</div> <div>{link}</div>{" "}
+                    </div>{" "}
+                    <div className="h-fit flex gap-2">
+                      <ModalComponent link={link} />
+                      <Button variant="contained">
+                        <DownloadIcon
+                          onClick={() => handleDownloadPdf(link)}
+                        />
+                      </Button>
                     </div>
                   </div>
-                </>
+                </div>
               ))}
           </Stack>
-        </div>
-        <div className="relative">
-          <p>
-            Page {pageNumber} of {numPages}
-          </p>
-          <Document file={pdfLink} onLoadSuccess={onDocumentLoadSuccess}>
-            {Array.apply(null, Array(numPages))
-              .map((x, i) => i + 1)
-              .map((page, i) => {
-                return (
-                  <Stack key={i}>
-                    <Page
-                      pageNumber={page}
-                      renderTextLayer={false}
-                      renderAnnotationLayer={false}
-                    />
-                  </Stack>
-                );
-              })}
-          </Document>
         </div>
       </div>
     </>
