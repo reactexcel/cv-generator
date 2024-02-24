@@ -2,10 +2,8 @@ import { useState, useEffect } from "react";
 import ApiFetching from "../../services/ApiFetching";
 import { useDispatch, useSelector } from "react-redux";
 import { setCvData } from "../../redux/slices/CvSlice";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import EditIcon from "@mui/icons-material/Edit";
 import DownloadIcon from "@mui/icons-material/Download";
-import { Document, Page, pdfjs } from "react-pdf";
+import { pdfjs } from "react-pdf";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import ModalComponent from "./ModalComponent";
@@ -70,11 +68,10 @@ const Library = () => {
   }, []);
 
   return (
-    <>
-      <div className="w-full font-poppins bg-slate-200 h-fit shadow-sm rounded-md flex flex-col">
-        <div className="flex p-4 gap-2 w-full justify-between border-2 border-slate-100 rounded-sm">
+      <Stack sx={{wordBreak:'break-all'}} className="font-poppins bg-slate-200 h-fit shadow-sm rounded-md flex flex-col">
+        <Stack direction={{md:'row',xs:'column'}} sx={{justifyContent:'space-between', p:"30px"}}>
           <div className="text-lg font-semibold">
-            Name:{data && data.fullname}
+            Name:{data && data.firstname+' '+data.lastname}
           </div>
           <div className="text-lg font-semibold ">
             {" "}
@@ -83,7 +80,7 @@ const Library = () => {
           <div className="text-lg font-semibold">
             Mobile No :{data && data.mobile}
           </div>
-        </div>
+        </Stack>
         <div>
           <Stack className="border-2 p-4 text-lg rounded-sm gap-2">
             {data &&
@@ -123,8 +120,8 @@ const Library = () => {
               ))}
           </Stack>
         </div>
-      </div>
-    </>
+      </Stack>
+    
   );
 };
 

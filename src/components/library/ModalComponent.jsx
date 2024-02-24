@@ -22,7 +22,8 @@ const style = {
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
-  widthL:"100px"
+  width:{md:"auto",xs:'90%'}
+  // width:""
 };
 
 

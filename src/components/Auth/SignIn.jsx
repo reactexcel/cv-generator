@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import { SignInScheema } from "../../validation/validationScheema";
 import ApiFetching from "../../services/ApiFetching";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LoginIcon from "@mui/icons-material/Login";
 import { useEffect } from "react";
 const SignIn = () => {
@@ -115,6 +115,11 @@ const SignIn = () => {
                   )}
                 </div>
                 <div className="mt-4">
+                <Link to={"/signUp"} style={{ width: "100%", color: "blue" }}>
+                    <Typography sx={{ textAlign: "right" }}>
+                      Create New Account
+                    </Typography>
+                  </Link>
                   <Button variant="contained" type="submit" fullWidth>
                     Sign in
                   </Button>
