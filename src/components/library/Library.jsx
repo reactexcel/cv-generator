@@ -9,6 +9,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import ModalComponent from "./ModalComponent";
+import moment from "moment";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -30,6 +31,26 @@ const Library = () => {
     document.body.removeChild(anchor);
   };
 
+  const [titleName, setTitleName] = useState(null);
+  console.log(titleName);
+
+  const fileName =
+    titleName &&
+    Array.isArray(titleName) &&
+    titleName.map((item) => {
+      if (typeof item === "string") {
+        const trimmedLink = item.replace(
+          "http://116.202.210.102:3030/resumes/65d715cdfbf9b1c5d1d8adc7-",
+          ""
+        );
+        return trimmedLink;
+      } else {
+        return item;
+      }
+    });
+
+  console.log(fileName);
+
   useEffect(() => {
     const getData = async () => {
       try {
@@ -39,6 +60,7 @@ const Library = () => {
         if (data.success === true) {
           console.log(response.data);
           dispatch(setCvData(data.user));
+          setTitleName(data.user.cvLink);
         }
       } catch (error) {
         console.log(error, "afsasd");
@@ -69,17 +91,30 @@ const Library = () => {
               data.cvLink.map((link, index) => (
                 <div
                   className="flex flex-col gap-1 w-full border-2 border-gray-400 p-2 rounded-md"
-                  key={index}
-                >
+                  key={index}>
                   <div className="flex font-medium  justify-between">
                     <div className="flex gap-2 leading-0">
-                      <div> {index + 1}.</div> <div>{link}</div>{" "}
+                      <div> {index + 1}.</div>
+                      <div>
+                        <div>
+                          {typeof link.link === "string" &&
+                            link.link.replace(
+                              "http://116.202.210.102:3030/resumes/65d87d0e840d38f93d41709a-",
+                              ""
+                            )}
+                        </div>
+                        <div className="opacity-95">
+                          {moment(link.updatedAt).format(
+                            "MMMM DD, YYYY hh:mm A"
+                          )}
+                        </div>
+                      </div>
                     </div>{" "}
                     <div className="h-fit flex gap-2">
-                      <ModalComponent link={link} />
+                      <ModalComponent link={link.link} />
                       <Button variant="contained">
                         <DownloadIcon
-                          onClick={() => handleDownloadPdf(link)}
+                          onClick={() => handleDownloadPdf(link.link)}
                         />
                       </Button>
                     </div>
