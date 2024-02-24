@@ -1,451 +1,463 @@
 import React from "react";
-import { Field, FieldArray, Form, Formik } from "formik";
-import {
-  Box,
-  Button,
-  MenuItem,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { Box, Button, MenuItem, Stack, TextField } from "@mui/material";
 import ApiFetching from "../../services/ApiFetching";
+import CloseIcon from "@mui/icons-material/Close";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+
 const CvCreatorForm = () => {
-  const cvDataFormat = {
-    personalInfo: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      address: "",
-      links: {
-        github: "",
-        linkedin: "",
-        website: "",
-      },
-    },
-    education: [
-      {
-        institution: "",
-        degree: "",
-        fieldOfStudy: "",
-        startDate: "",
-        endDate: "",
-      },
-    ],
-    experience: [
-      {
-        company: "",
-        position: "",
-        startDate: "",
-        endDate: "",
-        responsibilities: "",
-      },
-    ],
-    skills: ["Java", "Node", "Python"],
-    languages: [{ language: "", proficiency: "" }],
-    certifications: [{ name: "", organization: "", date: "" }],
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm();
+  const {
+    fields: educationFields,
+    append: appendEducation,
+    remove: removeEducation,
+  } = useFieldArray({
+    control,
+    name: "education",
+  });
+
+  const {
+    fields: experienceFields,
+    append: appendExperience,
+    remove: removeExperience,
+  } = useFieldArray({
+    control,
+    name: "experience",
+  });
+
+  const [languagesFields, setLanguagesFields] = React.useState([
+    { language: "", proficiency: "" },
+    { language: "", proficiency: "" },
+  ]);
+
+  const handleRemoveCertification = (index) => {
+    const updatedCertification = [...certificationsFields];
+    updatedCertification.splice(index, 1);
+    setCertificationsFields(updatedCertification);
+  };
+
+  const handleRemoveExperience = (index) => {
+    removeExperience(index);
+  };
+  const handleRemoveEducation = (index) => {
+    removeEducation(index);
+  };
+
+  const [certificationsFields, setCertificationsFields] = React.useState([]);
+  const [selectedTechSkills, setSelectedTechSkills] = React.useState([]);
+
+  const languageOptions = ["English", "Spanish", "French", "German", "Chinese"];
+  const proficiencyOptions = ["Beginner", "Intermediate", "Advanced", "Fluent"];
+  const techSkills = [
+    "JavaScript",
+    "HTML",
+    "CSS",
+    "React",
+    "Node.js",
+    "Python",
+    "Java",
+    "SQL",
+    "MongoDB",
+    "Git",
+    "TypeScript",
+    "Angular",
+    "Vue.js",
+    "Ruby",
+    "PHP",
+    "C#",
+    "ASP.NET",
+    "Express.js",
+    "Django",
+    "Flask",
+    "Spring Boot",
+    "AWS",
+    "Azure",
+    "Google Cloud Platform",
+    "Docker",
+    "Kubernetes",
+    "TensorFlow",
+    "Machine Learning",
+    "Artificial Intelligence",
+    "Blockchain",
+  ];
+
+  const appendCertification = () => {
+    setCertificationsFields([
+      ...certificationsFields,
+      { name: "", organization: "", date: "" },
+    ]);
+  };
+  const onSubmit = async (data) => {
+    console.log(data);
+
+    const requestData = {
+      ...data,
+      languages: languagesFields.map((language) => ({
+        language: language.language,
+        proficiency: language.proficiency,
+      })),
+      skills: selectedTechSkills,
+    };
+
+    console.log(requestData);
+
+    const dataToSend = await ApiFetching("POST", "user/cv/create", requestData);
+    console.log(dataToSend);
+  };
+
+  const handleSkillSelect = (e) => {
+    const skill = e.target.value;
+    setSelectedTechSkills([...selectedTechSkills, skill]);
+  };
+  const handleSkillRemove = (index) => {
+    const updatedSkills = selectedTechSkills.filter((_, i) => i !== index);
+    setSelectedTechSkills(updatedSkills);
   };
 
   return (
-    <Formik
-      initialValues={cvDataFormat}
-      onSubmit={async(values) => {
-        console.log(values);
-        const dataToSend = await ApiFetching('POST', 'user/cv/create', values);
-        console.log(dataToSend);
-      }}
-    >
-      <Form>
-        <Stack spacing={4}>
-          <Stack
-            spacing={2}
-            sx={{
-              background: "#4d434312",
-              borderRadius: "10px",
-              p: "15px",
-              boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-            }}
-          >
-            <Typography sx={{ textAlign: "center" }} variant="h4">
-              Personal information
-            </Typography>
-            <Box
-              sx={{
-                display: "grid",
-                gridTemplateColumns: { md: "49% 49%", xs: "100%" },
-                gridColumnGap: 20,
-                justifyContent: "space-between",
-              }}
-            >
-              <Field
-                name="personalInfo.firstName"
-                as={TextField}
-                label="First Name"
-                variant="outlined"
-                margin="normal"
-              />
-              <Field
-                name="personalInfo.lastName"
-                as={TextField}
-                label="Last Name"
-                variant="outlined"
-                margin="normal"
-              />
-              <Field
-                name="personalInfo.email"
-                as={TextField}
-                type="email"
-                label="Email"
-                variant="outlined"
-                margin="normal"
-              />
-              <Field
-                name="personalInfo.phone"
-                as={TextField}
-                label="Phone"
-                variant="outlined"
-                margin="normal"
-              />
-              <Field
-                name="personalInfo.address"
-                as={TextField}
-                label="Address"
-                variant="outlined"
-                multiline
-                rows={4}
-                margin="normal"
-              />
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Stack spacing={2}>
+        {/* Personal Information */}
+        <Stack spacing={1}>
+          <div className="font-poppins text-3xl font-medium">
+            Personal information
+          </div>
+          <Box className="grid grid-cols-3 gap-2">
+            <TextField
+              {...register("personalInfo.firstName")}
+              margin="dense"
+              required
+              label="First Name"
+              variant="filled"
+            />
+            <TextField
+              {...register("personalInfo.lastName")}
+              margin="dense"
+              label="Last Name"
+              variant="filled"
+            />
+            <TextField
+              {...register("personalInfo.email")}
+              type="email"
+              margin="dense"
+              required
+              label="Email"
+              variant="filled"
+            />
+            <TextField
+              {...register("personalInfo.phone")}
+              margin="dense"
+              required
+              label="Phone"
+              variant="filled"
+            />
+            <TextField
+              {...register("personalInfo.address")}
+              margin="dense"
+              label="Address"
+              variant="filled"
+              multiline
+              rows={2}
+            />
+          </Box>
+        </Stack>
+        {/* Social Links */}
+        <Stack spacing={1}>
+          <div className="font-poppins text-3xl font-medium">Social Link</div>
+          <Box className="grid grid-cols-3 gap-2">
+            <TextField
+              {...register("personalInfo.links.github")}
+              margin="dense"
+              label="Github"
+              variant="filled"
+            />
+            <TextField
+              {...register("personalInfo.links.linkedin")}
+              margin="dense"
+              label="LinkedIn"
+              variant="filled"
+            />
+            <TextField
+              {...register("personalInfo.links.website")}
+              margin="dense"
+              label="Website"
+              variant="filled"
+            />
+          </Box>
+        </Stack>
+
+        {/* Languages */}
+        <Stack spacing={1}>
+          <div className="font-poppins text-3xl font-medium">Languages</div>
+          {languagesFields.map((field, index) => (
+            <Box className="grid grid-cols-4 gap-2" key={index}>
+              <TextField
+                select
+                label="Language"
+                variant="filled"
+                value={field.language}
+                onChange={(e) => {
+                  const updatedFields = [...languagesFields];
+                  updatedFields[index].language = e.target.value;
+                  setLanguagesFields(updatedFields);
+                }}>
+                {languageOptions.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                select
+                label="Proficiency"
+                variant="filled"
+                value={field.proficiency}
+                onChange={(e) => {
+                  const updatedFields = [...languagesFields];
+                  updatedFields[index].proficiency = e.target.value;
+                  setLanguagesFields(updatedFields);
+                }}>
+                {proficiencyOptions.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Box>
-          </Stack>
-          <Stack
-            spacing={2}
-            sx={{
-              background: "#4d434312",
-              borderRadius: "10px",
-              p: "15px",
-              boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-            }}
-          >
-            <Typography sx={{ textAlign: "center" }} variant="h4">
-              Social Link
-            </Typography>
-            <Box
-              sx={{
-                display: "grid",
-                gridTemplateColumns: { md: "49% 49%", xs: "100%" },
-                gridColumnGap: 20,
-                justifyContent: "space-between",
-              }}
-            >
-              {/* Add links for personal info */}
-              <Stack>
-                <Field
-                  name="personalInfo.links.github"
-                  as={TextField}
-                  label="Github"
-                  variant="outlined"
-                  margin="normal"
+          ))}
+        </Stack>
+        {/* education */}
+        <Stack spacing={1}>
+          <div className="font-poppins text-3xl font-medium">
+            Education Detail
+          </div>
+          {educationFields.map((field, index) => (
+            <>
+              <div className="font-poppins text-sm font-medium">
+                {`Education Detail ${index + 1}`}
+              </div>
+              <Box className="grid grid-cols-3 gap-2" key={field.id}>
+                <TextField
+                  {...register(`education.${index}.institution`)}
+                  margin="dense"
+                  label="Institution"
+                  variant="filled"
                 />
-              </Stack>
-              <Stack>
-                <Field
-                  name="personalInfo.links.linkedin"
-                  as={TextField}
-                  label="LinkedIn"
-                  variant="outlined"
-                  margin="normal"
+                <TextField
+                  {...register(`education.${index}.degree`)}
+                  margin="dense"
+                  label="Degree"
+                  variant="filled"
                 />
-              </Stack>
-              <Stack>
-                <Field
-                  name="personalInfo.links.website"
-                  as={TextField}
-                  label="Website"
-                  variant="outlined"
-                  margin="normal"
+                <TextField
+                  {...register(`education.${index}.fieldOfStudy`)}
+                  margin="dense"
+                  label="Field of Study"
+                  variant="filled"
                 />
-              </Stack>
-            </Box>
-          </Stack>
-          <Stack
-            spacing={2}
-            sx={{
-              background: "#4d434312",
-              borderRadius: "10px",
-              p: "15px",
-              boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-            }}
-          >
-            <Typography sx={{ textAlign: "center" }} variant="h4">
-              Education Detail
-            </Typography>
 
-            {/* Education Fields */}
-            <FieldArray name="education">
-              {({ push }) => (
-                <div>
-                  {cvDataFormat.education.map((_, index) => (
-                    <Box
-                      sx={{
-                        display: "grid",
-                        gridTemplateColumns: { md: "49% 49%", xs: "100%" },
-                        gridColumnGap: 20,
-                        justifyContent: "space-between",
-                      }}
-                      key={index}
-                    >
-                      <Field
-                        name={`education[${index}].institution`}
-                        as={TextField}
-                        label="Institution"
-                        variant="outlined"
-                        margin="normal"
-                      />
-                      <Field
-                        name={`education[${index}].degree`}
-                        as={TextField}
-                        label="Degree"
-                        variant="outlined"
-                        margin="normal"
-                      />
-                      <Field
-                        name={`education[${index}].fieldOfStudy`}
-                        as={TextField}
-                        label="Field of Study"
-                        variant="outlined"
-                        margin="normal"
-                      />
-                      <Field
-                        name={`education[${index}].startDate`}
-                        as={TextField}
-                        type="date"
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <Controller
+                    control={control}
+                    name={`education.${index}.startDate`}
+                    render={({ field }) => (
+                      <DatePicker
+                        {...field}
                         label="Start Date"
-                        variant="outlined"
-                        margin="normal"
+                        onChange={(date) => field.onChange(date)}
                       />
-                      <Field
-                        name={`education[${index}].endDate`}
-                        as={TextField}
-                        type="date"
+                    )}
+                  />
+                </LocalizationProvider>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <Controller
+                    control={control}
+                    name={`education.${index}.endDate`}
+                    render={({ field }) => (
+                      <DatePicker
+                        {...field}
                         label="End Date"
-                        variant="outlined"
-                        margin="normal"
+                        onChange={(date) => field.onChange(date)}
                       />
-                    </Box>
-                  ))}
-                  <Button
-                    type="button"
-                    variant="contained"
-                    onClick={() => push({})}
-                  >
-                    Add Education
-                  </Button>
-                </div>
-              )}
-            </FieldArray>
-          </Stack>
-          <Stack
-            spacing={2}
-            sx={{
-              background: "#4d434312",
-              borderRadius: "10px",
-              p: "15px",
-              boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-            }}
-          >
-            <Typography sx={{ textAlign: "center" }} variant="h4">
-              Experience Detail
-            </Typography>
+                    )}
+                  />
+                  <CloseIcon onClick={() => handleRemoveEducation(index)} />
+                </LocalizationProvider>
+              </Box>
+            </>
+          ))}
 
-            <FieldArray name="experience">
-              {({ push }) => (
-                <div>
-                  {cvDataFormat.experience.map((_, index) => (
-                    <Box
-                      sx={{
-                        display: "grid",
-                        gridTemplateColumns: { md: "49% 49%", xs: "100%" },
-                        gridColumnGap: 20,
-                        justifyContent: "space-between",
-                      }}
-                      key={index}
-                    >
-                      <Field
-                        name={`experience[${index}].company`}
-                        as={TextField}
-                        label="Company"
-                        variant="outlined"
-                        margin="normal"
-                      />
-                      <Field
-                        name={`experience[${index}].position`}
-                        as={TextField}
-                        label="Position"
-                        variant="outlined"
-                        margin="normal"
-                      />
-                      <Field
-                        name={`experience[${index}].startDate`}
-                        as={TextField}
-                        type="date"
+          {educationFields.length < 2 && (
+            <Button
+              type="button"
+              variant="contained"
+              onClick={() => appendEducation({})}>
+              Add Education
+            </Button>
+          )}
+        </Stack>
+        {/* Experience Detail */}
+        <Stack spacing={1}>
+          <div className="font-poppins text-3xl font-medium">
+            Experience Detail
+          </div>
+          {experienceFields.map((field, index) => (
+            <>
+              <div className="font-poppins text-sm font-medium">
+                {`Experience Detail ${index + 1}`}
+              </div>
+              <Box className="grid grid-cols-3 gap-2" key={field.id}>
+                <TextField
+                  {...register(`experience.${index}.company`)}
+                  margin="dense"
+                  label="Company"
+                  variant="filled"
+                />
+                <TextField
+                  {...register(`experience.${index}.position`)}
+                  margin="dense"
+                  label="Position"
+                  variant="filled"
+                />
+                {/* Use Controller for DatePicker */}
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <Controller
+                    control={control}
+                    name={`experience.${index}.startDate`}
+                    render={({ field }) => (
+                      <DatePicker
+                        {...field}
                         label="Start Date"
-                        variant="outlined"
-                        margin="normal"
+                        onChange={(date) => field.onChange(date)}
                       />
-                      <Field
-                        name={`experience[${index}].endDate`}
-                        as={TextField}
-                        type="date"
+                    )}
+                  />
+                </LocalizationProvider>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <Controller
+                    control={control}
+                    name={`experience.${index}.endDate`}
+                    render={({ field }) => (
+                      <DatePicker
+                        {...field}
                         label="End Date"
-                        variant="outlined"
-                        margin="normal"
+                        onChange={(date) => field.onChange(date)}
                       />
-                      <Field
-                        name="skills"
-                        as={TextField}
-                        select
-                        label="Skills"
-                        variant="outlined"
-                        margin="normal"
-                      >
-                        {cvDataFormat.skills.map((skill, index) => (
-                          <MenuItem key={index} value={skill}>
-                            {skill}
-                          </MenuItem>
-                        ))}
-                      </Field>
-                      <Field
-                        name={`experience[${index}].responsibilities`}
-                        as={TextField}
-                        label="Responsibilities"
-                        variant="outlined"
-                        multiline
-                        rows={4}
-                        margin="normal"
-                      />
-                    </Box>
-                  ))}
+                    )}
+                  />
+                </LocalizationProvider>
+                <CloseIcon onClick={() => handleRemoveExperience(index)} />
+              </Box>
+            </>
+          ))}
 
-                  <Button
-                    type="button"
-                    variant="contained"
-                    onClick={() => push({})}
-                  >
-                    Add Experience
-                  </Button>
-                </div>
-              )}
-            </FieldArray>
-          </Stack>
-
-          <Stack spacing={2} sx={{background:'#4d434312', borderRadius:"10px",p:'15px',boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px'}} >
-        <Typography sx={{textAlign:'center'}} variant='h4'>Languages</Typography>
-       
-        <FieldArray name="languages">
-  {({ push }) => (
-    <div>
-      {cvDataFormat.languages.map((_, index) => (
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: { md: "49% 49%", xs: "100%" },
-            gridColumnGap: 20,
-            justifyContent: "space-between",
-          }}
-          key={index}
-        >
-          <Field
-            name={`languages[${index}].language`}
-            as={TextField}
-            label="Language"
-            variant="outlined"
-            margin="normal"
-          />
-          <Field
-            name={`languages[${index}].proficiency`}
-            as={TextField}
-            label="Proficiency"
-            variant="outlined"
-            margin="normal"
-          />
-        </Box>
-      ))}
-   <Button
-  type="button"
-  variant="contained"
-  onClick={() => {
-    push({ language: "", proficiency: "" });
-    console.log("Language added");
-  }}
->
-  Add Language
-</Button>
-
-    </div>
-  )}
-</FieldArray>
-
-          </Stack>
-          {/* Certifications */}
-          <Stack spacing={2} sx={{background:'#4d434312', borderRadius:"10px",p:'15px',boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px'}} >
-        <Typography sx={{textAlign:'center'}} variant='h4'>Certification</Typography>
-      
-        <FieldArray name="certifications">
-  {({ push }) => (
-    <div>
-      {cvDataFormat.certifications.map((_, index) => (
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: { md: "49% 49%", xs: "100%" },
-            gridColumnGap: 20,
-            justifyContent: "space-between",
-          }}
-          key={index}
-        >
-          <Field
-            name={`certifications[${index}].name`}
-            as={TextField}
-            label="Certification Name"
-            variant="outlined"
-            margin="normal"
-          />
-          <Field
-            name={`certifications[${index}].organization`}
-            as={TextField}
-            label="Organization"
-            variant="outlined"
-            margin="normal"
-          />
-          <Field
-            name={`certifications[${index}].date`}
-            as={TextField}
-            type="date"
-            label="Date"
-            variant="outlined"
-            margin="normal"
-          />
-        </Box>
-      ))}
-      <Button
-        type="button"
-        variant="contained"
-        onClick={() => push({ name: "", organization: "", date: "" })}
-      >
-        Add Certification
-      </Button>
-    </div>
-  )}
-</FieldArray>
-
-          </Stack>
-
-          <Button type="submit" variant="contained" color="primary">
-            Submit
+          <Button
+            type="button"
+            variant="contained"
+            onClick={() => appendExperience()}>
+            Add Experience
           </Button>
         </Stack>
-      </Form>
-    </Formik>
+        {/* Certifications */}
+        <Stack spacing={1}>
+          <div className="font-poppins text-3xl font-medium">
+            Certifications
+          </div>
+          {certificationsFields.map((field, index) => (
+            <Box className="grid grid-cols-3 gap-2" key={index}>
+              <TextField
+                {...register(`certifications.${index}.name`)}
+                margin="dense"
+                label="Certification Name"
+                variant="filled"
+              />
+              <TextField
+                {...register(`certifications.${index}.organization`)}
+                margin="dense"
+                label="Organization"
+                variant="filled"
+              />
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <Controller
+                  control={control}
+                  name={`certifications.${index}.date`}
+                  render={({ field }) => (
+                    <DatePicker
+                      {...field}
+                      label="Date"
+                      onChange={(date) => field.onChange(date)}
+                    />
+                  )}
+                />
+              </LocalizationProvider>
+              <CloseIcon onClick={() => handleRemoveCertification(index)} />
+            </Box>
+          ))}
+          <Button
+            type="button"
+            variant="contained"
+            onClick={appendCertification}>
+            Add Certification
+          </Button>
+        </Stack>
+        <Stack spacing={1}>
+          <div className="font-poppins text-3xl font-medium">
+            Certifications
+          </div>
+        </Stack>
+
+        <Box className="grid grid-cols-3" sx={{ minWidth: 120 }}>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label"> Skill</InputLabel>
+            <Select
+              className="bg-slate-1000"
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={selectedTechSkills}
+              label="skill"
+              multiple=""
+              onChange={handleSkillSelect}>
+              {techSkills.map((skill, index) => (
+                <MenuItem key={index} value={skill}>
+                  {skill}
+                </MenuItem>
+              ))}
+            </Select>
+            {selectedTechSkills && (
+              <div>
+                {selectedTechSkills.map((skill, index) => (
+                  <div
+                    className="p-2 border-2 inset-3 m-1 rounded-md bg-slate-200 "
+                    key={index}>
+                    <span key={index} className="selected-skill ">
+                      <span className="px-1"> {skill}</span>
+                      <CloseIcon
+                        className="text-red-800"
+                        onClick={() => handleSkillRemove(index)}
+                      />
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </FormControl>
+        </Box>
+
+        <Button type="submit" variant="contained" color="primary">
+          Submit
+        </Button>
+      </Stack>
+    </form>
   );
 };
 
