@@ -4,16 +4,15 @@ import jsPDF from "jspdf";
 import { useEffect, useRef } from "react";
 import ApiFetching from "../../services/ApiFetching";
 import { useDispatch, useSelector } from "react-redux";
-import { setSingleUserData } from "../../redux/slices/CvSlice";
+import { seUserId, setSingleUserData } from "../../redux/slices/CvSlice";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import EmailIcon from "@mui/icons-material/Email";
 import { toast } from "react-toastify";
-import { useNavigate, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 
 const CvTemplate = () => {
-  const navigate=useNavigate()
   const userId = useParams();
   const dispatch = useDispatch();
   const SingleUserData = useSelector(
@@ -29,10 +28,7 @@ const CvTemplate = () => {
       );
       if (getSingleData.status === 200) {
         dispatch(setSingleUserData(getSingleData.data.data));
-      } else {
-        // navigate('../*')
-        toast.error("Some Error occur");
-      }
+      } 
     };
     getSingleUserData();
   }, []);
@@ -51,16 +47,13 @@ const CvTemplate = () => {
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
       pdf.addImage(imgData, "PDF", 0, 0, imgWidth, imgHeight);
-
-      // Convert the PDF to blob
       const blob = pdf.output("blob");
-
-      // Create a FormData object
       const formData = new FormData();
       console.log(formData);
+      
       formData.append("resume", blob, `${SingleUserData?.personalInfo?.firstName}.pdf`);
+      formData.append('templetId',userId.cvTemplateId)
 
-      // Send the PDF file to the backend API
     const res = await ApiFetching("POST", "user/upload", formData);
     if(res.status===200){
       toast.success('Your resume saved SuccessFully')
@@ -100,7 +93,7 @@ const CvTemplate = () => {
                 <div>
                   <div className="flex items-center my-1">
                     <a className="w-6 text-gray-700 hover:text-orange-600">
-                      <LinkedInIcon />
+                    {SingleUserData?.personalInfo?.links?.linkedin && <LinkedInIcon /> }  
                     </a>
                     <div className="ml-2 truncate">
                       {SingleUserData?.personalInfo?.links?.linkedin}
@@ -113,7 +106,7 @@ const CvTemplate = () => {
                       href=""
                       target="_blank"
                     >
-                      <LocalPhoneIcon className="h-4" />
+                     {SingleUserData?.personalInfo?.phone && <LocalPhoneIcon className="h-4" />} 
                     </a>
                     <div>{SingleUserData?.personalInfo?.phone}</div>
                   </div>
@@ -124,7 +117,7 @@ const CvTemplate = () => {
                       href=""
                       target="_blank"
                     >
-                      <EmailIcon />
+                     {SingleUserData?.personalInfo?.email && <EmailIcon />} 
                     </a>
                     <div>{SingleUserData?.personalInfo?.email}</div>
                   </div>
@@ -135,7 +128,7 @@ const CvTemplate = () => {
                       href=""
                       target="_blank"
                     >
-                      <GitHubIcon />
+                     {SingleUserData?.personalInfo?.links?.github && <GitHubIcon />} 
                     </a>
                     <div>{SingleUserData?.personalInfo?.links?.github}</div>
                   </div>
@@ -248,7 +241,7 @@ const CvTemplate = () => {
       <Button onClick={handleSave} variant="contained">
         Upload
       </Button>
-      <Button variant="contained" onClick={()=>navigate(`../editCvGenerator/${userId.cvTemplateId}`)} >Edit </Button>
+      {/* <Button variant="contained" onClick={()=>navigate(`../editCvGenerator/${userId.cvTemplateId}`)} >Edit </Button> */}
       </Stack>
     </Stack>
   );

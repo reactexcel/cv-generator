@@ -140,6 +140,7 @@ const CvCreatorForm = () => {
   };
   const dispatch=useDispatch()
   useEffect(()=>{
+   
     const getSingleUserData = async () => {
       const getSingleData = await ApiFetching(
         "GET",
@@ -148,12 +149,12 @@ const CvCreatorForm = () => {
       );
       if (getSingleData.status === 200) {
         dispatch(setSingleUserData(getSingleData.data.data));
-      } else {
-        toast.error("Some Error occur");
-      }
+      } 
     };
-    getSingleUserData();
-  },[id.editId])
+    if(id.editId){
+      getSingleUserData();
+    }
+  },[])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

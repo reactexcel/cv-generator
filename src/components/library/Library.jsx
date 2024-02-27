@@ -8,6 +8,7 @@ import Stack from "@mui/material/Stack";
 import ModalComponent from "./ModalComponent";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -16,9 +17,9 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 const Library = () => {
   const navigate=useNavigate()
+  // const id=useSelector(state=>state.CvSlice.UserId)
   const dispatch = useDispatch();
   const data = useSelector((state) => state.CvSlice.getCvData);
-
   const handleDownloadPdf = (link) => {
     const anchor = document.createElement("a");
     anchor.href = link;
@@ -33,29 +34,12 @@ const Library = () => {
   const [titleName, setTitleName] = useState(null);
   console.log(titleName);
 
-  const fileName =
-    titleName &&
-    Array.isArray(titleName) &&
-    titleName.map((item) => {
-      if (typeof item === "string") {
-        const trimmedLink = item.replace(
-          "http://116.202.210.102:3030/resumes/65d715cdfbf9b1c5d1d8adc7-",
-          ""
-        );
-        return trimmedLink;
-      } else {
-        return item;
-      }
-    });
-
-  console.log(fileName);
 
   useEffect(() => {
     const getData = async () => {
       try {
         const response = await ApiFetching("GET", "user/get", null);
         const data = response.data;
-        console.log(data);
         if (data.success === true) {
           console.log(response.data);
           dispatch(setCvData(data.user));
@@ -117,6 +101,7 @@ const Library = () => {
                     className="mt-2"
                       onClick={() => handleDownloadPdf(link.link)}
                     />
+                    <Button >Edit</Button>
                   </div>
                 </div>
               </div>
