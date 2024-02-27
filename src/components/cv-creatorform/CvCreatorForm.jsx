@@ -9,14 +9,20 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import { toast } from "react-toastify";
+import { useNavigate, useParams } from "react-router-dom";
+// import { useNavigate } from "react-router";
 
 const CvCreatorForm = () => {
+  const id=useParams()
+  console.log(id);
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
   } = useForm();
+  
   const {
     fields: educationFields,
     append: appendEducation,
@@ -52,9 +58,9 @@ const CvCreatorForm = () => {
   const handleRemoveEducation = (index) => {
     removeEducation(index);
   };
-
   const [certificationsFields, setCertificationsFields] = React.useState([]);
   const [selectedTechSkills, setSelectedTechSkills] = React.useState([]);
+  const navigate=useNavigate()
 
   const languageOptions = ["English", "Spanish", "French", "German", "Chinese"];
   const proficiencyOptions = ["Beginner", "Intermediate", "Advanced", "Fluent"];
@@ -112,7 +118,11 @@ const CvCreatorForm = () => {
     console.log(requestData);
 
     const dataToSend = await ApiFetching("POST", "user/cv/create", requestData);
-    console.log(dataToSend);
+    if(dataToSend.status===200){
+      console.log(dataToSend.data.data._id);
+      toast.success('CV Created Successfully');
+    navigate(`../cvTemlate/${dataToSend.data.data._id}`)
+    }
   };
 
   const handleSkillSelect = (e) => {

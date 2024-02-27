@@ -20,6 +20,7 @@ const AddCv = () => {
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
         const formData = new FormData();
+        console.log(formData);
         formData.append("resume", values.file);
         const response = await ApiFetching("POST", "/user/upload", formData);
         console.log("Upload response:", response);

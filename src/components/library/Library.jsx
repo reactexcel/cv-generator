@@ -8,6 +8,7 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import ModalComponent from "./ModalComponent";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -15,6 +16,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 const Library = () => {
+  const navigate=useNavigate()
   const dispatch = useDispatch();
   const data = useSelector((state) => state.CvSlice.getCvData);
 
