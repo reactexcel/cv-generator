@@ -5,7 +5,6 @@ import { setCvData } from "../../redux/slices/CvSlice";
 import DownloadIcon from "@mui/icons-material/Download";
 import { pdfjs } from "react-pdf";
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
 import ModalComponent from "./ModalComponent";
 import moment from "moment";
 
@@ -68,60 +67,60 @@ const Library = () => {
   }, []);
 
   return (
-      <Stack sx={{wordBreak:'break-all'}} className="font-poppins bg-slate-200 h-fit shadow-sm rounded-md flex flex-col">
-        <Stack direction={{md:'row',xs:'column'}} sx={{justifyContent:'space-between', p:"30px"}}>
-          <div className="text-lg font-semibold">
-            Name:{data && data.firstname+' '+data.lastname}
-          </div>
-          <div className="text-lg font-semibold ">
-            {" "}
-            Email:{data && data.email}
-          </div>
-          <div className="text-lg font-semibold">
-            Mobile No :{data && data.mobile}
-          </div>
-        </Stack>
-        <div>
-          <Stack className="border-2 p-4 text-lg rounded-sm gap-2">
-            {data &&
-              data.cvLink &&
-              data.cvLink.map((link, index) => (
-                <div
-                  className="flex flex-col gap-1 w-full border-2 border-gray-400 p-2 rounded-md"
-                  key={index}>
-                  <div className="flex font-medium  justify-between">
-                    <div className="flex gap-2 leading-0">
-                      <div> {index + 1}.</div>
-                      <div>
-                        <div>
-                          {typeof link.link === "string" &&
-                            link.link.replace(
-                              "http://116.202.210.102:3030/resumes/65d87d0e840d38f93d41709a-",
-                              ""
-                            )}
-                        </div>
-                        <div className="opacity-95">
-                          {moment(link.updatedAt).format(
-                            "MMMM DD, YYYY hh:mm A"
-                          )}
-                        </div>
-                      </div>
-                    </div>{" "}
-                    <div className="h-fit flex gap-2">
-                      <ModalComponent link={link.link} />
-                      <Button variant="contained">
-                        <DownloadIcon
-                          onClick={() => handleDownloadPdf(link.link)}
-                        />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-          </Stack>
+    <Stack
+      sx={{ wordBreak: "break-all" }}
+      className="font-poppins bg-slate-200 h-fit shadow-sm rounded-md flex flex-col">
+      <Stack
+        direction={{ md: "row", xs: "column" }}
+        sx={{ justifyContent: "space-between", p: "30px" }}>
+        <div className="md:text-lg text-sm font-semibold">
+          Name:{data && data.firstname + " " + data.lastname}
+        </div>
+        <div className="md:text-lg text-sm font-semibold ">
+          {" "}
+          Email:{data && data.email}
+        </div>
+        <div className="ms:text-lg text-sm font-semibold">
+          Mobile No :{data && data.mobile}
         </div>
       </Stack>
-    
+      <div>
+        <Stack className="border-2 p-4 text-lg rounded-sm gap-2">
+          {data &&
+            data.cvLink &&
+            data.cvLink.map((link, index) => (
+              <div
+                className="flex flex-col gap-1 w-full border-2 border-gray-400 p-2 rounded-md"
+                key={index}>
+                <div className="flex font-medium w-full  justify-between">
+                  <div className="flex gap-2 leading-0">
+                    <div> {index + 1}.</div>
+                    <div>
+                      <div className="text-sm">
+                        {typeof link.link === "string" &&
+                          link.link.replace(
+                            "http://116.202.210.102:3030/resumes/65d87d0e840d38f93d41709a-",
+                            ""
+                          )}
+                      </div>
+                      <div className="text-sm font-light opacity-95">
+                        Last Updated:{" "}
+                        {moment(link.updatedAt).format("MMMM DD, YYYY hh:mm A")}
+                      </div>
+                    </div>
+                  </div>{" "}
+                  <div className="h-fit max-w-sm flex gap-2">
+                    <ModalComponent link={link.link} />
+                    <DownloadIcon
+                      onClick={() => handleDownloadPdf(link.link)}
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+        </Stack>
+      </div>
+    </Stack>
   );
 };
 

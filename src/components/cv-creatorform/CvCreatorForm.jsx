@@ -126,25 +126,29 @@ const CvCreatorForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="py-2 text-wrap">
+        We suggest including an email and phone number.
+      </div>
       <Stack spacing={2}>
         {/* Personal Information */}
         <Stack spacing={1}>
-          <div className="font-poppins text-3xl font-medium">
+          <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
             Personal information
           </div>
-          <Box className="grid grid-cols-3 gap-2">
+          <Box className="grid md:grid-cols-3 grid-cols-1 gap-2">
             <TextField
               {...register("personalInfo.firstName")}
               margin="dense"
               required
+              sx={{ backgroundColor: "white" }}
               label="First Name"
-              variant="filled"
+              variant="outlined"
             />
             <TextField
               {...register("personalInfo.lastName")}
               margin="dense"
               label="Last Name"
-              variant="filled"
+              variant="outlined"
             />
             <TextField
               {...register("personalInfo.email")}
@@ -152,20 +156,20 @@ const CvCreatorForm = () => {
               margin="dense"
               required
               label="Email"
-              variant="filled"
+              variant="outlined"
             />
             <TextField
               {...register("personalInfo.phone")}
               margin="dense"
               required
               label="Phone"
-              variant="filled"
+              variant="outlined"
             />
             <TextField
               {...register("personalInfo.address")}
               margin="dense"
               label="Address"
-              variant="filled"
+              variant="outlined"
               multiline
               rows={2}
             />
@@ -173,38 +177,42 @@ const CvCreatorForm = () => {
         </Stack>
         {/* Social Links */}
         <Stack spacing={1}>
-          <div className="font-poppins text-3xl font-medium">Social Link</div>
-          <Box className="grid grid-cols-3 gap-2">
+          <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
+            Social Link
+          </div>
+          <Box className="grid md:grid-cols-3 grid-cols-1 gap-2">
             <TextField
               {...register("personalInfo.links.github")}
               margin="dense"
               label="Github"
-              variant="filled"
+              variant="outlined"
             />
             <TextField
               {...register("personalInfo.links.linkedin")}
               margin="dense"
               label="LinkedIn"
-              variant="filled"
+              variant="outlined"
             />
             <TextField
               {...register("personalInfo.links.website")}
               margin="dense"
               label="Website"
-              variant="filled"
+              variant="outlined"
             />
           </Box>
         </Stack>
 
         {/* Languages */}
         <Stack spacing={1}>
-          <div className="font-poppins text-3xl font-medium">Languages</div>
+          <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
+            Languages
+          </div>
           {languagesFields.map((field, index) => (
-            <Box className="grid grid-cols-4 gap-2" key={index}>
+            <Box className="grid md:grid-cols-4 grid-cols-1 gap-2" key={index}>
               <TextField
                 select
                 label="Language"
-                variant="filled"
+                variant="outlined"
                 value={field.language}
                 onChange={(e) => {
                   const updatedFields = [...languagesFields];
@@ -220,7 +228,7 @@ const CvCreatorForm = () => {
               <TextField
                 select
                 label="Proficiency"
-                variant="filled"
+                variant="outlined"
                 value={field.proficiency}
                 onChange={(e) => {
                   const updatedFields = [...languagesFields];
@@ -238,7 +246,7 @@ const CvCreatorForm = () => {
         </Stack>
         {/* education */}
         <Stack spacing={1}>
-          <div className="font-poppins text-3xl font-medium">
+          <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
             Education Detail
           </div>
           {educationFields.map((field, index) => (
@@ -246,24 +254,26 @@ const CvCreatorForm = () => {
               <div className="font-poppins text-sm font-medium">
                 {`Education Detail ${index + 1}`}
               </div>
-              <Box className="grid grid-cols-3 gap-2" key={field.id}>
+              <Box
+                className="grid md:grid-cols-3 grid-cols-1 gap-2"
+                key={field.id}>
                 <TextField
                   {...register(`education.${index}.institution`)}
                   margin="dense"
                   label="Institution"
-                  variant="filled"
+                  variant="outlined"
                 />
                 <TextField
                   {...register(`education.${index}.degree`)}
                   margin="dense"
                   label="Degree"
-                  variant="filled"
+                  variant="outlined"
                 />
                 <TextField
                   {...register(`education.${index}.fieldOfStudy`)}
                   margin="dense"
                   label="Field of Study"
-                  variant="filled"
+                  variant="outlined"
                 />
 
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -291,7 +301,14 @@ const CvCreatorForm = () => {
                       />
                     )}
                   />
-                  <CloseIcon onClick={() => handleRemoveEducation(index)} />
+
+                  <Button
+                    onClick={() => handleRemoveEducation(index)}
+                    color="error"
+                    className="w-[30%]">
+                    {" "}
+                    <CloseIcon />
+                  </Button>
                 </LocalizationProvider>
               </Box>
             </>
@@ -299,8 +316,9 @@ const CvCreatorForm = () => {
 
           {educationFields.length < 2 && (
             <Button
+              className="md:w-[20%] w-full text-sm"
               type="button"
-              variant="contained"
+              variant="outlined"
               onClick={() => appendEducation({})}>
               Add Education
             </Button>
@@ -308,41 +326,43 @@ const CvCreatorForm = () => {
         </Stack>
         {/* Experience Detail */}
         <Stack spacing={1}>
-          <div className="font-poppins text-3xl font-medium">
-            Experience Detail
+          <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
+            Experience 
           </div>
           {experienceFields.map((field, index) => (
             <>
               <div className="font-poppins text-sm font-medium">
                 {`Experience Detail ${index + 1}`}
               </div>
-              <Box className="grid grid-cols-3 gap-2" key={field.id}>
+              <Box className="grid md:grid-cols-3 gap-2" key={field.id}>
                 <TextField
                   {...register(`experience.${index}.company`)}
                   margin="dense"
                   label="Company"
-                  variant="filled"
+                  variant="outlined"
                 />
                 <TextField
                   {...register(`experience.${index}.position`)}
                   margin="dense"
                   label="Position"
-                  variant="filled"
+                  variant="outlined"
                 />
                 {/* Use Controller for DatePicker */}
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <Controller
-                    control={control}
-                    name={`experience.${index}.startDate`}
-                    render={({ field }) => (
-                      <DatePicker
-                        {...field}
-                        label="Start Date"
-                        onChange={(date) => field.onChange(date)}
-                      />
-                    )}
-                  />
-                </LocalizationProvider>
+                <div className="w-full mt-2">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <Controller
+                      control={control}
+                      name={`experience.${index}.startDate`}
+                      render={({ field }) => (
+                        <DatePicker
+                          {...field}
+                          label="Start Date"
+                          onChange={(date) => field.onChange(date)}
+                        />
+                      )}
+                    />
+                  </LocalizationProvider>
+                </div>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <Controller
                     control={control}
@@ -356,36 +376,42 @@ const CvCreatorForm = () => {
                     )}
                   />
                 </LocalizationProvider>
-                <CloseIcon onClick={() => handleRemoveExperience(index)} />
+                <Button
+                  onClick={() => handleRemoveExperience(index)}
+                  className="w-[30%]"
+                  color="error">
+                  <CloseIcon />
+                </Button>
               </Box>
             </>
           ))}
 
           <Button
+            className="md:w-[20%] w-full text-sm"
             type="button"
-            variant="contained"
+            variant="outlined"
             onClick={() => appendExperience()}>
             Add Experience
           </Button>
         </Stack>
         {/* Certifications */}
         <Stack spacing={1}>
-          <div className="font-poppins text-3xl font-medium">
+          <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
             Certifications
           </div>
           {certificationsFields.map((field, index) => (
-            <Box className="grid grid-cols-3 gap-2" key={index}>
+            <Box className="grid md:grid-cols-3 gap-2" key={index}>
               <TextField
                 {...register(`certifications.${index}.name`)}
                 margin="dense"
                 label="Certification Name"
-                variant="filled"
+                variant="outlined"
               />
               <TextField
                 {...register(`certifications.${index}.organization`)}
                 margin="dense"
                 label="Organization"
-                variant="filled"
+                variant="outlined"
               />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Controller
@@ -400,19 +426,26 @@ const CvCreatorForm = () => {
                   )}
                 />
               </LocalizationProvider>
-              <CloseIcon onClick={() => handleRemoveCertification(index)} />
+              <Button
+                onClick={() => handleRemoveCertification(index)}
+                color="error"
+                className="w-[30%]">
+                {" "}
+                <CloseIcon />
+              </Button>
             </Box>
           ))}
           <Button
             type="button"
-            variant="contained"
+            className="md:w-[20%] w-full text-sm"
+            variant="outlined"
             onClick={appendCertification}>
             Add Certification
           </Button>
         </Stack>
         <Stack spacing={1}>
-          <div className="font-poppins text-3xl font-medium">
-            Certifications
+          <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
+            Skills
           </div>
         </Stack>
 
@@ -439,7 +472,7 @@ const CvCreatorForm = () => {
                   <div
                     className="p-2 border-2 inset-3 m-1 rounded-md bg-slate-200 "
                     key={index}>
-                    <span key={index} className="selected-skill ">
+                    <span key={index} className="selected-skill max-w-sm">
                       <span className="px-1"> {skill}</span>
                       <CloseIcon
                         className="text-red-800"
@@ -453,7 +486,11 @@ const CvCreatorForm = () => {
           </FormControl>
         </Box>
 
-        <Button type="submit" variant="contained" color="primary">
+        <Button
+          className="w-[10%]"
+          type="submit"
+          variant="contained"
+          color="primary">
           Submit
         </Button>
       </Stack>
