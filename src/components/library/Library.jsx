@@ -7,7 +7,6 @@ import { pdfjs } from "react-pdf";
 import Stack from "@mui/material/Stack";
 import ModalComponent from "./ModalComponent";
 import moment from "moment";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -16,8 +15,6 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 const Library = () => {
-  const navigate=useNavigate()
-  // const id=useSelector(state=>state.CvSlice.UserId)
   const dispatch = useDispatch();
   const data = useSelector((state) => state.CvSlice.getCvData);
   const handleDownloadPdf = (link) => {
@@ -32,8 +29,6 @@ const Library = () => {
   };
 
   const [titleName, setTitleName] = useState(null);
-  console.log(titleName);
-
 
   useEffect(() => {
     const getData = async () => {
@@ -85,7 +80,7 @@ const Library = () => {
                       <div className="text-sm">
                         {typeof link.link === "string" &&
                           link.link.replace(
-                            "http://116.202.210.102:3030/resumes/65d87d0e840d38f93d41709a-",
+                            "http://116.202.210.102:3030/resumes/65ddb8d950b2990f7cfae6b7-",
                             ""
                           )}
                       </div>
@@ -98,10 +93,10 @@ const Library = () => {
                   <div className="h-fit max-w-sm flex gap-2">
                     <ModalComponent link={link.link} />
                     <DownloadIcon
-                    className="mt-2"
+                      className="mt-2"
                       onClick={() => handleDownloadPdf(link.link)}
                     />
-                    <Button >Edit</Button>
+                    <Button>Edit</Button>
                   </div>
                 </div>
               </div>
