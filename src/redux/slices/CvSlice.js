@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState={
     getCvData:[],
-    getSingleUserData:[]
+    getSingleUserData:[],
+    isLoading:false,
+    UserId:''
 }
 const CvSlice=createSlice({
     name:'CvSlice',
@@ -12,8 +14,11 @@ const CvSlice=createSlice({
         },
         setSingleUserData(state,action){
             state.getSingleUserData=action.payload;
-        }
+        },
+        seUserId(state, action) {
+            state.UserId = action.payload;
+          },
     }
 })
-export const {setCvData,setSingleUserData} = CvSlice.actions;
+export const {setCvData,setSingleUserData,seUserId} = CvSlice.actions;
 export default CvSlice.reducer;
