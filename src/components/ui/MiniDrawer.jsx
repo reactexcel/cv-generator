@@ -21,6 +21,7 @@ import PostAddIcon from "@mui/icons-material/PostAdd";
 import { Button } from "@mui/material";
 import { useHref, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
+import HomeIcon from '@mui/icons-material/Home';
 
 const drawerWidth = 240;
 
@@ -117,9 +118,11 @@ export default function MiniDrawer({pages}) {
             }}>
             <MenuIcon />
           </IconButton>
-          <Typography sx={{width:'45%'}} variant="h6" noWrap component="div">
+          <Link to={'/home'} style={{width:'45%'}}>
+          <Typography  variant="h6" noWrap component="div">
             CV Mangement System
           </Typography>
+          </Link>
 
             <Button  sx={{ml:"auto"}} onClick={()=>{
               localStorage.clear()
@@ -142,8 +145,9 @@ export default function MiniDrawer({pages}) {
         <Divider />
         <List>
           {[
-            { path: "library", pathName: "Library" },
-            { path: "cvgenerator", pathName: " CV Generator" },
+            {path:'/home',pathName:'Home',icon:<HomeIcon/>},
+            { path: "library", pathName: "Library",icon:<LibraryBooksIcon /> },
+            { path: "cvgenerator", pathName: " CV Generator",icon:<PostAddIcon /> },
           ].map((text, index) => (
             <Link to={text.path}  key={text.pathName}>
             <ListItem
@@ -162,7 +166,7 @@ export default function MiniDrawer({pages}) {
                     mr: open ? 3 : "auto",
                     justifyContent: "center",
                   }}>
-                  {index % 2 === 0 ? <LibraryBooksIcon /> : <PostAddIcon />}
+                  {text.icon}
                 </ListItemIcon>
                 <ListItemText
                   primary={text.pathName}
@@ -176,7 +180,7 @@ export default function MiniDrawer({pages}) {
         <Divider />
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader />
+        <DrawerHeader sx={{overflow:'hidden'}} />
         {pages}
       </Box>
     </Box>
