@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { Box, Button, MenuItem, Stack, TextField } from "@mui/material";
 import ApiFetching from "../../services/ApiFetching";
@@ -11,6 +11,8 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
+import { setSingleUserData } from "../../redux/slices/CvSlice";
+import { useDispatch, useSelector } from "react-redux";
 // import { useNavigate } from "react-router";
 
 const CvCreatorForm = () => {
@@ -61,7 +63,10 @@ const CvCreatorForm = () => {
   const [certificationsFields, setCertificationsFields] = React.useState([]);
   const [selectedTechSkills, setSelectedTechSkills] = React.useState([]);
   const navigate=useNavigate()
-
+  const SingleUserData = useSelector(
+    (state) => state.CvSlice.getSingleUserData
+  );
+  console.log(SingleUserData);
   const languageOptions = ["English", "Spanish", "French", "German", "Chinese"];
   const proficiencyOptions = ["Beginner", "Intermediate", "Advanced", "Fluent"];
   const techSkills = [
@@ -133,6 +138,22 @@ const CvCreatorForm = () => {
     const updatedSkills = selectedTechSkills.filter((_, i) => i !== index);
     setSelectedTechSkills(updatedSkills);
   };
+  const dispatch=useDispatch()
+  useEffect(()=>{
+    const getSingleUserData = async () => {
+      const getSingleData = await ApiFetching(
+        "GET",
+        `user/cv/fetch/${id.editId}`,
+        null
+      );
+      if (getSingleData.status === 200) {
+        dispatch(setSingleUserData(getSingleData.data.data));
+      } else {
+        toast.error("Some Error occur");
+      }
+    };
+    getSingleUserData();
+  },[id.editId])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

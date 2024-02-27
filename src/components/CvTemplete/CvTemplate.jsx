@@ -1,4 +1,4 @@
-import { Box, Button, Stack } from "@mui/material";
+import {  Button, Stack } from "@mui/material";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { useEffect, useRef } from "react";

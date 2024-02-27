@@ -114,6 +114,7 @@ const Library = () => {
                   <div className="h-fit max-w-sm flex gap-2">
                     <ModalComponent link={link.link} />
                     <DownloadIcon
+                    className="mt-2"
                       onClick={() => handleDownloadPdf(link.link)}
                     />
                   </div>
