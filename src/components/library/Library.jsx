@@ -7,14 +7,17 @@ import { pdfjs } from "react-pdf";
 import Stack from "@mui/material/Stack";
 import ModalComponent from "./ModalComponent";
 import moment from "moment";
-import { Button } from "@mui/material";
-
+import { Backdrop, Button, CircularProgress } from "@mui/material";
+import Refereshing from "../Refereshing/Refereshing";
+import { useNavigate } from "react-router-dom";
+import EditIcon from '@mui/icons-material/Edit';
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
   import.meta.url
 ).toString();
 
 const Library = () => {
+  const navigate=useNavigate()
   const dispatch = useDispatch();
   const data = useSelector((state) => state.CvSlice.getCvData);
   const handleDownloadPdf = (link) => {
@@ -29,10 +32,12 @@ const Library = () => {
   };
 
   const [titleName, setTitleName] = useState(null);
-
+  const [loading, setloading] = useState(false)
   useEffect(() => {
     const getData = async () => {
       try {
+        setloading(true)
+
         const response = await ApiFetching("GET", "user/get", null);
         const data = response.data;
         if (data.success === true) {
@@ -42,15 +47,20 @@ const Library = () => {
         }
       } catch (error) {
         console.log(error, "afsasd");
+      }finally{
+        setloading(false)
       }
     };
     getData();
   }, []);
 
+  if(loading){
+    return  <Refereshing/>
+  }
   return (
     <Stack
-      sx={{ wordBreak: "break-all" }}
-      className="font-poppins bg-slate-200 h-fit shadow-sm rounded-md flex flex-col">
+      sx={{ wordBreak: "break-all",bgcolor:'#dfe4ea' }}
+      className="font-poppins  h-fit shadow-sm rounded-md flex flex-col">
       <Stack
         direction={{ md: "row", xs: "column" }}
         sx={{ justifyContent: "space-between", p: "30px" }}>
@@ -96,7 +106,7 @@ const Library = () => {
                       className="mt-2"
                       onClick={() => handleDownloadPdf(link.link)}
                     />
-                    <Button>Edit</Button>
+                    <Button disabled={!link.templetId} onClick={()=>navigate(`../editCvGenerator/${link.templetId}`)}><EditIcon/></Button>
                   </div>
                 </div>
               </div>

@@ -1,7 +1,7 @@
-import {  Button, Stack } from "@mui/material";
+import {  Button, CircularProgress, Stack } from "@mui/material";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import ApiFetching from "../../services/ApiFetching";
 import { useDispatch, useSelector } from "react-redux";
 import { seUserId, setSingleUserData } from "../../redux/slices/CvSlice";
@@ -11,16 +11,20 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import EmailIcon from "@mui/icons-material/Email";
 import { toast } from "react-toastify";
 import {  useParams } from "react-router-dom";
+import Refereshing from "../Refereshing/Refereshing";
 
 const CvTemplate = () => {
+  const [loading, setLoading] = useState(false)
   const userId = useParams();
   const dispatch = useDispatch();
+  const [Btnloading, setBtnloading] = useState(false)
   const SingleUserData = useSelector(
     (state) => state.CvSlice.getSingleUserData
   );
   const componentRef = useRef();
   useEffect(() => {
     const getSingleUserData = async () => {
+      setLoading(true)
       const getSingleData = await ApiFetching(
         "GET",
         `user/cv/fetch/${userId.cvTemplateId}`,
@@ -29,39 +33,66 @@ const CvTemplate = () => {
       if (getSingleData.status === 200) {
         dispatch(setSingleUserData(getSingleData.data.data));
       } 
+      setLoading(false);
     };
     getSingleUserData();
   }, []);
-
   const handleSave = async () => {
     const input = componentRef.current;
 
-    html2canvas(input).then(async (canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "px",
-        format: "a4",
-      });
-      const imgWidth = 595;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    const approximatePdfSize = 2500 * 3500;
 
-      pdf.addImage(imgData, "PDF", 0, 0, imgWidth, imgHeight);
-      const blob = pdf.output("blob");
+    html2canvas(input, { scale: 2 }).then(async (canvas) => {
+      let imgData = canvas.toDataURL("image/jpeg", 1.0); 
+      let pdf;
+      let blob;
+      let quality = 1.0;
+
+      const calculatePdfSize = () => {
+        pdf = new jsPDF({
+          orientation: "portrait",
+          unit: "px",
+          format: "a4",
+        });
+        const imgWidth = 600;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        pdf.addImage(imgData, "JPEG", 0, 0, imgWidth, imgHeight);
+
+        blob = pdf.output("blob");
+        return blob.size;
+      };
+
+      let size = calculatePdfSize();
+
+      while (size > approximatePdfSize && quality > 0) {
+        quality -= 0.05;
+        imgData = canvas.toDataURL("image/jpeg", quality);
+        size = calculatePdfSize();
+      }
       const formData = new FormData();
-      console.log(formData);
-      
       formData.append("resume", blob, `${SingleUserData?.personalInfo?.firstName}.pdf`);
-      formData.append('templetId',userId.cvTemplateId)
+      formData.append('templetId', userId.cvTemplateId);
+      setBtnloading(true);
 
-    const res = await ApiFetching("POST", "user/upload", formData);
-    if(res.status===200){
-      toast.success('Your resume saved SuccessFully')
-    }else{
-      toast.error("Something went wrong")
-    }
+      const res = await ApiFetching("POST", "user/upload", formData);
+      if (res.status === 200) {
+        toast.success('Your resume saved successfully');
+      } else {
+        toast.error("Something went wrong");
+      }
+
+    setBtnloading(false);
     });
   };
+
+
+  
+  
+  
+  if(loading){
+    return <Refereshing/>
+  }
   
   return (
     <Stack width={{ sm: "100%", xs: "80%" }} m={"auto"} >
@@ -239,7 +270,7 @@ const CvTemplate = () => {
       <Stack direction={'row'}spacing={2} sx={{justifyContent:"center",alignItems:'center',mt:"10px"}}>
 
       <Button onClick={handleSave} variant="contained">
-        Upload
+        {Btnloading?<CircularProgress sx={{color:'inherit'}}/>:'Upload'}
       </Button>
       {/* <Button variant="contained" onClick={()=>navigate(`../editCvGenerator/${userId.cvTemplateId}`)} >Edit </Button> */}
       </Stack>

@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { Box, Button, MenuItem, Stack, TextField } from "@mui/material";
+import { Box, Button, CircularProgress, MenuItem, Stack, TextField } from "@mui/material";
 import ApiFetching from "../../services/ApiFetching";
 import CloseIcon from "@mui/icons-material/Close";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 // import { useNavigate } from "react-router";
 
 const CvCreatorForm = () => {
+  const [loading, setLoading] = useState(false)
   const id=useParams()
   console.log(id);
   const {
@@ -121,12 +122,13 @@ const CvCreatorForm = () => {
     };
 
     console.log(requestData);
-
+    setLoading(true)
     const dataToSend = await ApiFetching("POST", "user/cv/create", requestData);
     if(dataToSend.status===200){
       console.log(dataToSend.data.data._id);
       toast.success('CV Created Successfully');
     navigate(`../cvTemlate/${dataToSend.data.data._id}`)
+    setLoading(false)
     }
   };
 
@@ -523,7 +525,7 @@ const CvCreatorForm = () => {
           type="submit"
           variant="contained"
           color="primary">
-          Submit
+          {loading?  <CircularProgress sx={{color:"inherit"}} />:'Submit'}
         </Button>
       </Stack>
     </form>
