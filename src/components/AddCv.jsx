@@ -1,5 +1,6 @@
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Button, Stack } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import { Box } from "@mui/system";
 import { useFormik } from "formik";
 import { useState } from "react";
@@ -10,6 +11,7 @@ import { Document, Page } from "react-pdf";
 
 const AddCv = () => {
   const [isDragging, setIsDragging] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -21,13 +23,15 @@ const AddCv = () => {
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
         const formData = new FormData();
-        console.log(formData);
+        setLoading(true);
         formData.append("resume", values.file);
-        console.log(values.file);
+
         const response = await ApiFetching("POST", "/user/upload", formData);
         console.log("Upload response:", response);
         toast.success("Your File has been Uploaded Successfully");
         resetForm();
+        setPdfFile(false);
+        setLoading(false);
       } catch (error) {
         console.error("Upload error:", error);
       }
@@ -129,7 +133,11 @@ const AddCv = () => {
             </p>
             <div>
               <Button variant="contained" fullWidth type="submit">
-                Upload
+                {loading ? (
+                  <CircularProgress sx={{ color: "inherit" }} />
+                ) : (
+                  "Submit"
+                )}
               </Button>
             </div>
           </form>
