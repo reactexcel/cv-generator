@@ -11,6 +11,7 @@ import { Button, IconButton, Tooltip } from "@mui/material";
 import Refereshing from "../Refereshing/Refereshing";
 import { useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from '@mui/icons-material/Delete';
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
   import.meta.url
