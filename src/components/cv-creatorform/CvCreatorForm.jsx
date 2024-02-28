@@ -171,7 +171,6 @@ const CvCreatorForm = () => {
 
   useEffect(() => {
     if (id.editId && SingleUserData._id) {
-      
       const { firstName, lastName, email, phone, address, links } =
         SingleUserData.personalInfo;
       setValue("personalInfo.firstName", firstName);
@@ -454,7 +453,7 @@ const CvCreatorForm = () => {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <Controller
                     control={control}
-                    name={`certifications.${index}.date`}
+                    name={`certifications.${index}.dateRange`}
                     render={({ field }) => (
                       <DateRangePicker
                         {...field}
