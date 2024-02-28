@@ -349,23 +349,19 @@ const CvCreatorForm = () => {
                   margin="dense"
                   label="Institution"
                   variant="outlined"
-                  // value={field.institution}
                 />
                 <TextField
                   {...register(`education.${index}.degree`)}
                   margin="dense"
                   label="Degree"
                   variant="outlined"
-                  // value={field.degree}
-
                 />
                 <TextField
                   {...register(`education.${index}.fieldOfStudy`)}
                   margin="dense"
                   label="Field of Study"
                   variant="outlined"
-                  // value={field.fieldOfStudy}
-                />
+                  />
 
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <Controller
