@@ -11,6 +11,8 @@ import { Button } from "@mui/material";
 import Refereshing from "../Refereshing/Refereshing";
 import { useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
   import.meta.url
@@ -20,6 +22,26 @@ const Library = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const data = useSelector((state) => state.CvSlice.getCvData);
+
+  const handleDeleteFile = async (id) => {
+    console.log(id, "delete");
+    const response = await ApiFetching("DELETE", `user/cv/delete/${id}`, null);
+    if (response) {
+      try {
+        setloading(true);
+        const response = await ApiFetching("GET", "user/get", null);
+        const data = response.data;
+        if (data.success === true) {
+          dispatch(setCvData(data.user));
+          setTitleName(data.user.cvLink);
+        }
+      } catch (error) {
+        console.log(error, "afsasd");
+      } finally {
+        setloading(false);
+      }
+    }
+  };
   const handleDownloadPdf = (link) => {
     const anchor = document.createElement("a");
     anchor.href = link;
@@ -112,6 +134,9 @@ const Library = () => {
                             navigate(`../editCvGenerator/${link.templetId}`)
                           }>
                           <EditIcon />
+                        </Button>
+                        <Button onClick={() => handleDeleteFile(link._id)}>
+                          <DeleteIcon />
                         </Button>
                       </div>
                     </div>
