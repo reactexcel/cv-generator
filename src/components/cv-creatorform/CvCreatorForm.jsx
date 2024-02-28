@@ -1,11 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { Box, Button, CircularProgress, MenuItem, Stack, TextField } from "@mui/material";
+
+import {
+  Box,
+  Button,
+  CircularProgress,
+  MenuItem,
+  Stack,
+  TextField,
+} from "@mui/material";
 import ApiFetching from "../../services/ApiFetching";
 import CloseIcon from "@mui/icons-material/Close";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
+import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -13,19 +23,19 @@ import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import { setSingleUserData } from "../../redux/slices/CvSlice";
 import { useDispatch, useSelector } from "react-redux";
+
 // import { useNavigate } from "react-router";
 
 const CvCreatorForm = () => {
   const [loading, setLoading] = useState(false)
   const id=useParams()
-  console.log(id);
   const {
     register,
     handleSubmit,
     control,
-    formState: { errors },setValue
+    formState: { errors },
+    setValue,
   } = useForm();
-  
   const {
     fields: educationFields,
     append: appendEducation,
@@ -43,7 +53,6 @@ const CvCreatorForm = () => {
     control,
     name: "experience",
   });
-
   const [languagesFields, setLanguagesFields] = React.useState([
     { language: "", proficiency: "" },
     { language: "", proficiency: "" },
@@ -63,11 +72,10 @@ const CvCreatorForm = () => {
   };
   const [certificationsFields, setCertificationsFields] = React.useState([]);
   const [selectedTechSkills, setSelectedTechSkills] = React.useState([]);
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const SingleUserData = useSelector(
     (state) => state.CvSlice.getSingleUserData
   );
-  console.log(SingleUserData);
   const languageOptions = ["English", "Spanish", "French", "German", "Chinese"];
   const proficiencyOptions = ["Beginner", "Intermediate", "Advanced", "Fluent"];
   const techSkills = [
@@ -110,9 +118,7 @@ const CvCreatorForm = () => {
     ]);
   };
   const onSubmit = async (data) => {
-    console.log(data);
-
-    const requestData = {
+     const requestData = {
       ...data,
       languages: languagesFields.map((language) => ({
         language: language.language,
@@ -120,18 +126,25 @@ const CvCreatorForm = () => {
       })),
       skills: selectedTechSkills,
     };
-
-    console.log(requestData);
-    setLoading(true)
-    const dataToSend = await ApiFetching("POST", "user/cv/create", requestData);
-    if(dataToSend.status===200){
-      console.log(dataToSend.data.data._id);
-      toast.success('CV Created Successfully');
-    navigate(`../cvTemlate/${dataToSend.data.data._id}`)
-    setLoading(false)
+  
+    if (id.editId) {
+      // If editing an existing CV, send a PUT request to update the CV
+      const res = await ApiFetching('PUT', `user/cv/update/${id.editId}`, requestData);
+      if (res.status === 200) {
+        toast.success('CV updated successfully');
+        navigate(`../cvTemlate/${res.data.data._id}`);
+      }
+    } else {
+      setLoading(true);
+      const dataToSend = await ApiFetching('POST', 'user/cv/create', requestData);
+      if (dataToSend.status === 200) {
+        toast.success('CV Created Successfully');
+        navigate(`../cvTemlate/${dataToSend.data.data._id}`);
+        setLoading(false);
+      }
     }
   };
-
+  
   const handleSkillSelect = (e) => {
     const skill = e.target.value;
     setSelectedTechSkills([...selectedTechSkills, skill]);
@@ -140,9 +153,8 @@ const CvCreatorForm = () => {
     const updatedSkills = selectedTechSkills.filter((_, i) => i !== index);
     setSelectedTechSkills(updatedSkills);
   };
-  const dispatch=useDispatch()
-  useEffect(()=>{
-   
+  const dispatch = useDispatch();
+  useEffect(() => {
     const getSingleUserData = async () => {
       const getSingleData = await ApiFetching(
         "GET",
@@ -151,36 +163,51 @@ const CvCreatorForm = () => {
       );
       if (getSingleData.status === 200) {
         dispatch(setSingleUserData(getSingleData.data.data));
-      } 
+      }
     };
-    if(id.editId){
+    if (id.editId) {
       getSingleUserData();
     }
-  },[])
-  useEffect(() => {
-    // Set dynamic values fetched from an API or Redux store
-    if (id.editId && SingleUserData._id) {
-      // Set values for personal information fields
-      const { firstName, lastName, email, phone, address, links } = SingleUserData.personalInfo;
-      setValue("personalInfo.firstName", firstName);
-      setValue("personalInfo.lastName", lastName);
-      setValue("personalInfo.email", email);
-      setValue("personalInfo.phone", phone);
-      setValue("personalInfo.address", address);
-      setValue("personalInfo.links.github", links.github);
-      setValue("personalInfo.links.linkedin", links.linkedin);
-      setValue("personalInfo.links.website", links.website);
-      SingleUserData.education.forEach((education, index) => {
-        setValue(`education.${index}.institution`, education.institution);
-        setValue(`education.${index}.degree`, education.degree);
-        setValue(`education.${index}.fieldOfStudy`, education.fieldOfStudy);
-        setValue(`education.${index}.startDate`, new Date(education.startDate));
-        setValue(`education.${index}.endDate`, new Date(education.endDate));
-      });
+  }, []);
 
-      // Set values for other fields similarly...
+  useEffect(() => {
+    if (id.editId && SingleUserData._id) {
+      const { personalInfo, education, experience, certifications } = SingleUserData;
+     console.log(certifications,'asdad');
+     console.log(education);
+      if (id.editId) {
+        education.forEach((item, index) => {
+          Object.keys(item).forEach((key) => {
+            setValue(`education[${index}].${key}`, item[key]);
+          });
+        });
+        experience.forEach((item, index) => {
+          Object.keys(item).forEach((key) => {
+            setValue(`experience[${index}].${key}`, item[key]);
+          });
+        });
+        certifications.forEach((item, index) => {
+          Object.keys(item).forEach((key) => {
+            setValue(`certifications[${index}].${key}`, item[key]);
+          });
+        });
+       
+      }
+  
+      Object.keys(personalInfo).forEach(key => {
+        setValue(`personalInfo.${key}`, personalInfo[key]);
+      });
+  
+      const languagesData = SingleUserData.languages.map(language => ({
+        language: language.language,
+        proficiency: language.proficiency
+      }));
+      setLanguagesFields(languagesData);
+      setSelectedTechSkills(SingleUserData.skills);
     }
-  }, [id.editId,SingleUserData._id, setValue]);
+  }, [id.editId, SingleUserData, setValue]);
+  
+  
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="py-2 text-wrap">
@@ -199,13 +226,16 @@ const CvCreatorForm = () => {
               required
               sx={{ backgroundColor: "white" }}
               label="First Name"
+              error={!!errors.personalInfo?.firstName}
               variant="outlined"
+              disabled={id.editId? true : false}
             />
             <TextField
               {...register("personalInfo.lastName")}
               margin="dense"
               label="Last Name"
               variant="outlined"
+              disabled={id.editId? true : false}
             />
             <TextField
               {...register("personalInfo.email")}
@@ -232,7 +262,6 @@ const CvCreatorForm = () => {
             />
           </Box>
         </Stack>
-        {/* Social Links */}
         <Stack spacing={1}>
           <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
             Social Link
@@ -270,7 +299,7 @@ const CvCreatorForm = () => {
                 select
                 label="Language"
                 variant="outlined"
-                value={  field.language}
+                value={field.language}
                 onChange={(e) => {
                   const updatedFields = [...languagesFields];
                   updatedFields[index].language = e.target.value;
@@ -307,6 +336,7 @@ const CvCreatorForm = () => {
             Education Detail
           </div>
           {educationFields.map((field, index) => (
+
             <>
               <div className="font-poppins text-sm font-medium">
                 {`Education Detail ${index + 1}`}
@@ -319,53 +349,37 @@ const CvCreatorForm = () => {
                   margin="dense"
                   label="Institution"
                   variant="outlined"
+                  // value={field.institution}
                 />
                 <TextField
                   {...register(`education.${index}.degree`)}
                   margin="dense"
                   label="Degree"
                   variant="outlined"
+                  // value={field.degree}
+
                 />
                 <TextField
                   {...register(`education.${index}.fieldOfStudy`)}
                   margin="dense"
                   label="Field of Study"
                   variant="outlined"
+                  // value={field.fieldOfStudy}
                 />
 
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <Controller
                     control={control}
-                    name={`education.${index}.startDate`}
+                    name={`education.${index}.dateRange`}
                     render={({ field }) => (
-                      <DatePicker
+                      <DateRangePicker
                         {...field}
-                        label="Start Date"
-                        onChange={(date) => field.onChange(date)}
+                        label="Responsive variant"
+                        localeText={{ start: "Start Date", end: "End Date" }}
+                        onChange={(dateRange) => field.onChange(dateRange)}
                       />
                     )}
                   />
-                </LocalizationProvider>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <Controller
-                    control={control}
-                    name={`education.${index}.endDate`}
-                    render={({ field }) => (
-                      <DatePicker
-                        {...field}
-                        label="End Date"
-                        onChange={(date) => field.onChange(date)}
-                      />
-                    )}
-                  />
-
-                  <Button
-                    onClick={() => handleRemoveEducation(index)}
-                    color="error"
-                    className="w-[30%]">
-                    {" "}
-                    <CloseIcon />
-                  </Button>
                 </LocalizationProvider>
               </Box>
             </>
@@ -384,7 +398,7 @@ const CvCreatorForm = () => {
         {/* Experience Detail */}
         <Stack spacing={1}>
           <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
-            Experience 
+            Experience
           </div>
           {experienceFields.map((field, index) => (
             <>
@@ -409,30 +423,19 @@ const CvCreatorForm = () => {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <Controller
                       control={control}
-                      name={`experience.${index}.startDate`}
+                      name={`experience.${index}.dateRange`}
                       render={({ field }) => (
-                        <DatePicker
+                        <DateRangePicker
                           {...field}
-                          label="Start Date"
-                          onChange={(date) => field.onChange(date)}
+                          label="Responsive variant"
+                          component="DateRangePicker"
+                          localeText={{ start: "Start Date", end: "End Date" }}
+                          onChange={(dateRange) => field.onChange(dateRange)}
                         />
                       )}
                     />
                   </LocalizationProvider>
                 </div>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <Controller
-                    control={control}
-                    name={`experience.${index}.endDate`}
-                    render={({ field }) => (
-                      <DatePicker
-                        {...field}
-                        label="End Date"
-                        onChange={(date) => field.onChange(date)}
-                      />
-                    )}
-                  />
-                </LocalizationProvider>
                 <Button
                   onClick={() => handleRemoveExperience(index)}
                   className="w-[30%]"
@@ -457,7 +460,8 @@ const CvCreatorForm = () => {
             Certifications
           </div>
           {certificationsFields.map((field, index) => (
-            <Box className="grid md:grid-cols-3 gap-2" key={index}>
+            <Box className="grid md:grid-cols-3 gap-2" key={field.id}>
+              {console.log(field,'asda')}
               <TextField
                 {...register(`certifications.${index}.name`)}
                 margin="dense"
@@ -470,19 +474,22 @@ const CvCreatorForm = () => {
                 label="Organization"
                 variant="outlined"
               />
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Controller
-                  control={control}
-                  name={`certifications.${index}.date`}
-                  render={({ field }) => (
-                    <DatePicker
-                      {...field}
-                      label="Date"
-                      onChange={(date) => field.onChange(date)}
-                    />
-                  )}
-                />
-              </LocalizationProvider>
+              <div className="mt-2">
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <Controller
+                    control={control}
+                    name={`certifications.${index}.date`}
+                    render={({ field }) => (
+                      <DateRangePicker
+                        {...field}
+                        label="Date Range"
+                        localeText={{ start: "Start Date", end: "End Date" }}
+                        onChange={(dateRange) => field.onChange(dateRange)}
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
+              </div>
               <Button
                 onClick={() => handleRemoveCertification(index)}
                 color="error"
@@ -548,7 +555,7 @@ const CvCreatorForm = () => {
           type="submit"
           variant="contained"
           color="primary">
-          {loading?  <CircularProgress sx={{color:"inherit"}} />:'Submit'}
+          {loading ? <CircularProgress sx={{ color: "inherit" }} /> : "Submit"}
         </Button>
       </Stack>
     </form>
