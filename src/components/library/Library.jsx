@@ -7,7 +7,8 @@ import { pdfjs } from "react-pdf";
 import Stack from "@mui/material/Stack";
 import ModalComponent from "./ModalComponent";
 import moment from "moment";
-import { Button } from "@mui/material";
+import { Backdrop, Button, CircularProgress } from "@mui/material";
+import Refereshing from "../Refereshing/Refereshing";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -29,10 +30,12 @@ const Library = () => {
   };
 
   const [titleName, setTitleName] = useState(null);
-
+  const [loading, setloading] = useState(false)
   useEffect(() => {
     const getData = async () => {
       try {
+        setloading(true)
+
         const response = await ApiFetching("GET", "user/get", null);
         const data = response.data;
         if (data.success === true) {
@@ -42,11 +45,16 @@ const Library = () => {
         }
       } catch (error) {
         console.log(error, "afsasd");
+      }finally{
+        setloading(false)
       }
     };
     getData();
   }, []);
 
+  if(loading){
+    return  <Refereshing/>
+  }
   return (
     <Stack
       sx={{ wordBreak: "break-all" }}
