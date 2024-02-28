@@ -7,12 +7,11 @@ import { pdfjs } from "react-pdf";
 import Stack from "@mui/material/Stack";
 import ModalComponent from "./ModalComponent";
 import moment from "moment";
-import { Button } from "@mui/material";
+import { Button, IconButton, Tooltip } from "@mui/material";
 import Refereshing from "../Refereshing/Refereshing";
 import { useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-
+import DeleteIcon from '@mui/icons-material/Delete';
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
   import.meta.url
@@ -22,26 +21,6 @@ const Library = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const data = useSelector((state) => state.CvSlice.getCvData);
-
-  const handleDeleteFile = async (id) => {
-    console.log(id, "delete");
-    const response = await ApiFetching("DELETE", `user/cv/delete/${id}`, null);
-    if (response) {
-      try {
-        setloading(true);
-        const response = await ApiFetching("GET", "user/get", null);
-        const data = response.data;
-        if (data.success === true) {
-          dispatch(setCvData(data.user));
-          setTitleName(data.user.cvLink);
-        }
-      } catch (error) {
-        console.log(error, "afsasd");
-      } finally {
-        setloading(false);
-      }
-    }
-  };
   const handleDownloadPdf = (link) => {
     const anchor = document.createElement("a");
     anchor.href = link;
@@ -108,10 +87,11 @@ const Library = () => {
                   <div className="flex flex-col md:flex-row gap-2  justify-between w-full leading-0">
                     <div className="flex mt-2 px-2">
                       <div className="text-sm font-medium"> {index + 1}.</div>
+                      { console.log(link._id,'asdsad')}
                       <div className="text-sm">
-                        {typeof link.link === "string" &&
+                        { typeof link.link === "string" &&
                           link.link.replace(
-                            "http://116.202.210.102:3030/resumes/65ddb8d950b2990f7cfae6b7-",
+                            `http://116.202.210.102:3030/resumes/${data._id}-`,
                             ""
                           )}
                       </div>
@@ -123,20 +103,36 @@ const Library = () => {
                         {moment(link.updatedAt).format("DD, MMMM hh:mm A")}
                       </div>
                       <div className="h-fit max-w-sm flex gap-2">
-                        <ModalComponent link={link.link} />
-                        <DownloadIcon
-                          className="mt-2"
-                          onClick={() => handleDownloadPdf(link.link)}
-                        />
+                        <Tooltip title="View Pdf">
+                          <IconButton>
+                            <ModalComponent link={link.link} />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Download">
+                          <IconButton>
+                            <DownloadIcon
+                              className="mt-2"
+                              onClick={() => handleDownloadPdf(link.link)}
+                            />
+                          </IconButton>
+                        </Tooltip>
                         <Button
                           disabled={!link.templetId}
                           onClick={() =>
                             navigate(`../editCvGenerator/${link.templetId}`)
                           }>
-                          <EditIcon />
+                          <Tooltip title="Edit">
+                            <IconButton>
+                              <EditIcon />
+                            </IconButton>
+                          </Tooltip>
                         </Button>
                         <Button onClick={() => handleDeleteFile(link._id)}>
-                          <DeleteIcon />
+                          <Tooltip title="Delete">
+                            <IconButton>
+                              <DeleteIcon />
+                            </IconButton>
+                          </Tooltip>
                         </Button>
                       </div>
                     </div>

@@ -1,4 +1,4 @@
-import {  Button, CircularProgress, Stack } from "@mui/material";
+import { Button, CircularProgress, Stack } from "@mui/material";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { useEffect, useRef, useState } from "react";
@@ -10,29 +10,31 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import EmailIcon from "@mui/icons-material/Email";
 import { toast } from "react-toastify";
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Refereshing from "../Refereshing/Refereshing";
+import moment from "moment";
 
 const CvTemplate = () => {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const userId = useParams();
   const dispatch = useDispatch();
-  const [Btnloading, setBtnloading] = useState(false)
+  const [Btnloading, setBtnloading] = useState(false);
   const SingleUserData = useSelector(
     (state) => state.CvSlice.getSingleUserData
   );
   const componentRef = useRef();
   useEffect(() => {
     const getSingleUserData = async () => {
-      setLoading(true)
+      setLoading(true);
       const getSingleData = await ApiFetching(
         "GET",
         `user/cv/fetch/${userId.cvTemplateId}`,
         null
       );
       if (getSingleData.status === 200) {
+        console.log(getSingleData);
         dispatch(setSingleUserData(getSingleData.data.data));
-      } 
+      }
       setLoading(false);
     };
     getSingleUserData();
@@ -43,7 +45,7 @@ const CvTemplate = () => {
     const approximatePdfSize = 2500 * 3500;
 
     html2canvas(input, { scale: 2 }).then(async (canvas) => {
-      let imgData = canvas.toDataURL("image/jpeg", 1.0); 
+      let imgData = canvas.toDataURL("image/jpeg", 1.0);
       let pdf;
       let blob;
       let quality = 1.0;
@@ -71,36 +73,39 @@ const CvTemplate = () => {
         size = calculatePdfSize();
       }
       const formData = new FormData();
-      formData.append("resume", blob, `${SingleUserData?.personalInfo?.firstName}.pdf`);
-      formData.append('templetId', userId.cvTemplateId);
+      formData.append(
+        "resume",
+        blob,
+        `${SingleUserData?.personalInfo?.firstName}.pdf`
+      );
+      formData.append("templetId", userId.cvTemplateId);
       setBtnloading(true);
 
       const res = await ApiFetching("POST", "user/upload", formData);
       if (res.status === 200) {
-        toast.success('Your resume saved successfully');
+        toast.success("Your resume saved successfully");
       } else {
         toast.error("Something went wrong");
       }
 
-    setBtnloading(false);
+      setBtnloading(false);
     });
   };
 
-
-  
-  
-  
-  if(loading){
-    return <Refereshing/>
+  if (loading) {
+    return <Refereshing />;
   }
-  
+
   return (
-    <Stack width={{ sm: "100%", xs: "80%" }} m={"auto"} >
-      <Stack className="border-1 shadow-lg shadow-gray-700 rounded-lg" id={"pdf"}    ref={componentRef}>
+    <Stack width={{ sm: "100%", xs: "80%" }} m={"auto"}>
+      <Stack
+        className="border-1 shadow-lg shadow-gray-700 rounded-lg"
+        id={"pdf"}
+        ref={componentRef}>
         {/* top content */}
         <div className="flex rounded-t-lg bg-red-600 text-white sm:px-2 w-full">
           <div className="h-40 w-40 overflow-hidden sm:rounded-full sm:relative sm:p-0 top-10 left-5 p-3">
-            <img src="https://media.licdn.com/dms/image/C4D03AQH8qidO0nb_Ng/profile-displayphoto-shrink_800_800/0/1615696897070?e=2147483647&v=beta&t=ia3wfE2J7kVLdBy9ttkgUDAA_ul29fymykhQo0lABDo" />
+            <img src="https://images.app.goo.gl/KCP3CC2JTAnybUnx8" />
           </div>
           <div className="w-2/3 sm:text-center pl-5 mt-10 text-start">
             <p className="font-poppins font-bold text-heading sm:text-4xl text-2xl">
@@ -124,7 +129,9 @@ const CvTemplate = () => {
                 <div>
                   <div className="flex items-center my-1">
                     <a className="w-6 text-gray-700 hover:text-orange-600">
-                    {SingleUserData?.personalInfo?.links?.linkedin && <LinkedInIcon /> }  
+                      {SingleUserData?.personalInfo?.links?.linkedin && (
+                        <LinkedInIcon />
+                      )}
                     </a>
                     <div className="ml-2 truncate">
                       {SingleUserData?.personalInfo?.links?.linkedin}
@@ -135,9 +142,10 @@ const CvTemplate = () => {
                       className="w-6 text-gray-700 hover:text-orange-600"
                       aria-label="Visit TrendyMinds YouTube"
                       href=""
-                      target="_blank"
-                    >
-                     {SingleUserData?.personalInfo?.phone && <LocalPhoneIcon className="h-4" />} 
+                      target="_blank">
+                      {SingleUserData?.personalInfo?.phone && (
+                        <LocalPhoneIcon className="h-4" />
+                      )}
                     </a>
                     <div>{SingleUserData?.personalInfo?.phone}</div>
                   </div>
@@ -146,9 +154,8 @@ const CvTemplate = () => {
                       className="w-6 text-gray-700 hover:text-orange-600"
                       aria-label="Visit TrendyMinds Facebook"
                       href=""
-                      target="_blank"
-                    >
-                     {SingleUserData?.personalInfo?.email && <EmailIcon />} 
+                      target="_blank">
+                      {SingleUserData?.personalInfo?.email && <EmailIcon />}
                     </a>
                     <div>{SingleUserData?.personalInfo?.email}</div>
                   </div>
@@ -157,9 +164,10 @@ const CvTemplate = () => {
                       className="w-6 text-gray-700 hover:text-orange-600"
                       aria-label="Visit TrendyMinds Twitter"
                       href=""
-                      target="_blank"
-                    >
-                     {SingleUserData?.personalInfo?.links?.github && <GitHubIcon />} 
+                      target="_blank">
+                      {SingleUserData?.personalInfo?.links?.github && (
+                        <GitHubIcon />
+                      )}
                     </a>
                     <div>{SingleUserData?.personalInfo?.links?.github}</div>
                   </div>
@@ -192,14 +200,18 @@ const CvTemplate = () => {
                     return (
                       <div key={i} className="flex flex-col">
                         <p className="font-semibold text-xs text-gray-700">
-                          {new Date(e.startDate).getFullYear()}-
-                          {new Date(e.endDate).getFullYear()}
+                          <p className=" font-thin">{e.institution}</p>
+                          {e.dateRange?.map((dateformat, i) => (
+                            <div className="flex text-sm font-thin" key={i}>
+                              {moment(dateformat).format("YYYY")}
+                            </div>
+                          ))}
                         </p>
                         <p className="text-sm font-medium">
                           <span className="text-green-700">
                             {e.degree} ({e.fieldOfStudy})
                           </span>
-                          ,{e.institution}
+                          ,
                         </p>
                       </div>
                     );
@@ -234,8 +246,11 @@ const CvTemplate = () => {
                           {e.company} | {e.position}
                         </p>
                         <p className="font-semibold text-sm text-gray-700">
-                          {new Date(e.startDate).getFullYear()}-
-                          {new Date(e.endDate).getFullYear()}
+                          {e.dateRange?.map((dateformat, i) => (
+                            <div className="flex text-sm font-thin" key={i}>
+                              {moment(dateformat).format("MM YYYY")}
+                            </div>
+                          ))}
                         </p>
                       </div>
                     );
@@ -256,7 +271,8 @@ const CvTemplate = () => {
                           {e.name}
                         </p>
                         <p className="font-normal text-md text-gray-700 mb-1 pl-2">
-                          {e.organization} ({new Date(e.date).getFullYear()})
+                          {e.organization}
+                          {moment(e.date).format("DD MM YYYY")}
                         </p>
                       </div>
                     );
@@ -267,12 +283,18 @@ const CvTemplate = () => {
           </div>
         </Stack>
       </Stack>
-      <Stack direction={'row'}spacing={2} sx={{justifyContent:"center",alignItems:'center',mt:"10px"}}>
-
-      <Button onClick={handleSave} variant="contained">
-        {Btnloading?<CircularProgress sx={{color:'inherit'}}/>:'Upload'}
-      </Button>
-      {/* <Button variant="contained" onClick={()=>navigate(`../editCvGenerator/${userId.cvTemplateId}`)} >Edit </Button> */}
+      <Stack
+        direction={"row"}
+        spacing={2}
+        sx={{ justifyContent: "center", alignItems: "center", mt: "10px" }}>
+        <Button onClick={handleSave} variant="contained">
+          {Btnloading ? (
+            <CircularProgress sx={{ color: "inherit" }} />
+          ) : (
+            "Upload"
+          )}
+        </Button>
+        {/* <Button variant="contained" onClick={()=>navigate(`../editCvGenerator/${userId.cvTemplateId}`)} >Edit </Button> */}
       </Stack>
     </Stack>
   );
