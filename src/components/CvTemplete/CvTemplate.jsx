@@ -32,6 +32,7 @@ const CvTemplate = () => {
         null
       );
       if (getSingleData.status === 200) {
+        console.log(getSingleData);
         dispatch(setSingleUserData(getSingleData.data.data));
       }
       setLoading(false);
@@ -202,7 +203,7 @@ const CvTemplate = () => {
                           <p className=" font-thin">{e.institution}</p>
                           {e.dateRange?.map((dateformat, i) => (
                             <div className="flex text-sm font-thin" key={i}>
-                              {moment(dateformat).format("DD MM YY")}
+                              {moment(dateformat).format("YYYY")}
                             </div>
                           ))}
                         </p>
@@ -245,8 +246,11 @@ const CvTemplate = () => {
                           {e.company} | {e.position}
                         </p>
                         <p className="font-semibold text-sm text-gray-700">
-                          {new Date(e.startDate).getFullYear()}-
-                          {new Date(e.endDate).getFullYear()}
+                          {e.dateRange?.map((dateformat, i) => (
+                            <div className="flex text-sm font-thin" key={i}>
+                              {moment(dateformat).format("MM YYYY")}
+                            </div>
+                          ))}
                         </p>
                       </div>
                     );
@@ -267,7 +271,8 @@ const CvTemplate = () => {
                           {e.name}
                         </p>
                         <p className="font-normal text-md text-gray-700 mb-1 pl-2">
-                          {e.organization} ({new Date(e.date).getFullYear()})
+                          {e.organization}
+                          {moment(e.date).format("DD MM YYYY")}
                         </p>
                       </div>
                     );

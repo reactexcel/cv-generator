@@ -7,7 +7,7 @@ import { pdfjs } from "react-pdf";
 import Stack from "@mui/material/Stack";
 import ModalComponent from "./ModalComponent";
 import moment from "moment";
-import { Button } from "@mui/material";
+import { Button, IconButton, Tooltip } from "@mui/material";
 import Refereshing from "../Refereshing/Refereshing";
 import { useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
@@ -123,20 +123,36 @@ const Library = () => {
                         {moment(link.updatedAt).format("DD, MMMM hh:mm A")}
                       </div>
                       <div className="h-fit max-w-sm flex gap-2">
-                        <ModalComponent link={link.link} />
-                        <DownloadIcon
-                          className="mt-2"
-                          onClick={() => handleDownloadPdf(link.link)}
-                        />
+                        <Tooltip title="View Pdf">
+                          <IconButton>
+                            <ModalComponent link={link.link} />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Download">
+                          <IconButton>
+                            <DownloadIcon
+                              className="mt-2"
+                              onClick={() => handleDownloadPdf(link.link)}
+                            />
+                          </IconButton>
+                        </Tooltip>
                         <Button
                           disabled={!link.templetId}
                           onClick={() =>
                             navigate(`../editCvGenerator/${link.templetId}`)
                           }>
-                          <EditIcon />
+                          <Tooltip title="Edit">
+                            <IconButton>
+                              <EditIcon />
+                            </IconButton>
+                          </Tooltip>
                         </Button>
                         <Button onClick={() => handleDeleteFile(link._id)}>
-                          <DeleteIcon />
+                          <Tooltip title="Delete">
+                            <IconButton>
+                              <DeleteIcon />
+                            </IconButton>
+                          </Tooltip>
                         </Button>
                       </div>
                     </div>
