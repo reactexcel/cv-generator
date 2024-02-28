@@ -23,7 +23,7 @@ const CvCreatorForm = () => {
     register,
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors },setValue
   } = useForm();
   
   const {
@@ -157,7 +157,30 @@ const CvCreatorForm = () => {
       getSingleUserData();
     }
   },[])
+  useEffect(() => {
+    // Set dynamic values fetched from an API or Redux store
+    if (id.editId && SingleUserData._id) {
+      // Set values for personal information fields
+      const { firstName, lastName, email, phone, address, links } = SingleUserData.personalInfo;
+      setValue("personalInfo.firstName", firstName);
+      setValue("personalInfo.lastName", lastName);
+      setValue("personalInfo.email", email);
+      setValue("personalInfo.phone", phone);
+      setValue("personalInfo.address", address);
+      setValue("personalInfo.links.github", links.github);
+      setValue("personalInfo.links.linkedin", links.linkedin);
+      setValue("personalInfo.links.website", links.website);
+      SingleUserData.education.forEach((education, index) => {
+        setValue(`education.${index}.institution`, education.institution);
+        setValue(`education.${index}.degree`, education.degree);
+        setValue(`education.${index}.fieldOfStudy`, education.fieldOfStudy);
+        setValue(`education.${index}.startDate`, new Date(education.startDate));
+        setValue(`education.${index}.endDate`, new Date(education.endDate));
+      });
 
+      // Set values for other fields similarly...
+    }
+  }, [id.editId,SingleUserData._id, setValue]);
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="py-2 text-wrap">
@@ -247,7 +270,7 @@ const CvCreatorForm = () => {
                 select
                 label="Language"
                 variant="outlined"
-                value={field.language}
+                value={  field.language}
                 onChange={(e) => {
                   const updatedFields = [...languagesFields];
                   updatedFields[index].language = e.target.value;
