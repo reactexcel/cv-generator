@@ -101,7 +101,7 @@ const Library = () => {
           {data &&
             data.cvLink &&
             data.cvLink.map((link, index) => (
-              <Stack sx={{width:'90%',m:'auto'}}
+              <Stack sx={{width:'96%',m:'auto',p:'0 20px'}}
                 className="  border-2 border-gray-300  rounded-md "
                 key={index}>
                 <div 
