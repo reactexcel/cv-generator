@@ -11,7 +11,7 @@ import { Button, IconButton, Tooltip } from "@mui/material";
 import Refereshing from "../Refereshing/Refereshing";
 import { useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
   import.meta.url
@@ -21,6 +21,9 @@ const Library = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const data = useSelector((state) => state.CvSlice.getCvData);
+  const [titleName, setTitleName] = useState(null);
+  const [loading, setloading] = useState(false);
+
   const handleDownloadPdf = (link) => {
     const anchor = document.createElement("a");
     anchor.href = link;
@@ -31,8 +34,8 @@ const Library = () => {
 
     document.body.removeChild(anchor);
   };
+
   const handleDeleteFile = async (id) => {
-    console.log(id, "delete");
     const response = await ApiFetching("DELETE", `user/cv/delete/${id}`, null);
     if (response) {
       try {
@@ -50,8 +53,7 @@ const Library = () => {
       }
     }
   };
-  const [titleName, setTitleName] = useState(null);
-  const [loading, setloading] = useState(false);
+
   useEffect(() => {
     const getData = async () => {
       try {
@@ -105,9 +107,9 @@ const Library = () => {
                   <div className="flex flex-col md:flex-row gap-2  justify-between w-full leading-0">
                     <div className="flex mt-2 px-2">
                       <div className="text-sm font-medium"> {index + 1}.</div>
-                      { console.log(link._id,'asdsad')}
+
                       <div className="text-sm">
-                        { typeof link.link === "string" &&
+                        {typeof link.link === "string" &&
                           link.link.replace(
                             `http://116.202.210.102:3030/resumes/${data._id}-`,
                             ""
