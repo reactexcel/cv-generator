@@ -31,7 +31,25 @@ const Library = () => {
 
     document.body.removeChild(anchor);
   };
-
+  const handleDeleteFile = async (id) => {
+    console.log(id, "delete");
+    const response = await ApiFetching("DELETE", `user/cv/delete/${id}`, null);
+    if (response) {
+      try {
+        setloading(true);
+        const response = await ApiFetching("GET", "user/get", null);
+        const data = response.data;
+        if (data.success === true) {
+          dispatch(setCvData(data.user));
+          setTitleName(data.user.cvLink);
+        }
+      } catch (error) {
+        console.log(error, "afsasd");
+      } finally {
+        setloading(false);
+      }
+    }
+  };
   const [titleName, setTitleName] = useState(null);
   const [loading, setloading] = useState(false);
   useEffect(() => {
