@@ -14,32 +14,30 @@ const SignIn = () => {
       email: "",
       password: "",
     },
-    onSubmit:async (values)=>{
-     
-        const response=await ApiFetching('POST','user/auth/signin',values)
-        // console.log(response.response);
-        if(response?.response?.status===404){
-          toast.error(response?.response?.data?.message)
+    onSubmit: async (values) => {
+      const response = await ApiFetching("POST", "user/auth/signin", values);
+      // console.log(response.response);
+      if (response?.response?.status === 404) {
+        toast.error(response?.response?.data?.message);
+      }
+      if (response.statusText === "OK" && response.status == 200) {
+        const token = response.data?.accessToken;
+        if (token) {
+          toast.success("Login SuccessFully");
+          localStorage.setItem("token", token);
+          navigate("/home");
         }
-        if(response.statusText==='OK' && response.status==200){
-          const token=response.data?.accessToken;
-          if(token){
-            toast.success('Login SuccessFully')
-            localStorage.setItem( "token", token)
-          navigate('/home')
-          }
-        }
-        // if(response)
-      
+      }
     },
-    validationSchema:SignInScheema
-  })
-  useEffect(()=>{
-    const token=localStorage.getItem('token')
-    if(token){
-      navigate( '/home')
+    validationSchema: SignInScheema,
+  });
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/home");
     }
-  },[])
+  }, []);
+
   return (
     <>
       {/* component */}
@@ -49,7 +47,7 @@ const SignIn = () => {
           src={loginassets}
           alt=""
         />
-        <div className="absolute backdrop-blur-sm w-full top-0 flex flex-col md:flex-row ">
+        <div className="absolute backdrop-blur-sm w-full top-0 lg:top-16 flex flex-col md:flex-row ">
           <div className="lg:flex hidden w-1/2 font-poppins bg-no-repeat bg-cover items-center">
             <div className="opacity-60 inset-0 z-0" />
             <div className="w-full px-24 z-10">
@@ -85,7 +83,7 @@ const SignIn = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.email}
-                    className="block w-full p-3 text-lg rounded-md outline-none text-gray-700 font-poppins"
+                    className="block w-full p-2 text-lg rounded-md outline-none text-gray-700 font-poppins"
                   />
                   {formik.errors.email && formik.touched.email && (
                     <Typography
@@ -97,7 +95,7 @@ const SignIn = () => {
                 </div>
                 <div className="pb-2 pt-4">
                   <input
-                    className="block w-full p-3 text-lg rounded-md outline-none text-gray-700 font-poppins"
+                    className="block w-full p-2 text-lg rounded-md outline-none text-gray-700 font-poppins"
                     type="password"
                     name="password"
                     id="password"
@@ -115,7 +113,7 @@ const SignIn = () => {
                   )}
                 </div>
                 <div className="mt-4">
-                <Link to={"/signUp"} style={{ width: "100%", color: "blue" }}>
+                  <Link to={"/signUp"} style={{ width: "100%", color: "blue" }}>
                     <Typography sx={{ textAlign: "right" }}>
                       Create New Account
                     </Typography>

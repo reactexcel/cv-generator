@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { Button, Stack, Typography } from "@mui/material";
 import { useFormik } from "formik";
 import ApiFetching from "../../services/ApiFetching";
@@ -46,7 +45,7 @@ const SignUp = () => {
           src={loginassets}
           alt=""
         />
-        <div className="absolute backdrop-blur-sm w-full top-0 flex flex-col md:flex-row ">
+        <div className="absolute lg:top-16  backdrop-blur-sm w-full top-0 flex flex-col md:flex-row ">
           <div className="lg:flex hidden w-1/2 font-poppins bg-no-repeat bg-cover items-center">
             <div className="opacity-60 inset-0 z-0" />
             <div className="w-full px-24 z-10">
@@ -60,21 +59,19 @@ const SignUp = () => {
             <div className="absolute lg:hidden z-10 inset-0  bg-no-repeat bg-cover items-center">
               <div className="absolute opacity-60 inset-0 z-0" />
             </div>
-            <div className="w-full h-auto py-10 z-20 md:border md:backdrop-blur-sm rounded-lg md:shadow-md border-slate-300  mt-20">
+            <div className="w-full h-auto py-3 z-20 md:border md:backdrop-blur-sm rounded-lg md:shadow-md border-slate-300  md:mt-4 ">
               <Stack
                 direction={"row"}
                 spacing={1}
-                sx={{ justifyContent: "center", alignItems: "center" }}
-              >
+                sx={{ justifyContent: "center", alignItems: "center" }}>
                 <LoginIcon />
                 <div className="font-poppins text-2xl">SignUp</div>
               </Stack>
               <form
                 onSubmit={formik.handleSubmit}
-                className="sm:w-2/3 w-full px-4 lg:px-0 mx-auto "
-              >
+                className="sm:w-2/3 w-full px-4 lg:px-0 mx-auto ">
                 <Stack direction={"row"} spacing={2}>
-                  <div className="pb-2 pt-4">
+                  <div className="pb-2 pt-3">
                     <input
                       type="text"
                       name="firstname"
@@ -82,18 +79,15 @@ const SignUp = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.firstname}
-                      className="block w-full p-3 text-lg rounded-md outline-none text-gray-700 font-poppins"
+                      className="block w-full p-2 md:text-lg text-sm rounded-md outline-none text-gray-700 font-poppins"
                     />
                     {formik.errors.firstname && formik.touched.firstname && (
-                      <Typography
-                        color="error"
-                        sx={{ textAlign: "left", pl: "7px" }}
-                      >
+                      <Typography color="error" sx={{ textAlign: "left" }}>
                         {formik.errors.firstname}
                       </Typography>
                     )}
                   </div>
-                  <div className="pb-2 pt-4">
+                  <div className="pb-2 pt-3">
                     <input
                       type="text"
                       name="lastname"
@@ -101,19 +95,16 @@ const SignUp = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.lastname}
-                      className="block w-full p-3 text-lg rounded-md outline-none text-gray-700 font-poppins"
+                      className="block w-full p-2 md:text-lg text-sm rounded-md outline-none text-gray-700 font-poppins"
                     />
                     {formik.errors.lastname && formik.touched.lastname && (
-                      <Typography
-                        color="error"
-                        sx={{ textAlign: "left", pl: "7px" }}
-                      >
+                      <Typography color="error" sx={{ textAlign: "left" }}>
                         {formik.errors.lastname}
                       </Typography>
                     )}
                   </div>
                 </Stack>
-                <div className="pb-2 pt-4">
+                <div className="pb-2 pt-3">
                   <input
                     type="text"
                     name="mobile"
@@ -121,18 +112,17 @@ const SignUp = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.mobile}
-                    className="block w-full p-3 text-lg rounded-md outline-none text-gray-700 font-poppins"
+                    className="block w-full p-2 md:text-lg text-sm rounded-md outline-none text-gray-700 font-poppins"
                   />
                   {formik.errors.mobile && formik.touched.mobile && (
                     <Typography
                       color="error"
-                      sx={{ textAlign: "left", pl: "7px" }}
-                    >
+                      sx={{ textAlign: "left", pl: "7px" }}>
                       {formik.errors.mobile}
                     </Typography>
                   )}
                 </div>
-                <div className="pb-2 pt-4">
+                <div className="pb-2 pt-3">
                   <input
                     type="email"
                     name="email"
@@ -141,20 +131,19 @@ const SignUp = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.email}
-                    className="block w-full p-3 text-lg rounded-md outline-none text-gray-700 font-poppins"
+                    className="block w-full p-2 md:text-lg text-sm rounded-md outline-none text-gray-700 font-poppins"
                   />
                   {formik.errors.email && formik.touched.email && (
                     <Typography
                       color="error"
-                      sx={{ textAlign: "left", pl: "7px" }}
-                    >
+                      sx={{ textAlign: "left", pl: "7px" }}>
                       {formik.errors.email}
                     </Typography>
                   )}
                 </div>
-                <div className="pb-2 pt-4">
+                <div className="pb-2 pt-3">
                   <input
-                    className="block w-full p-3 text-lg rounded-md outline-none text-gray-700 font-poppins"
+                    className="block w-full p-2 md:text-lg text-sm rounded-md outline-none text-gray-700 font-poppins"
                     type="password"
                     name="password"
                     id="password"
@@ -166,15 +155,14 @@ const SignUp = () => {
                   {formik.errors.password && formik.touched.password && (
                     <Typography
                       color="error"
-                      sx={{ textAlign: "left", pl: "7px" }}
-                    >
+                      sx={{ textAlign: "left", pl: "7px" }}>
                       {formik.errors.password}
                     </Typography>
                   )}
                 </div>
-                <div className="pb-2 pt-4">
+                <div className="pb-2 pt-3">
                   <input
-                    className="block w-full p-3 text-lg rounded-md outline-none text-gray-700 font-poppins"
+                    className="block w-full p-2 md:text-lg text-sm rounded-md outline-none text-gray-700 font-poppins"
                     type="password"
                     name="confirm_password"
                     id="confirm_password"
@@ -187,8 +175,7 @@ const SignUp = () => {
                     formik.touched.confirm_password && (
                       <Typography
                         color="error"
-                        sx={{ textAlign: "left", pl: "7px" }}
-                      >
+                        sx={{ textAlign: "left", pl: "7px" }}>
                         {formik.errors.confirm_password}
                       </Typography>
                     )}
