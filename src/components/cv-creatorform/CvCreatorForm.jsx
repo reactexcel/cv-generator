@@ -442,22 +442,20 @@ const CvCreatorForm = () => {
                     label="Field of Study"
                     variant="outlined"
                   />
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <Controller
-                      control={control}
-                      name={`education[${index}].dateRange`}
-                      render={({ field }) => (
-                        <DateRangePicker
-                          {...field}
-                          label="Responsive variant"
-                          focused={id.editId ? true : false}
-                          localeText={{ start: "Start Date", end: "End Date" }}
-                          onChange={(dateRange) => field.onChange(dateRange)}
-                          value={field.dateRange}
-                        />
-                      )}
-                    />
-                  </LocalizationProvider>
+                  <TextField
+                    {...register(`education[${index}].startDate`)}
+                    margin="dense"
+                    focused={id.editId ? true : false}
+                    label="Start Year"
+                    variant="outlined"
+                  />
+                  <TextField
+                    {...register(`education[${index}].endDate`)}
+                    margin="dense"
+                    focused={id.editId ? true : false}
+                    label="End Year "
+                    variant="outlined"
+                  />
                 </Box>
                 <Button
                   onClick={() => handleRemoveEducation(index)}
@@ -504,27 +502,21 @@ const CvCreatorForm = () => {
                     focused={id.editId ? true : false}
                     variant="outlined"
                   />
-                  {/* Use Controller for DatePicker */}
-                  <div className="w-full mt-2">
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <Controller
-                        control={control}
-                        {...register(`experience[${index}].dateRange`)}
-                        render={({ field }) => (
-                          <DateRangePicker
-                            {...field}
-                            label="Responsive variant"
-                            localeText={{
-                              start: "Start Date",
-                              end: "End Date",
-                            }}
-                            onChange={(dateRange) => field.onChange(dateRange)}
-                            value={field.dateRange}
-                          />
-                        )}
-                      />
-                    </LocalizationProvider>
-                  </div>
+                  <TextField
+                    {...register(`experience.${index}.startDate`)}
+                    margin="dense"
+                    label="Start Date"
+                    focused={id.editId ? true : false}
+                    variant="outlined"
+                  />
+                  <TextField
+                    {...register(`experience.${index}.endDate`)}
+                    margin="dense"
+                    label="End Date"
+                    focused={id.editId ? true : false}
+                    variant="outlined"
+                  />
+
                   <Button
                     onClick={() => handleRemoveExperience(index)}
                     className="w-[30%]"
@@ -564,20 +556,13 @@ const CvCreatorForm = () => {
                   variant="outlined"
                 />
                 <div className="mt-2">
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <Controller
-                      control={control}
-                      name={`certifications[${index}].date`}
-                      render={({ field }) => (
-                        <DatePicker
-                          {...field}
-                          label="Certificate Date"
-                          onChange={(date) => field.onChange(date)}
-                          value={field.date}
-                        />
-                      )}
-                    />
-                  </LocalizationProvider>
+                  <TextField
+                    {...register(`certifications.${index}.date`)}
+                    margin="dense"
+                    focused={id.editId ? true : false}
+                    label="Date"
+                    variant="outlined"
+                  />
                 </div>
                 <Button
                   onClick={() => handleRemoveCertification(index)}

@@ -204,18 +204,26 @@ const CvTemplate = () => {
                     return (
                       <div key={i} className="flex flex-col">
                         <p className="font-semibold text-xs text-gray-700">
-                          <p className=" font-thin">{e.institution}</p>
-                          {e.dateRange?.map((dateformat, i) => (
-                            <div className="flex text-sm font-thin" key={i}>
-                              {moment(dateformat).format("YYYY")}
-                            </div>
-                          ))}
+                          <p className="text-lg font-poppins">
+                            {e.institution}
+                          </p>
+                          <div className="flex gap-10">
+                            {" "}
+                            <div> {e.startDate}</div>
+                            <div>{e.endDate}</div>
+                          </div>
                         </p>
                         <p className="text-sm font-medium">
                           <span className="text-green-700">
-                            {e.degree} ({e.fieldOfStudy})
+                            <div className="flex gap-2 ">
+                              {" "}
+                              <div className="text-base font-medium">
+                                Courses
+                              </div>
+                              <div>{e.degree}</div>
+                            </div>
+                            <div>{e.fieldOfStudy}</div>
                           </span>
-                          ,
                         </p>
                       </div>
                     );
@@ -250,11 +258,11 @@ const CvTemplate = () => {
                           {e.company} | {e.position}
                         </p>
                         <p className="font-semibold text-sm text-gray-700">
-                          {e.dateRange?.map((dateformat, i) => (
-                            <div className="flex text-sm font-thin" key={i}>
-                              {moment(dateformat).format("MM YYYY")}
-                            </div>
-                          ))}
+                          <div>
+                            {" "}
+                            <div>Start Date: {e.startDate}</div>
+                            <div>End Date :{e.endDate}</div>
+                          </div>
                         </p>
                       </div>
                     );
@@ -264,9 +272,9 @@ const CvTemplate = () => {
               {/* Projects */}
               <div className="py-3">
                 <h2 className="text-lg font-poppins font-bold text-top-color">
-                  Certificate
+                  Certificates
                 </h2>
-                <div className="border-2 w-20 border-top-color my-3" />
+                <div className="border-2 w-20  my-3" />
                 <div className="flex flex-col">
                   {SingleUserData?.certifications?.map((e, i) => {
                     return (
@@ -275,8 +283,8 @@ const CvTemplate = () => {
                           {e.name}
                         </p>
                         <p className="font-normal text-md text-gray-700 mb-1 pl-2">
-                          {e.organization}
-                          {moment(e.date).format("DD MM YYYY")}
+                          <div> {e.organization}</div>
+                          <div>{e.date}</div>
                         </p>
                       </div>
                     );
