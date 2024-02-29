@@ -23,9 +23,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { setSingleUserData } from "../../redux/slices/CvSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { DatePicker } from "@mui/x-date-pickers";
-import { DevTool } from "@hookform/devtools";
-
-// import { useNavigate } from "react-router";
 
 const CvCreatorForm = () => {
   const [loading, setLoading] = useState(false);
@@ -36,7 +33,6 @@ const CvCreatorForm = () => {
     control,
     formState: { errors },
     setValue,
-    onChange,
   } = useForm({
     defaultValues: {
       personalInfo: {
@@ -407,6 +403,12 @@ const CvCreatorForm = () => {
                     />
                   </LocalizationProvider>
                 </Box>
+                <Button
+                  onClick={() => handleRemoveEducation(index)}
+                  className="w-[30%]"
+                  color="error">
+                  <CloseIcon />
+                </Button>
               </>
             ))}
 
