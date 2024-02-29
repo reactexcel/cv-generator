@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { DevTool } from "@hookform/devtools";
 
 import {
   Box,
@@ -23,10 +24,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { setSingleUserData } from "../../redux/slices/CvSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { DatePicker } from "@mui/x-date-pickers";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 const CvCreatorForm = () => {
   const [loading, setLoading] = useState(false);
   const id = useParams();
+
   const {
     register,
     handleSubmit,
@@ -232,42 +236,94 @@ const CvCreatorForm = () => {
               Personal information
             </div>
             <Box className="grid md:grid-cols-3 grid-cols-1 gap-2">
-              <TextField
-                {...register("personalInfo.firstName")}
-                margin="dense"
-                required
-                sx={{ backgroundColor: "white" }}
-                label={id.editId ? "" : "First Name"}
-                error={!!errors.personalInfo?.firstName}
-                variant="outlined"
-                focused={id.editId ? true : false}
-                disabled={id.editId ? true : false}
-              />
-              <TextField
-                {...register("personalInfo.lastName")}
-                margin="dense"
-                label={id.editId ? "" : "Last Name"}
-                variant="outlined"
-                focused={id.editId ? true : false}
-                disabled={id.editId ? true : false}
-              />
-              <TextField
-                {...register("personalInfo.email")}
-                type="email"
-                margin="dense"
-                required
-                label="Email"
-                variant="outlined"
-                focused={id.editId ? true : false}
-              />
-              <TextField
-                {...register("personalInfo.phone")}
-                margin="dense"
-                required
-                label="Phone"
-                variant="outlined"
-                focused={id.editId ? true : false}
-              />
+              <div className="flex flex-col">
+                <TextField
+                  {...register("personalInfo.firstName", {
+                    required: true,
+                    maxLength: 10,
+                  })}
+                  margin="dense"
+                  required
+                  sx={{ backgroundColor: "white" }}
+                  label={id.editId ? "" : "First Name"}
+                  variant="outlined"
+                  focused={id.editId ? true : false}
+                  disabled={id.editId ? true : false}
+                />
+                <p className=" px-2">
+                  {errors.personalInfo?.firstName && (
+                    <p className="text-red-500">Please check the First Name</p>
+                  )}
+                </p>
+              </div>
+
+              <div className="flex flex-col">
+                <TextField
+                  {...register("personalInfo.lastName", {
+                    required: true,
+                    maxLength: 10,
+                  })}
+                  margin="dense"
+                  label={id.editId ? "" : "Last Name"}
+                  variant="outlined"
+                  focused={id.editId ? true : false}
+                  disabled={id.editId ? true : false}
+                />
+                <p className=" px-2">
+                  {errors.personalInfo?.lastName && (
+                    <p className="text-red-500">Please check the Last Name</p>
+                  )}
+                </p>
+              </div>
+
+              <div className="flex flex-col">
+                <TextField
+                  {...register("personalInfo.email", {
+                    required: true,
+                    pattern:
+                      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                  })}
+                  type="email"
+                  margin="dense"
+                  required
+                  label="Email"
+                  variant="outlined"
+                  focused={id.editId ? true : false}
+                />
+                <p className=" px-2">
+                  {errors.personalInfo?.email && (
+                    <p className="text-red-500">Please check your email</p>
+                  )}
+                </p>
+              </div>
+
+              <div className="flex flex-col">
+                <TextField
+                  {...register("personalInfo.phone", {
+                    required: "Phone number is required",
+                    pattern: {
+                      value: /^[0-9]*$/,
+                      message: "Please enter only digits",
+                    },
+                    maxLength: {
+                      value: 10,
+                      message: "Phone number cannot exceed 10 digits",
+                    },
+                  })}
+                  margin="dense"
+                  required
+                  label="Phone"
+                  variant="outlined"
+                  focused={id.editId ? true : false}
+                />
+                <p className=" px-2">
+                  {errors.personalInfo?.phone && (
+                    <p className="text-red-500">
+                      {errors.personalInfo.phone.message}
+                    </p>
+                  )}
+                </p>
+              </div>
               <TextField
                 {...register("personalInfo.address")}
                 margin="dense"
@@ -596,6 +652,7 @@ const CvCreatorForm = () => {
           </Button>
         </Stack>
       </form>
+      <DevTool control={control} />
     </>
   );
 };
