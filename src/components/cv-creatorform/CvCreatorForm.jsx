@@ -247,16 +247,19 @@ const CvCreatorForm = () => {
               margin="dense"
               required
               sx={{ backgroundColor: "white" }}
-              label="First Name"
+              label={id.editId?'':"First Name"}
               error={!!errors.personalInfo?.firstName}
               variant="outlined"
+              focused={id.editId ? true : false}
               disabled={id.editId ? true : false}
             />
             <TextField
               {...register("personalInfo.lastName")}
               margin="dense"
-              label="Last Name"
+              // label="Last Name"
+              label={id.editId?'':"Last Name"}
               variant="outlined"
+              focused={id.editId ? true : false}
               disabled={id.editId ? true : false}
             />
             <TextField
@@ -266,6 +269,7 @@ const CvCreatorForm = () => {
               required
               label="Email"
               variant="outlined"
+              focused={id.editId ? true : false}
             />
             <TextField
               {...register("personalInfo.phone")}
@@ -273,6 +277,7 @@ const CvCreatorForm = () => {
               required
               label="Phone"
               variant="outlined"
+              focused={id.editId ? true : false}
             />
             <TextField
               {...register("personalInfo.address")}
@@ -281,6 +286,7 @@ const CvCreatorForm = () => {
               variant="outlined"
               multiline
               rows={2}
+              focused={id.editId ? true : false}
             />
           </Box>
         </Stack>
