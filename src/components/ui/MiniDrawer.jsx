@@ -21,7 +21,7 @@ import PostAddIcon from "@mui/icons-material/PostAdd";
 import { Button } from "@mui/material";
 import { useHref, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import HomeIcon from '@mui/icons-material/Home';
+import HomeIcon from "@mui/icons-material/Home";
 
 const drawerWidth = 240;
 
@@ -89,8 +89,8 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MiniDrawer({pages}) {
-  const navigate=useNavigate()
+export default function MiniDrawer({ pages }) {
+  const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -105,7 +105,7 @@ export default function MiniDrawer({pages}) {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open} sx={{bgcolor:"#1289A7"}}>
+      <AppBar position="fixed" open={open} sx={{ bgcolor: "#1289A7" }}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -118,18 +118,22 @@ export default function MiniDrawer({pages}) {
             }}>
             <MenuIcon />
           </IconButton>
-          <Link to={'/home'} style={{width:'45%'}}>
-          <Typography  variant="h6" noWrap component="div">
-            CV Mangement System
-          </Typography>
+          <Link to={"/home"} style={{ width: "45%" }}>
+            <Typography variant="h6" noWrap component="div">
+              CV Mangement System
+            </Typography>
           </Link>
 
-            <Button  sx={{ml:"auto"}} onClick={()=>{
-              localStorage.clear()
-              navigate('/',{replace:true})
-            }} variant="contained" color="error">
-              Sign Out
-            </Button>
+          <Button
+            sx={{ ml: "auto" }}
+            onClick={() => {
+              localStorage.clear();
+              navigate("/", { replace: true });
+            }}
+            variant="contained"
+            color="error">
+            Sign Out
+          </Button>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -145,42 +149,47 @@ export default function MiniDrawer({pages}) {
         <Divider />
         <List>
           {[
-            {path:'/home',pathName:'Home',icon:<HomeIcon/>},
-            { path: "library", pathName: "Library",icon:<LibraryBooksIcon /> },
-            { path: "cvgenerator", pathName: " CV Generator",icon:<PostAddIcon /> },
+            { path: "/home", pathName: "Home", icon: <HomeIcon /> },
+            {
+              path: "library",
+              pathName: "Library",
+              icon: <LibraryBooksIcon />,
+            },
+            {
+              path: "cvgenerator",
+              pathName: " CV Generator",
+              icon: <PostAddIcon />,
+            },
           ].map((text, index) => (
-            <Link to={text.path}  key={text.pathName}>
-            <ListItem
-
-              disablePadding
-              sx={{ display: "block" }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}>
-                <ListItemIcon
+            <Link to={text.path} key={text.pathName}>
+              <ListItem disablePadding sx={{ display: "block" }}>
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
                   }}>
-                  {text.icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={text.pathName}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}>
+                    {text.icon}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={text.pathName}
+                    sx={{ opacity: open ? 1 : 0 }}
+                  />
+                </ListItemButton>
+              </ListItem>
             </Link>
           ))}
         </List>
         <Divider />
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader sx={{overflow:'hidden'}} />
+        <DrawerHeader sx={{ overflow: "hidden" }} />
         {pages}
       </Box>
     </Box>

@@ -192,6 +192,7 @@ const CvCreatorForm = () => {
       getSingleUserData();
     }
   }, [id.editId]);
+
   useEffect(() => {
     if (id.editId && SingleUserData._id) {
       const {
@@ -202,20 +203,13 @@ const CvCreatorForm = () => {
         languages,
         skills,
       } = SingleUserData;
-      console.log(education, "eldasd");
-      // Set personal information values
+
       setValue("personalInfo", { ...personalInfo });
 
-      // Set education values
       setValue("education", education || []);
 
-      // education.forEach(element => {
-
-      // });
-      // Set experience values
       setValue("experience", experience || []);
 
-      // Set certifications values
       setValue("certifications", certifications || []);
 
       const languagesData = SingleUserData.languages.map((language) => ({
@@ -225,8 +219,6 @@ const CvCreatorForm = () => {
       setLanguagesFields(languagesData);
       setSelectedTechSkills(SingleUserData.skills);
 
-      console.log(languages);
-      // Set selected tech skills
       const defaultSkills = skills.filter((skill) => skills.includes(skill));
       setSelectedTechSkills(defaultSkills);
     }
@@ -258,7 +250,6 @@ const CvCreatorForm = () => {
               <TextField
                 {...register("personalInfo.lastName")}
                 margin="dense"
-                // label="Last Name"
                 label={id.editId ? "" : "Last Name"}
                 variant="outlined"
                 focused={id.editId ? true : false}
@@ -372,7 +363,6 @@ const CvCreatorForm = () => {
             </div>
             {educationFields.map((field, index) => (
               <>
-                {console.log(field, "hekko")}
                 <div className="font-poppins text-sm font-medium">
                   {`Education Detail ${index + 1}`}
                 </div>
@@ -416,9 +406,6 @@ const CvCreatorForm = () => {
                       )}
                     />
                   </LocalizationProvider>
-                  {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DateRangePicker {...register(`education[${index}].dateRange`)} />
-                </LocalizationProvider> */}
                 </Box>
               </>
             ))}

@@ -4,7 +4,7 @@ import jsPDF from "jspdf";
 import { useEffect, useRef, useState } from "react";
 import ApiFetching from "../../services/ApiFetching";
 import { useDispatch, useSelector } from "react-redux";
-import { seUserId, setSingleUserData } from "../../redux/slices/CvSlice";
+import { setSingleUserData } from "../../redux/slices/CvSlice";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -19,10 +19,13 @@ const CvTemplate = () => {
   const userId = useParams();
   const dispatch = useDispatch();
   const [Btnloading, setBtnloading] = useState(false);
+
   const SingleUserData = useSelector(
     (state) => state.CvSlice.getSingleUserData
   );
+
   const componentRef = useRef();
+
   useEffect(() => {
     const getSingleUserData = async () => {
       setLoading(true);
@@ -39,6 +42,7 @@ const CvTemplate = () => {
     };
     getSingleUserData();
   }, []);
+
   const handleSave = async () => {
     const input = componentRef.current;
 
@@ -294,7 +298,6 @@ const CvTemplate = () => {
             "Upload"
           )}
         </Button>
-        {/* <Button variant="contained" onClick={()=>navigate(`../editCvGenerator/${userId.cvTemplateId}`)} >Edit </Button> */}
       </Stack>
     </Stack>
   );
