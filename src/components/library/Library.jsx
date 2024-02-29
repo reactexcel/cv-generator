@@ -79,7 +79,7 @@ const Library = () => {
   }
   return (
     <Stack
-      sx={{ wordBreak: "break-all", bgcolor: "#eeecf3" }}
+      sx={{ wordBreak: "break-all", bgcolor: "#eeecf3",width:"100%",m:'auto' }}
       className="font-poppins  h-fit shadow-sm rounded-md flex flex-col">
       <Stack
         direction={{ md: "row", xs: "column" }}
@@ -95,13 +95,12 @@ const Library = () => {
           Mobile No :{data && data.mobile}
         </div>
       </Stack>
-      <div>
         <Stack spacing={2} sx={{alignItems:'center',pb:'10px'}}
         >
           {data &&
             data.cvLink &&
             data.cvLink.map((link, index) => (
-              <Stack sx={{width:'96%',m:'auto',p:'0 20px'}}
+              <Stack sx={{width:'96%',m:'auto'}}
                 className="  border-2 border-gray-300  rounded-md "
                 key={index}>
                 <div 
@@ -169,7 +168,7 @@ const Library = () => {
               </Stack>
             ))}
         </Stack>
-      </div>
+      
     </Stack>
   );
 };
