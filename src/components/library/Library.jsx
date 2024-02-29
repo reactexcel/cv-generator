@@ -76,7 +76,12 @@ const Library = () => {
   }
   return (
     <Stack
-      sx={{ wordBreak: "break-all", bgcolor: "#eeecf3",width:"100%",m:'auto' }}
+      sx={{
+        wordBreak: "break-all",
+        bgcolor: "#eeecf3",
+        width: "100%",
+        m: "auto",
+      }}
       className="font-poppins  h-fit shadow-sm rounded-md flex flex-col">
       <Stack
         direction={{ md: "row", xs: "column" }}
@@ -92,80 +97,83 @@ const Library = () => {
           Mobile No :{data && data.mobile}
         </div>
       </Stack>
-        <Stack spacing={2} sx={{alignItems:'center',pb:'10px'}}
-        >
-          {data &&
-            data.cvLink &&
-            data.cvLink.map((link, index) => (
-              <Stack sx={{width:'96%',m:'auto'}}
-                className="  border-2 border-gray-300  rounded-md "
-                key={index}>
-                <div 
-                className="flex font-medium w-full justify-between "
-                >
-                  <Stack direction={{md:'row',xs:'column'}} sx={{justifyContent:'space-between',width:'100%',alignItems:"center"}} 
-                  >
-                    <Stack direction={'row'} spacing={1} sx={{alignItems:'center'}} 
-                    >
-                      <div 
-                      > {index + 1}.</div>
+      <Stack spacing={2} sx={{ alignItems: "center", pb: "10px" }}>
+        {data &&
+          data.cvLink &&
+          data.cvLink.map((link, index) => (
+            <Stack
+              sx={{ width: "96%", m: "auto" }}
+              className="  border-2 border-gray-300  rounded-md "
+              key={index}>
+              <div className="flex font-medium w-full justify-between ">
+                <Stack
+                  direction={{ md: "row", xs: "column" }}
+                  sx={{
+                    justifyContent: "space-between",
+                    width: "100%",
+                    alignItems: "center",
+                  }}>
+                  <Stack direction={"row"} sx={{ alignItems: "center" }}>
+                    <div className="px-2"> {index + 1}.</div>
 
-                      <div className="text-sm">
-                        {typeof link.link === "string" &&
-                          link.link.replace(
-                            `http://116.202.210.102:3030/resumes/${data._id}-`,
-                            ""
-                          )}
-                      </div>
-                    </Stack>
+                    <div className="text-sm">
+                      {typeof link.link === "string" &&
+                        link.link.replace(
+                          `http://116.202.210.102:3030/resumes/${data._id}-`,
+                          ""
+                        )}
+                    </div>
+                  </Stack>
 
-                    <Stack direction={{md:'row',xs:'column'}}sx={{alignItems:'center'}} 
-                    >
-                      <div className="text-xs  font-light opacity-95 ">
-                        Last Updated:{" "}
-                        {moment(link.updatedAt).format("DD, MMMM hh:mm A")}
-                      </div>
-                      <Stack direction={'row'} 
-                      >
-                        <Tooltip title="View Pdf">
+                  <Stack
+                    direction={{ md: "row", xs: "column" }}
+                    sx={{ alignItems: "center" }}>
+                    <div className="text-xs  font-light opacity-95 ">
+                      Last Updated:{" "}
+                      {moment(link.updatedAt).format("DD, MMMM hh:mm A")}
+                    </div>
+                    <Stack direction={"row"}>
+                      <Tooltip title="View Pdf">
+                        <IconButton>
+                          <ModalComponent link={link.link} />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Download">
+                        <IconButton>
+                          <DownloadIcon
+                            className="mt-2"
+                            color="primary"
+                            onClick={() => handleDownloadPdf(link.link)}
+                          />
+                        </IconButton>
+                      </Tooltip>
+                      <Button
+                        disabled={!link.templetId}
+                        onClick={() =>
+                          navigate(`../editCvGenerator/${link.templetId}`)
+                        }>
+                        <Tooltip title="Edit">
                           <IconButton>
-                            <ModalComponent link={link.link} />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Download">
-                          <IconButton>
-                            <DownloadIcon
-                              className="mt-2"
-                              onClick={() => handleDownloadPdf(link.link)}
+                            <EditIcon
+                              color={!link.templetId ? "error" : "primary"}
                             />
                           </IconButton>
                         </Tooltip>
-                        <Button
-                          disabled={!link.templetId}
-                          onClick={() =>
-                            navigate(`../editCvGenerator/${link.templetId}`)
-                          }>
-                          <Tooltip title="Edit">
-                            <IconButton>
-                              <EditIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Button>
-                        <Button onClick={() => handleDeleteFile(link._id)}>
-                          <Tooltip title="Delete">
-                            <IconButton>
-                              <DeleteIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Button>
-                      </Stack>
+                      </Button>
+                      <Button onClick={() => handleDeleteFile(link._id)}>
+                        <Tooltip title="Delete">
+                          <IconButton>
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Button>
                     </Stack>
-                  </Stack>{" "}
-                </div>
-              </Stack>
-            ))}
-        </Stack>
-      
+                  </Stack>
+                </Stack>{" "}
+              </div>
+            </Stack>
+          ))}
+      </Stack>
     </Stack>
   );
 };
