@@ -21,7 +21,6 @@ const Library = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const data = useSelector((state) => state.CvSlice.getCvData);
-  const [titleName, setTitleName] = useState(null);
   const [loading, setloading] = useState(false);
 
   const handleDownloadPdf = (link) => {
@@ -44,7 +43,6 @@ const Library = () => {
         const data = response.data;
         if (data.success === true) {
           dispatch(setCvData(data.user));
-          setTitleName(data.user.cvLink);
         }
       } catch (error) {
         console.log(error, "afsasd");
@@ -63,7 +61,6 @@ const Library = () => {
         const data = response.data;
         if (data.success === true) {
           dispatch(setCvData(data.user));
-          setTitleName(data.user.cvLink);
         }
       } catch (error) {
         console.log(error, "afsasd");

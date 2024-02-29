@@ -5,7 +5,6 @@ import AddCV from "../pages/Home/add-cv/AddCV";
 import CvGenerator from "../pages/Home/cv-generator/CvGenerator";
 import LibraryPage from "../pages/Home/librarypage/LibraryPage";
 import SignUp from "../components/Auth/SignUp";
-import path from "path";
 import CvTemplate from "../components/CvTemplete/CvTemplate";
 import CvCreatorForm from "../components/cv-creatorform/CvCreatorForm";
 export const router=createBrowserRouter([
