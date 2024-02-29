@@ -11,6 +11,7 @@ async function ApiFetching(method, api, data) {
                 response = await instance.post(api, data);
                 break;
             case 'PUT':
+                console.log(data,'data');
                 response = await instance.put(api, data);
                 break;
             case 'DELETE':

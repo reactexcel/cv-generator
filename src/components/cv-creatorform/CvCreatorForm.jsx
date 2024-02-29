@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 
 import {
@@ -23,6 +23,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { setSingleUserData } from "../../redux/slices/CvSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { DatePicker } from "@mui/x-date-pickers";
+import { DevTool } from "@hookform/devtools";
 
 // import { useNavigate } from "react-router";
 
@@ -35,7 +36,24 @@ const CvCreatorForm = () => {
     control,
     formState: { errors },
     setValue,
-  } = useForm();
+    onChange
+  } = useForm({
+    defaultValues: {
+      personalInfo: {
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        address: "",
+      },
+      education: [],
+      experience: [],
+      certifications: [],
+      languages: [],
+      skills: [],
+    },
+  });
+  
   const {
     fields: educationFields,
     append: appendEducation,
@@ -44,7 +62,6 @@ const CvCreatorForm = () => {
     control,
     name: "education",
   });
-
   const {
     fields: experienceFields,
     append: appendExperience,
@@ -110,7 +127,6 @@ const CvCreatorForm = () => {
     "Artificial Intelligence",
     "Blockchain",
   ];
-
   const appendCertification = () => {
     setCertificationsFields([
       ...certificationsFields,
@@ -127,8 +143,8 @@ const CvCreatorForm = () => {
       skills: selectedTechSkills,
     };
 
+
     if (id.editId) {
-      // If editing an existing CV, send a PUT request to update the CV
       const res = await ApiFetching(
         "PUT",
         `user/cv/update/${id.editId}`,
@@ -176,52 +192,51 @@ const CvCreatorForm = () => {
     if (id.editId) {
       getSingleUserData();
     }
-  }, []);
-
+  }, [id.editId]);
   useEffect(() => {
     if (id.editId && SingleUserData._id) {
-      const { personalInfo, education, experience, certifications } =
-        SingleUserData;
-      console.log(certifications, "asdad");
-      console.log(education);
-      if (id.editId) {
-        education.forEach((item, index) => {
-          Object.keys(item).forEach((key) => {
-            setValue(`education[${index}].${key}`, item[key]);
-          });
-        });
-        experience.forEach((item, index) => {
-          Object.keys(item).forEach((key) => {
-            setValue(`experience[${index}].${key}`, item[key]);
-          });
-        });
-        certifications.forEach((item, index) => {
-          Object.keys(item).forEach((key) => {
-            setValue(`certifications[${index}].${key}`, item[key]);
-          });
-        });
-      }
+      const { personalInfo, education, experience, certifications, languages, skills } = SingleUserData;
+  console.log(education,'eldasd');
+      // Set personal information values
+      setValue('personalInfo', { ...personalInfo });
+  
+      // Set education values
+      setValue('education', education || []);
 
-      Object.keys(personalInfo).forEach((key) => {
-        setValue(`personalInfo.${key}`, personalInfo[key]);
-      });
+      // education.forEach(element => {
 
+      // });
+      // Set experience values
+      setValue('experience', experience || []);
+  
+      // Set certifications values
+      setValue('certifications', certifications || []);
+  
       const languagesData = SingleUserData.languages.map((language) => ({
         language: language.language,
         proficiency: language.proficiency,
       }));
       setLanguagesFields(languagesData);
       setSelectedTechSkills(SingleUserData.skills);
+    
+   
+    console.log(languages);
+      // Set selected tech skills
+      const defaultSkills = skills.filter(skill => skills.includes(skill));
+      setSelectedTechSkills(defaultSkills);
     }
-  }, [id.editId, SingleUserData, setValue]);
+  }, [id.editId, SingleUserData._id]);
+  
+  
 
   return (
+    <>
+    
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="py-2 text-wrap">
         We suggest including an email and phone number.
       </div>
       <Stack spacing={2}>
-        {/* Personal Information */}
         <Stack spacing={1}>
           <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
             Personal information
@@ -294,8 +309,6 @@ const CvCreatorForm = () => {
             />
           </Box>
         </Stack>
-
-        {/* Languages */}
         <Stack spacing={1}>
           <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
             Languages
@@ -339,64 +352,72 @@ const CvCreatorForm = () => {
         </Stack>
         {/* education */}
         <Stack spacing={1}>
-          <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
+          <div className="font-poppins md:text-xl text-sm font-semibold md:font-medium">
             Education Detail
           </div>
           {educationFields.map((field, index) => (
             <>
+            {console.log(field,'hekko')}
               <div className="font-poppins text-sm font-medium">
                 {`Education Detail ${index + 1}`}
               </div>
               <Box
                 className="grid md:grid-cols-3 grid-cols-1 gap-2"
-                key={field.id}>
+                key={field.id}
+              >
                 <TextField
-                  {...register(`education.${index}.institution`)}
+                  {...register(`education[${index}].institution`)}
                   margin="dense"
                   label="Institution"
                   variant="outlined"
                 />
                 <TextField
-                  {...register(`education.${index}.degree`)}
+                  {...register(`education[${index}].degree`)}
                   margin="dense"
                   label="Degree"
                   variant="outlined"
                 />
                 <TextField
-                  {...register(`education.${index}.fieldOfStudy`)}
+                  {...register(`education[${index}].fieldOfStudy`)}
                   margin="dense"
                   label="Field of Study"
                   variant="outlined"
-                  />
-
+                />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <Controller
                     control={control}
-                    name={`education.${index}.dateRange`}
+                    name={`education[${index}].dateRange`}
                     render={({ field }) => (
                       <DateRangePicker
                         {...field}
                         label="Responsive variant"
                         localeText={{ start: "Start Date", end: "End Date" }}
                         onChange={(dateRange) => field.onChange(dateRange)}
+                        value={field.dateRange}
                       />
                     )}
                   />
                 </LocalizationProvider>
+                {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DateRangePicker {...register(`education[${index}].dateRange`)} />
+                </LocalizationProvider> */}
+                      
               </Box>
             </>
           ))}
 
-          {educationFields.length < 2 && (
+          {educationFields.length<=2 && (
             <Button
               className="md:w-[20%] w-full text-sm"
               type="button"
               variant="outlined"
-              onClick={() => appendEducation({})}>
+              onClick={() => appendEducation({})}
+            >
               Add Education
             </Button>
           )}
         </Stack>
+
         {/* Experience Detail */}
         <Stack spacing={1}>
           <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
@@ -422,7 +443,7 @@ const CvCreatorForm = () => {
                 />
                 {/* Use Controller for DatePicker */}
                 <div className="w-full mt-2">
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <Controller
                       control={control}
                       name={`experience.${index}.dateRange`}
@@ -432,16 +453,34 @@ const CvCreatorForm = () => {
                           label="Responsive variant"
                           component="DateRangePicker"
                           localeText={{ start: "Start Date", end: "End Date" }}
-                          onChange={(dateRange) => field.onChange(dateRange)}
+                          // onChange={(dateRange) => field.onChange(dateRange)}
                         />
                       )}
                     />
-                  </LocalizationProvider>
+                  </LocalizationProvider> */}
+                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <Controller
+                    control={control}
+                    {...register(`experience[${index}].dateRange`)}
+                    // name={`experience[${index}].dateRange`}
+                    render={({ field }) => (
+                      <DateRangePicker
+                        {...field}
+                        label="Responsive variant"
+                        localeText={{ start: "Start Date", end: "End Date" }}
+                        onChange={(dateRange) => field.onChange(dateRange)}
+                        value={field.dateRange}
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
+                  
                 </div>
                 <Button
                   onClick={() => handleRemoveExperience(index)}
                   className="w-[30%]"
-                  color="error">
+                  color="error"
+                >
                   <CloseIcon />
                 </Button>
               </Box>
@@ -452,7 +491,8 @@ const CvCreatorForm = () => {
             className="md:w-[20%] w-full text-sm"
             type="button"
             variant="outlined"
-            onClick={() => appendExperience()}>
+            onClick={() => appendExperience({})}
+          >
             Add Experience
           </Button>
         </Stack>
@@ -476,18 +516,17 @@ const CvCreatorForm = () => {
                 variant="outlined"
               />
               <div className="mt-2">
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <Controller
                     control={control}
-                    name={`certifications.${index}.date`}
+                    name={`certifications[${index}].date`}
                     render={({ field }) => (
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          {...field}
-                          label="Certified Date"
-                          onChange={(date) => field.onChange(date)}
-                        />
-                      </LocalizationProvider>
+                      <DatePicker
+                        {...field}
+                        label="Responsive variant"
+                        onChange={(date) => field.onChange(date)}
+                        value={field.date}
+                      />
                     )}
                   />
                 </LocalizationProvider>
@@ -495,7 +534,8 @@ const CvCreatorForm = () => {
               <Button
                 onClick={() => handleRemoveCertification(index)}
                 color="error"
-                className="w-[30%]">
+                className="w-[30%]"
+              >
                 {" "}
                 <CloseIcon />
               </Button>
@@ -505,7 +545,8 @@ const CvCreatorForm = () => {
             type="button"
             className="md:w-[20%] w-full text-sm"
             variant="outlined"
-            onClick={appendCertification}>
+            onClick={appendCertification}
+          >
             Add Certification
           </Button>
         </Stack>
@@ -525,7 +566,8 @@ const CvCreatorForm = () => {
               value={selectedTechSkills}
               label="skill"
               multiple=""
-              onChange={handleSkillSelect}>
+              onChange={handleSkillSelect}
+            >
               {techSkills.map((skill, index) => (
                 <MenuItem key={index} value={skill}>
                   {skill}
@@ -537,7 +579,8 @@ const CvCreatorForm = () => {
                 {selectedTechSkills.map((skill, index) => (
                   <div
                     className="p-2 border-2 inset-3 m-1 rounded-md bg-slate-200 "
-                    key={index}>
+                    key={index}
+                  >
                     <span key={index} className="selected-skill max-w-sm">
                       <span className="px-1"> {skill}</span>
                       <CloseIcon
@@ -556,11 +599,14 @@ const CvCreatorForm = () => {
           className="w-[10%]"
           type="submit"
           variant="contained"
-          color="primary">
+          color="primary"
+        >
           {loading ? <CircularProgress sx={{ color: "inherit" }} /> : "Submit"}
         </Button>
       </Stack>
     </form>
+    <DevTool control={control} />
+    </>
   );
 };
 
