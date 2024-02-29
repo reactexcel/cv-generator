@@ -79,7 +79,7 @@ const Library = () => {
   }
   return (
     <Stack
-      sx={{ wordBreak: "break-all", bgcolor: "#eeecf3" }}
+      sx={{ wordBreak: "break-all", bgcolor: "#eeecf3",width:"100%",m:'auto' }}
       className="font-poppins  h-fit shadow-sm rounded-md flex flex-col">
       <Stack
         direction={{ md: "row", xs: "column" }}
@@ -95,18 +95,23 @@ const Library = () => {
           Mobile No :{data && data.mobile}
         </div>
       </Stack>
-      <div>
-        <Stack className="p-4 text-lg rounded-sm gap-2">
+        <Stack spacing={2} sx={{alignItems:'center',pb:'10px'}}
+        >
           {data &&
             data.cvLink &&
             data.cvLink.map((link, index) => (
-              <div
-                className="flex flex-col gap-1 w-full border-2 border-gray-300 p-2 rounded-md"
+              <Stack sx={{width:'96%',m:'auto'}}
+                className="  border-2 border-gray-300  rounded-md "
                 key={index}>
-                <div className="flex font-medium w-full justify-between">
-                  <div className="flex flex-col md:flex-row gap-2  justify-between w-full leading-0">
-                    <div className="flex mt-2 px-2">
-                      <div className="text-sm font-medium"> {index + 1}.</div>
+                <div 
+                className="flex font-medium w-full justify-between "
+                >
+                  <Stack direction={{md:'row',xs:'column'}} sx={{justifyContent:'space-between',width:'100%',alignItems:"center"}} 
+                  >
+                    <Stack direction={'row'} spacing={1} sx={{alignItems:'center'}} 
+                    >
+                      <div 
+                      > {index + 1}.</div>
 
                       <div className="text-sm">
                         {typeof link.link === "string" &&
@@ -115,14 +120,16 @@ const Library = () => {
                             ""
                           )}
                       </div>
-                    </div>
+                    </Stack>
 
-                    <div className="flex md:w-[40%] justify-between flex-col md:flex-row">
-                      <div className="text-xs mt-3 font-light opacity-95">
+                    <Stack direction={{md:'row',xs:'column'}}sx={{alignItems:'center'}} 
+                    >
+                      <div className="text-xs  font-light opacity-95 ">
                         Last Updated:{" "}
                         {moment(link.updatedAt).format("DD, MMMM hh:mm A")}
                       </div>
-                      <div className="h-fit max-w-sm flex gap-2">
+                      <Stack direction={'row'} 
+                      >
                         <Tooltip title="View Pdf">
                           <IconButton>
                             <ModalComponent link={link.link} />
@@ -154,14 +161,14 @@ const Library = () => {
                             </IconButton>
                           </Tooltip>
                         </Button>
-                      </div>
-                    </div>
-                  </div>{" "}
+                      </Stack>
+                    </Stack>
+                  </Stack>{" "}
                 </div>
-              </div>
+              </Stack>
             ))}
         </Stack>
-      </div>
+      
     </Stack>
   );
 };
