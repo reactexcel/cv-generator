@@ -36,7 +36,7 @@ const CvCreatorForm = () => {
     control,
     formState: { errors },
     setValue,
-    onChange
+    onChange,
   } = useForm({
     defaultValues: {
       personalInfo: {
@@ -53,7 +53,7 @@ const CvCreatorForm = () => {
       skills: [],
     },
   });
-  
+
   const {
     fields: educationFields,
     append: appendEducation,
@@ -143,7 +143,6 @@ const CvCreatorForm = () => {
       skills: selectedTechSkills,
     };
 
-
     if (id.editId) {
       const res = await ApiFetching(
         "PUT",
@@ -195,423 +194,419 @@ const CvCreatorForm = () => {
   }, [id.editId]);
   useEffect(() => {
     if (id.editId && SingleUserData._id) {
-      const { personalInfo, education, experience, certifications, languages, skills } = SingleUserData;
-  console.log(education,'eldasd');
+      const {
+        personalInfo,
+        education,
+        experience,
+        certifications,
+        languages,
+        skills,
+      } = SingleUserData;
+      console.log(education, "eldasd");
       // Set personal information values
-      setValue('personalInfo', { ...personalInfo });
-  
+      setValue("personalInfo", { ...personalInfo });
+
       // Set education values
-      setValue('education', education || []);
+      setValue("education", education || []);
 
       // education.forEach(element => {
 
       // });
       // Set experience values
-      setValue('experience', experience || []);
-  
+      setValue("experience", experience || []);
+
       // Set certifications values
-      setValue('certifications', certifications || []);
-  
+      setValue("certifications", certifications || []);
+
       const languagesData = SingleUserData.languages.map((language) => ({
         language: language.language,
         proficiency: language.proficiency,
       }));
       setLanguagesFields(languagesData);
       setSelectedTechSkills(SingleUserData.skills);
-    
-   
-    console.log(languages);
+
+      console.log(languages);
       // Set selected tech skills
-      const defaultSkills = skills.filter(skill => skills.includes(skill));
+      const defaultSkills = skills.filter((skill) => skills.includes(skill));
       setSelectedTechSkills(defaultSkills);
     }
   }, [id.editId, SingleUserData._id]);
-  
-  
 
   return (
     <>
-    
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="py-2 text-wrap">
-        We suggest including an email and phone number.
-      </div>
-      <Stack spacing={2}>
-        <Stack spacing={1}>
-          <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
-            Personal information
-          </div>
-          <Box className="grid md:grid-cols-3 grid-cols-1 gap-2">
-            <TextField
-              {...register("personalInfo.firstName")}
-              margin="dense"
-              required
-              sx={{ backgroundColor: "white" }}
-              label={id.editId?'':"First Name"}
-              error={!!errors.personalInfo?.firstName}
-              variant="outlined"
-              focused={id.editId ? true : false}
-              disabled={id.editId ? true : false}
-            />
-            <TextField
-              {...register("personalInfo.lastName")}
-              margin="dense"
-              // label="Last Name"
-              label={id.editId?'':"Last Name"}
-              variant="outlined"
-              focused={id.editId ? true : false}
-              disabled={id.editId ? true : false}
-            />
-            <TextField
-              {...register("personalInfo.email")}
-              type="email"
-              margin="dense"
-              required
-              label="Email"
-              variant="outlined"
-              focused={id.editId ? true : false}
-            />
-            <TextField
-              {...register("personalInfo.phone")}
-              margin="dense"
-              required
-              label="Phone"
-              variant="outlined"
-              focused={id.editId ? true : false}
-            />
-            <TextField
-              {...register("personalInfo.address")}
-              margin="dense"
-              label="Address"
-              variant="outlined"
-              multiline
-              rows={2}
-              focused={id.editId ? true : false}
-            />
-          </Box>
-        </Stack>
-        <Stack spacing={1}>
-          <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
-            Social Link
-          </div>
-          <Box className="grid md:grid-cols-3 grid-cols-1 gap-2">
-            <TextField
-              {...register("personalInfo.links.github")}
-              margin="dense"
-              label="Github"
-              variant="outlined"
-            />
-            <TextField
-              {...register("personalInfo.links.linkedin")}
-              margin="dense"
-              label="LinkedIn"
-              variant="outlined"
-            />
-            <TextField
-              {...register("personalInfo.links.website")}
-              margin="dense"
-              label="Website"
-              variant="outlined"
-            />
-          </Box>
-        </Stack>
-        <Stack spacing={1}>
-          <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
-            Languages
-          </div>
-          {languagesFields.map((field, index) => (
-            <Box className="grid md:grid-cols-4 grid-cols-1 gap-2" key={index}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="py-2 text-wrap">
+          We suggest including an email and phone number.
+        </div>
+        <Stack spacing={2}>
+          <Stack spacing={1}>
+            <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
+              Personal information
+            </div>
+            <Box className="grid md:grid-cols-3 grid-cols-1 gap-2">
               <TextField
-                select
-                label="Language"
+                {...register("personalInfo.firstName")}
+                margin="dense"
+                required
+                sx={{ backgroundColor: "white" }}
+                label={id.editId ? "" : "First Name"}
+                error={!!errors.personalInfo?.firstName}
                 variant="outlined"
-                value={field.language}
-                onChange={(e) => {
-                  const updatedFields = [...languagesFields];
-                  updatedFields[index].language = e.target.value;
-                  setLanguagesFields(updatedFields);
-                }}>
-                {languageOptions.map((option) => (
-                  <MenuItem key={option} value={option}>
-                    {option}
-                  </MenuItem>
-                ))}
-              </TextField>
+                focused={id.editId ? true : false}
+                disabled={id.editId ? true : false}
+              />
               <TextField
-                select
-                label="Proficiency"
+                {...register("personalInfo.lastName")}
+                margin="dense"
+                // label="Last Name"
+                label={id.editId ? "" : "Last Name"}
                 variant="outlined"
-                value={field.proficiency}
-                onChange={(e) => {
-                  const updatedFields = [...languagesFields];
-                  updatedFields[index].proficiency = e.target.value;
-                  setLanguagesFields(updatedFields);
-                }}>
-                {proficiencyOptions.map((option) => (
-                  <MenuItem key={option} value={option}>
-                    {option}
-                  </MenuItem>
-                ))}
-              </TextField>
+                focused={id.editId ? true : false}
+                disabled={id.editId ? true : false}
+              />
+              <TextField
+                {...register("personalInfo.email")}
+                type="email"
+                margin="dense"
+                required
+                label="Email"
+                variant="outlined"
+                focused={id.editId ? true : false}
+              />
+              <TextField
+                {...register("personalInfo.phone")}
+                margin="dense"
+                required
+                label="Phone"
+                variant="outlined"
+                focused={id.editId ? true : false}
+              />
+              <TextField
+                {...register("personalInfo.address")}
+                margin="dense"
+                label="Address"
+                variant="outlined"
+                multiline
+                rows={2}
+                focused={id.editId ? true : false}
+              />
             </Box>
-          ))}
-        </Stack>
-        {/* education */}
-        <Stack spacing={1}>
-          <div className="font-poppins md:text-xl text-sm font-semibold md:font-medium">
-            Education Detail
-          </div>
-          {educationFields.map((field, index) => (
-            <>
-            {console.log(field,'hekko')}
-              <div className="font-poppins text-sm font-medium">
-                {`Education Detail ${index + 1}`}
-              </div>
+          </Stack>
+          <Stack spacing={1}>
+            <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
+              Social Link
+            </div>
+            <Box className="grid md:grid-cols-3 grid-cols-1 gap-2">
+              <TextField
+                {...register("personalInfo.links.github")}
+                margin="dense"
+                label="Github"
+                variant="outlined"
+                focused={id.editId ? true : false}
+              />
+              <TextField
+                {...register("personalInfo.links.linkedin")}
+                margin="dense"
+                label="LinkedIn"
+                variant="outlined"
+                focused={id.editId ? true : false}
+              />
+              <TextField
+                {...register("personalInfo.links.website")}
+                margin="dense"
+                label="Website"
+                variant="outlined"
+                focused={id.editId ? true : false}
+              />
+            </Box>
+          </Stack>
+          <Stack spacing={1}>
+            <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
+              Languages
+            </div>
+            {languagesFields.map((field, index) => (
               <Box
-                className="grid md:grid-cols-3 grid-cols-1 gap-2"
-                key={field.id}
-              >
+                className="grid md:grid-cols-4 grid-cols-1 gap-2"
+                key={index}>
                 <TextField
-                  {...register(`education[${index}].institution`)}
-                  margin="dense"
-                  label="Institution"
+                  select
+                  label="Language"
                   variant="outlined"
-                />
+                  value={field.language}
+                  focused={id.editId ? true : false}
+                  onChange={(e) => {
+                    const updatedFields = [...languagesFields];
+                    updatedFields[index].language = e.target.value;
+                    setLanguagesFields(updatedFields);
+                  }}>
+                  {languageOptions.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </TextField>
                 <TextField
-                  {...register(`education[${index}].degree`)}
-                  margin="dense"
-                  label="Degree"
+                  select
+                  label="Proficiency"
                   variant="outlined"
-                />
-                <TextField
-                  {...register(`education[${index}].fieldOfStudy`)}
-                  margin="dense"
-                  label="Field of Study"
-                  variant="outlined"
-                />
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <Controller
-                    control={control}
-                    name={`education[${index}].dateRange`}
-                    render={({ field }) => (
-                      <DateRangePicker
-                        {...field}
-                        label="Responsive variant"
-                        localeText={{ start: "Start Date", end: "End Date" }}
-                        onChange={(dateRange) => field.onChange(dateRange)}
-                        value={field.dateRange}
-                      />
-                    )}
-                  />
-                </LocalizationProvider>
-                {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DateRangePicker {...register(`education[${index}].dateRange`)} />
-                </LocalizationProvider> */}
-                      
+                  value={field.proficiency}
+                  focused={id.editId ? true : false}
+                  onChange={(e) => {
+                    const updatedFields = [...languagesFields];
+                    updatedFields[index].proficiency = e.target.value;
+                    setLanguagesFields(updatedFields);
+                  }}>
+                  {proficiencyOptions.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </Box>
-            </>
-          ))}
-
-          {educationFields.length<=2 && (
-            <Button
-              className="md:w-[20%] w-full text-sm"
-              type="button"
-              variant="outlined"
-              onClick={() => appendEducation({})}
-            >
-              Add Education
-            </Button>
-          )}
-        </Stack>
-
-        {/* Experience Detail */}
-        <Stack spacing={1}>
-          <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
-            Experience
-          </div>
-          {experienceFields.map((field, index) => (
-            <>
-              <div className="font-poppins text-sm font-medium">
-                {`Experience Detail ${index + 1}`}
-              </div>
-              <Box className="grid md:grid-cols-3 gap-2" key={field.id}>
-                <TextField
-                  {...register(`experience.${index}.company`)}
-                  margin="dense"
-                  label="Company"
-                  variant="outlined"
-                />
-                <TextField
-                  {...register(`experience.${index}.position`)}
-                  margin="dense"
-                  label="Position"
-                  variant="outlined"
-                />
-                {/* Use Controller for DatePicker */}
-                <div className="w-full mt-2">
-                  {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+            ))}
+          </Stack>
+          {/* education */}
+          <Stack spacing={1}>
+            <div className="font-poppins md:text-xl text-sm font-semibold md:font-medium">
+              Education Detail
+            </div>
+            {educationFields.map((field, index) => (
+              <>
+                {console.log(field, "hekko")}
+                <div className="font-poppins text-sm font-medium">
+                  {`Education Detail ${index + 1}`}
+                </div>
+                <Box
+                  className="grid md:grid-cols-3 grid-cols-1 gap-2"
+                  key={field.id}>
+                  <TextField
+                    {...register(`education[${index}].institution`)}
+                    margin="dense"
+                    focused={id.editId ? true : false}
+                    label="Institution"
+                    variant="outlined"
+                  />
+                  <TextField
+                    {...register(`education[${index}].degree`)}
+                    margin="dense"
+                    focused={id.editId ? true : false}
+                    label="Degree"
+                    variant="outlined"
+                  />
+                  <TextField
+                    {...register(`education[${index}].fieldOfStudy`)}
+                    margin="dense"
+                    focused={id.editId ? true : false}
+                    label="Field of Study"
+                    variant="outlined"
+                  />
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <Controller
                       control={control}
-                      name={`experience.${index}.dateRange`}
+                      name={`education[${index}].dateRange`}
                       render={({ field }) => (
                         <DateRangePicker
                           {...field}
                           label="Responsive variant"
-                          component="DateRangePicker"
+                          focused={id.editId ? true : false}
                           localeText={{ start: "Start Date", end: "End Date" }}
-                          // onChange={(dateRange) => field.onChange(dateRange)}
+                          onChange={(dateRange) => field.onChange(dateRange)}
+                          value={field.dateRange}
                         />
                       )}
                     />
-                  </LocalizationProvider> */}
-                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <Controller
-                    control={control}
-                    {...register(`experience[${index}].dateRange`)}
-                    // name={`experience[${index}].dateRange`}
-                    render={({ field }) => (
-                      <DateRangePicker
-                        {...field}
-                        label="Responsive variant"
-                        localeText={{ start: "Start Date", end: "End Date" }}
-                        onChange={(dateRange) => field.onChange(dateRange)}
-                        value={field.dateRange}
-                      />
-                    )}
+                  </LocalizationProvider>
+                  {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DateRangePicker {...register(`education[${index}].dateRange`)} />
+                </LocalizationProvider> */}
+                </Box>
+              </>
+            ))}
+
+            {educationFields.length <= 2 && (
+              <Button
+                className="md:w-[20%] w-full text-sm"
+                type="button"
+                variant="outlined"
+                onClick={() => appendEducation({})}>
+                Add Education
+              </Button>
+            )}
+          </Stack>
+
+          {/* Experience Detail */}
+          <Stack spacing={1}>
+            <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
+              Experience
+            </div>
+            {experienceFields.map((field, index) => (
+              <>
+                <div className="font-poppins text-sm font-medium">
+                  {`Experience Detail ${index + 1}`}
+                </div>
+                <Box className="grid md:grid-cols-3 gap-2" key={field.id}>
+                  <TextField
+                    {...register(`experience.${index}.company`)}
+                    margin="dense"
+                    label="Company"
+                    focused={id.editId ? true : false}
+                    variant="outlined"
                   />
-                </LocalizationProvider>
-                  
+                  <TextField
+                    {...register(`experience.${index}.position`)}
+                    margin="dense"
+                    label="Position"
+                    focused={id.editId ? true : false}
+                    variant="outlined"
+                  />
+                  {/* Use Controller for DatePicker */}
+                  <div className="w-full mt-2">
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <Controller
+                        control={control}
+                        {...register(`experience[${index}].dateRange`)}
+                        render={({ field }) => (
+                          <DateRangePicker
+                            {...field}
+                            label="Responsive variant"
+                            localeText={{
+                              start: "Start Date",
+                              end: "End Date",
+                            }}
+                            onChange={(dateRange) => field.onChange(dateRange)}
+                            value={field.dateRange}
+                          />
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </div>
+                  <Button
+                    onClick={() => handleRemoveExperience(index)}
+                    className="w-[30%]"
+                    color="error">
+                    <CloseIcon />
+                  </Button>
+                </Box>
+              </>
+            ))}
+
+            <Button
+              className="md:w-[20%] w-full text-sm"
+              type="button"
+              variant="outlined"
+              onClick={() => appendExperience({})}>
+              Add Experience
+            </Button>
+          </Stack>
+          {/* Certifications */}
+          <Stack spacing={1}>
+            <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
+              Certifications
+            </div>
+            {certificationsFields.map((field, index) => (
+              <Box className="grid md:grid-cols-3 gap-2" key={field.id}>
+                <TextField
+                  {...register(`certifications.${index}.name`)}
+                  margin="dense"
+                  label="Certification Name"
+                  variant="outlined"
+                />
+                <TextField
+                  {...register(`certifications.${index}.organization`)}
+                  margin="dense"
+                  focused={id.editId ? true : false}
+                  label="Organization"
+                  variant="outlined"
+                />
+                <div className="mt-2">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <Controller
+                      control={control}
+                      name={`certifications[${index}].date`}
+                      render={({ field }) => (
+                        <DatePicker
+                          {...field}
+                          label="Certificate Date"
+                          onChange={(date) => field.onChange(date)}
+                          value={field.date}
+                        />
+                      )}
+                    />
+                  </LocalizationProvider>
                 </div>
                 <Button
-                  onClick={() => handleRemoveExperience(index)}
-                  className="w-[30%]"
+                  onClick={() => handleRemoveCertification(index)}
                   color="error"
-                >
+                  className="w-[30%]">
+                  {" "}
                   <CloseIcon />
                 </Button>
               </Box>
-            </>
-          ))}
+            ))}
+            <Button
+              type="button"
+              className="md:w-[20%] w-full text-sm"
+              variant="outlined"
+              onClick={appendCertification}>
+              Add Certification
+            </Button>
+          </Stack>
+          <Stack spacing={1}>
+            <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
+              Skills
+            </div>
+          </Stack>
 
-          <Button
-            className="md:w-[20%] w-full text-sm"
-            type="button"
-            variant="outlined"
-            onClick={() => appendExperience({})}
-          >
-            Add Experience
-          </Button>
-        </Stack>
-        {/* Certifications */}
-        <Stack spacing={1}>
-          <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
-            Certifications
-          </div>
-          {certificationsFields.map((field, index) => (
-            <Box className="grid md:grid-cols-3 gap-2" key={field.id}>
-              <TextField
-                {...register(`certifications.${index}.name`)}
-                margin="dense"
-                label="Certification Name"
-                variant="outlined"
-              />
-              <TextField
-                {...register(`certifications.${index}.organization`)}
-                margin="dense"
-                label="Organization"
-                variant="outlined"
-              />
-              <div className="mt-2">
-                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <Controller
-                    control={control}
-                    name={`certifications[${index}].date`}
-                    render={({ field }) => (
-                      <DatePicker
-                        {...field}
-                        label="Responsive variant"
-                        onChange={(date) => field.onChange(date)}
-                        value={field.date}
-                      />
-                    )}
-                  />
-                </LocalizationProvider>
-              </div>
-              <Button
-                onClick={() => handleRemoveCertification(index)}
-                color="error"
-                className="w-[30%]"
-              >
-                {" "}
-                <CloseIcon />
-              </Button>
-            </Box>
-          ))}
-          <Button
-            type="button"
-            className="md:w-[20%] w-full text-sm"
-            variant="outlined"
-            onClick={appendCertification}
-          >
-            Add Certification
-          </Button>
-        </Stack>
-        <Stack spacing={1}>
-          <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
-            Skills
-          </div>
-        </Stack>
-
-        <Box className="grid grid-cols-3" sx={{ minWidth: 120 }}>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label"> Skill</InputLabel>
-            <Select
-              className="bg-slate-1000"
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={selectedTechSkills}
-              label="skill"
-              multiple=""
-              onChange={handleSkillSelect}
-            >
-              {techSkills.map((skill, index) => (
-                <MenuItem key={index} value={skill}>
-                  {skill}
-                </MenuItem>
-              ))}
-            </Select>
-            {selectedTechSkills && (
-              <div>
-                {selectedTechSkills.map((skill, index) => (
-                  <div
-                    className="p-2 border-2 inset-3 m-1 rounded-md bg-slate-200 "
-                    key={index}
-                  >
-                    <span key={index} className="selected-skill max-w-sm">
-                      <span className="px-1"> {skill}</span>
-                      <CloseIcon
-                        className="text-red-800"
-                        onClick={() => handleSkillRemove(index)}
-                      />
-                    </span>
-                  </div>
+          <Box className="grid grid-cols-3" sx={{ minWidth: 120 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label"> Skill</InputLabel>
+              <Select
+                className="bg-slate-1000"
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={selectedTechSkills}
+                label="skill"
+                multiple=""
+                onChange={handleSkillSelect}>
+                {techSkills.map((skill, index) => (
+                  <MenuItem key={index} value={skill}>
+                    {skill}
+                  </MenuItem>
                 ))}
-              </div>
-            )}
-          </FormControl>
-        </Box>
+              </Select>
+              {selectedTechSkills && (
+                <div>
+                  {selectedTechSkills.map((skill, index) => (
+                    <div
+                      className="p-2 border-2 inset-3 m-1 rounded-md bg-slate-200 "
+                      key={index}>
+                      <span key={index} className="selected-skill max-w-sm">
+                        <span className="px-1"> {skill}</span>
+                        <CloseIcon
+                          className="text-red-800"
+                          onClick={() => handleSkillRemove(index)}
+                        />
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </FormControl>
+          </Box>
 
-        <Button
-          className="w-[10%]"
-          type="submit"
-          variant="contained"
-          color="primary"
-        >
-          {loading ? <CircularProgress sx={{ color: "inherit" }} /> : "Submit"}
-        </Button>
-      </Stack>
-    </form>
-    <DevTool control={control} />
+          <Button
+            className="w-[10%]"
+            type="submit"
+            variant="contained"
+            color="primary">
+            {loading ? (
+              <CircularProgress sx={{ color: "inherit" }} />
+            ) : (
+              "Submit"
+            )}
+          </Button>
+        </Stack>
+      </form>
     </>
   );
 };
