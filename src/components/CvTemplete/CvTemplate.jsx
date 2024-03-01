@@ -46,7 +46,7 @@ const CvTemplate = () => {
   const handleSave = async () => {
     const input = componentRef.current;
 
-    const approximatePdfSize = 2500 * 3500;
+    const approximatePdfSize = 1000 * 1000;
 
     html2canvas(input, { scale: 2 }).then(async (canvas) => {
       let imgData = canvas.toDataURL("image/jpeg", 1.0);
@@ -60,7 +60,7 @@ const CvTemplate = () => {
           unit: "px",
           format: "a4",
         });
-        const imgWidth = 600;
+        const imgWidth = 450;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
         pdf.addImage(imgData, "JPEG", 0, 0, imgWidth, imgHeight);
@@ -101,7 +101,7 @@ const CvTemplate = () => {
   if (loading) {
     return <Refereshing />;
   }
-
+  console.log(SingleUserData);
   return (
     <Stack width={{ sm: "100%", xs: "80%" }} m={"auto"}>
       <Stack
@@ -296,7 +296,7 @@ const CvTemplate = () => {
         direction={"row"}
         spacing={2}
         sx={{ justifyContent: "center", alignItems: "center", mt: "10px" }}>
-        <Button onClick={handleSave} variant="contained">
+        <Button onClick={handleSave} variant="contained" sx={{height:'40px',width:'100px'}}>
           {Btnloading ? (
             <CircularProgress sx={{ color: "inherit" }} />
           ) : (
