@@ -1,8 +1,13 @@
-import React, { useEffect, useState } from "react";
+import * as React from "react";
+import PropTypes from "prop-types";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 
 import {
-  Box,
   Button,
   CircularProgress,
   MenuItem,
@@ -19,7 +24,45 @@ import { useNavigate, useParams } from "react-router-dom";
 import { setSingleUserData } from "../../redux/slices/CvSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-const CvCreatorForm = () => {
+function CustomTabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}>
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+CustomTabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
+
+export default function BasicTabs() {
+  const [tabvalue, setTabValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
+
   const [loading, setLoading] = useState(false);
   const id = useParams();
 
@@ -38,9 +81,32 @@ const CvCreatorForm = () => {
         phone: "",
         address: "",
       },
-      projects: [],
-      education: [],
-      experience: [],
+      projects: [
+        {
+          projectName: "",
+          desc: "",
+          technologies: [],
+        },
+      ],
+      education: [
+        {
+          institution: "",
+          degree: "",
+          fieldOfStudy: "",
+          startDate: "",
+          endDate: "",
+        },
+      ],
+      experience: [
+        {
+          company: "",
+          position: "",
+          startDate: "",
+          endDate: "",
+          responsibilities: [],
+          environments: [],
+        },
+      ],
       certifications: [],
       languages: [],
       skills: [],
@@ -54,6 +120,15 @@ const CvCreatorForm = () => {
   } = useFieldArray({
     control,
     name: "education",
+    defaultValue: [
+      {
+        institution: "",
+        degree: "",
+        fieldOfStudy: "",
+        startDate: "",
+        endDate: "",
+      },
+    ],
   });
 
   const {
@@ -93,7 +168,13 @@ const CvCreatorForm = () => {
   const handleRemoveEducation = (index) => {
     removeEducation(index);
   };
-  const [certificationsFields, setCertificationsFields] = React.useState([]);
+  const [certificationsFields, setCertificationsFields] = React.useState([
+    {
+      name: "",
+      organization: "",
+      date: "",
+    },
+  ]);
   const [selectedTechSkills, setSelectedTechSkills] = React.useState([]);
   const navigate = useNavigate();
   const SingleUserData = useSelector(
@@ -140,6 +221,9 @@ const CvCreatorForm = () => {
     ]);
   };
   const onSubmit = async (data) => {
+    data.projects.forEach((project) => {
+      project.technologies = project.technologies.join(", ");
+    });
     const requestData = {
       ...data,
       languages: languagesFields.map((language) => ({
@@ -239,192 +323,211 @@ const CvCreatorForm = () => {
   }, [id.editId, SingleUserData._id]);
 
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="py-2 text-wrap">
-          We suggest including an email and phone number.
-        </div>
-        <Stack spacing={2}>
-          <Stack spacing={1}>
-            <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
-              Personal information
-            </div>
-            <Box className="grid md:grid-cols-3 grid-cols-1 gap-2">
-              <div className="flex flex-col">
-                <TextField
-                  {...register("personalInfo.firstName", {
-                    required: true,
-                    maxLength: 10,
-                  })}
-                  margin="dense"
-                  required
-                  sx={{ backgroundColor: "white" }}
-                  label={id.editId ? "" : "First Name"}
-                  variant="outlined"
-                  focused={id.editId ? true : false}
-                  disabled={id.editId ? true : false}
-                />
-                <p className=" px-2">
-                  {errors.personalInfo?.firstName && (
-                    <p className="text-red-500">Please check the First Name</p>
-                  )}
-                </p>
+    <Box sx={{ width: "100%" }}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Tabs
+          value={tabvalue}
+          onChange={handleChange}
+          aria-label="basic tabs example">
+          <Tab label="Personal" {...a11yProps(0)} />
+          <Tab label="Education & Project Details" {...a11yProps(1)} />
+          <Tab label="Experience Details" {...a11yProps(2)} />
+          <Tab label="Certifications & Skills" {...a11yProps(3)} />
+        </Tabs>
+      </Box>
+      <CustomTabPanel value={tabvalue} index={0}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="py-2 text-wrap">
+            We suggest including an email and phone number.
+          </div>
+          <Stack spacing={2}>
+            <Stack spacing={1}>
+              <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
+                Personal information
               </div>
+              <Box className="grid md:grid-cols-3 grid-cols-1 gap-2">
+                <div className="flex flex-col">
+                  <TextField
+                    {...register("personalInfo.firstName", {
+                      required: true,
+                      maxLength: 10,
+                    })}
+                    margin="dense"
+                    required
+                    sx={{ backgroundColor: "white" }}
+                    label={id.editId ? "" : "First Name"}
+                    variant="outlined"
+                    focused={id.editId ? true : false}
+                    disabled={id.editId ? true : false}
+                  />
+                  <p className=" px-2">
+                    {errors.personalInfo?.firstName && (
+                      <p className="text-red-500">
+                        Please check the First Name
+                      </p>
+                    )}
+                  </p>
+                </div>
 
-              <div className="flex flex-col">
-                <TextField
-                  {...register("personalInfo.lastName", {
-                    required: true,
-                    maxLength: 10,
-                  })}
-                  margin="dense"
-                  label={id.editId ? "" : "Last Name"}
-                  variant="outlined"
-                  focused={id.editId ? true : false}
-                  disabled={id.editId ? true : false}
-                />
-                <p className=" px-2">
-                  {errors.personalInfo?.lastName && (
-                    <p className="text-red-500">Please check the Last Name</p>
-                  )}
-                </p>
-              </div>
+                <div className="flex flex-col">
+                  <TextField
+                    {...register("personalInfo.lastName", {
+                      required: true,
+                      maxLength: 10,
+                    })}
+                    margin="dense"
+                    label={id.editId ? "" : "Last Name"}
+                    variant="outlined"
+                    focused={id.editId ? true : false}
+                    disabled={id.editId ? true : false}
+                  />
+                  <p className=" px-2">
+                    {errors.personalInfo?.lastName && (
+                      <p className="text-red-500">Please check the Last Name</p>
+                    )}
+                  </p>
+                </div>
 
-              <div className="flex flex-col">
-                <TextField
-                  {...register("personalInfo.email", {
-                    required: true,
-                    pattern:
-                      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                  })}
-                  type="email"
-                  margin="dense"
-                  required
-                  label="Email"
-                  variant="outlined"
-                  focused={id.editId ? true : false}
-                />
-                <p className=" px-2">
-                  {errors.personalInfo?.email && (
-                    <p className="text-red-500">Please check your email</p>
-                  )}
-                </p>
-              </div>
+                <div className="flex flex-col">
+                  <TextField
+                    {...register("personalInfo.email", {
+                      required: true,
+                      pattern:
+                        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                    })}
+                    type="email"
+                    margin="dense"
+                    required
+                    label="Email"
+                    variant="outlined"
+                    focused={id.editId ? true : false}
+                  />
+                  <p className=" px-2">
+                    {errors.personalInfo?.email && (
+                      <p className="text-red-500">Please check your email</p>
+                    )}
+                  </p>
+                </div>
 
-              <div className="flex flex-col">
+                <div className="flex flex-col">
+                  <TextField
+                    {...register("personalInfo.phone", {
+                      required: "Phone number is required",
+                      pattern: {
+                        value: /^[0-9]*$/,
+                        message: "Please enter only digits",
+                      },
+                      maxLength: {
+                        value: 10,
+                        message: "Phone number cannot exceed 10 digits",
+                      },
+                    })}
+                    margin="dense"
+                    required
+                    label="Phone"
+                    variant="outlined"
+                    focused={id.editId ? true : false}
+                  />
+                  <p className=" px-2">
+                    {errors.personalInfo?.phone && (
+                      <p className="text-red-500">
+                        {errors.personalInfo.phone.message}
+                      </p>
+                    )}
+                  </p>
+                </div>
                 <TextField
-                  {...register("personalInfo.phone", {
-                    required: "Phone number is required",
-                    pattern: {
-                      value: /^[0-9]*$/,
-                      message: "Please enter only digits",
-                    },
-                    maxLength: {
-                      value: 10,
-                      message: "Phone number cannot exceed 10 digits",
-                    },
-                  })}
+                  {...register("personalInfo.address")}
                   margin="dense"
-                  required
-                  label="Phone"
+                  label="Address"
                   variant="outlined"
+                  multiline
+                  rows={2}
                   focused={id.editId ? true : false}
                 />
-                <p className=" px-2">
-                  {errors.personalInfo?.phone && (
-                    <p className="text-red-500">
-                      {errors.personalInfo.phone.message}
-                    </p>
-                  )}
-                </p>
-              </div>
-              <TextField
-                {...register("personalInfo.address")}
-                margin="dense"
-                label="Address"
-                variant="outlined"
-                multiline
-                rows={2}
-                focused={id.editId ? true : false}
-              />
-            </Box>
-          </Stack>
-          <Stack spacing={1}>
-            <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
-              Social Link
-            </div>
-            <Box className="grid md:grid-cols-3 grid-cols-1 gap-2">
-              <TextField
-                {...register("personalInfo.links.github")}
-                margin="dense"
-                label="Github"
-                variant="outlined"
-                focused={id.editId ? true : false}
-              />
-              <TextField
-                {...register("personalInfo.links.linkedin")}
-                margin="dense"
-                label="LinkedIn"
-                variant="outlined"
-                focused={id.editId ? true : false}
-              />
-              <TextField
-                {...register("personalInfo.links.website")}
-                margin="dense"
-                label="Website"
-                variant="outlined"
-                focused={id.editId ? true : false}
-              />
-            </Box>
-          </Stack>
-          <Stack spacing={1}>
-            <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
-              Languages
-            </div>
-            {languagesFields.map((field, index) => (
-              <Box
-                className="grid md:grid-cols-4 grid-cols-1 gap-2"
-                key={index}>
-                <TextField
-                  select
-                  label="Language"
-                  variant="outlined"
-                  value={field.language}
-                  focused={id.editId ? true : false}
-                  onChange={(e) => {
-                    const updatedFields = [...languagesFields];
-                    updatedFields[index].language = e.target.value;
-                    setLanguagesFields(updatedFields);
-                  }}>
-                  {languageOptions.map((option) => (
-                    <MenuItem key={option} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <TextField
-                  select
-                  label="Proficiency"
-                  variant="outlined"
-                  value={field.proficiency}
-                  focused={id.editId ? true : false}
-                  onChange={(e) => {
-                    const updatedFields = [...languagesFields];
-                    updatedFields[index].proficiency = e.target.value;
-                    setLanguagesFields(updatedFields);
-                  }}>
-                  {proficiencyOptions.map((option) => (
-                    <MenuItem key={option} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </TextField>
               </Box>
-            ))}
+            </Stack>
+            <Stack spacing={1}>
+              <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
+                Social Link
+              </div>
+              <Box className="grid md:grid-cols-3 grid-cols-1 gap-2">
+                <TextField
+                  {...register("personalInfo.links.github")}
+                  margin="dense"
+                  label="Github"
+                  variant="outlined"
+                  focused={id.editId ? true : false}
+                />
+                <TextField
+                  {...register("personalInfo.links.linkedin")}
+                  margin="dense"
+                  label="LinkedIn"
+                  variant="outlined"
+                  focused={id.editId ? true : false}
+                />
+                <TextField
+                  {...register("personalInfo.links.website")}
+                  margin="dense"
+                  label="Website"
+                  variant="outlined"
+                  focused={id.editId ? true : false}
+                />
+              </Box>
+            </Stack>
+            <Stack spacing={1}>
+              <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
+                Languages
+              </div>
+              {languagesFields.map((field, index) => (
+                <Box
+                  className="grid md:grid-cols-4 grid-cols-1 gap-2"
+                  key={index}>
+                  <TextField
+                    select
+                    label="Language"
+                    variant="outlined"
+                    value={field.language}
+                    focused={id.editId ? true : false}
+                    onChange={(e) => {
+                      const updatedFields = [...languagesFields];
+                      updatedFields[index].language = e.target.value;
+                      setLanguagesFields(updatedFields);
+                    }}>
+                    {languageOptions.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                  <TextField
+                    select
+                    label="Proficiency"
+                    variant="outlined"
+                    value={field.proficiency}
+                    focused={id.editId ? true : false}
+                    onChange={(e) => {
+                      const updatedFields = [...languagesFields];
+                      updatedFields[index].proficiency = e.target.value;
+                      setLanguagesFields(updatedFields);
+                    }}>
+                    {proficiencyOptions.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Box>
+              ))}
+            </Stack>
           </Stack>
+        </form>
+      </CustomTabPanel>
+      <CustomTabPanel value={tabvalue} index={1}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={1}>
             <div className="font-poppins md:text-xl text-sm font-semibold md:font-medium">
-              Education Detail
+              Education Details
             </div>
             {educationFields.map((field, index) => (
               <>
@@ -472,7 +575,7 @@ const CvCreatorForm = () => {
                 </Box>
                 <Button
                   onClick={() => handleRemoveEducation(index)}
-                  className="w-[30%]"
+                  className="w-[5%]"
                   color="error">
                   <CloseIcon />
                 </Button>
@@ -480,19 +583,21 @@ const CvCreatorForm = () => {
             ))}
 
             {educationFields.length <= 2 && (
-              <Button
-                className="md:w-[20%] w-full text-sm"
-                type="button"
-                variant="outlined"
-                onClick={() => appendEducation({})}>
-                Add Education
-              </Button>
+              <div className="mt-2">
+                <Button
+                  className="md:w-[20%] w-full text-sm"
+                  type="button"
+                  variant="contained"
+                  onClick={() => appendEducation({})}>
+                  Add Education
+                </Button>
+              </div>
             )}
           </Stack>
 
-          <Stack spacing={1}>
+          <Stack sx={{ marginTop: "20px" }} spacing={1}>
             <div className="font-poppins md:text-xl text-sm font-semibold md:font-medium">
-              Projects Detail
+              Projects Details
             </div>
             {projectsFields.map((field, index) => (
               <>
@@ -528,7 +633,7 @@ const CvCreatorForm = () => {
                 </Box>
                 <Button
                   onClick={() => handleRemoveProjects(index)}
-                  className="w-[30%]"
+                  className="w-[5%]"
                   color="error">
                   <CloseIcon />
                 </Button>
@@ -539,13 +644,22 @@ const CvCreatorForm = () => {
               <Button
                 className="md:w-[20%] w-full text-sm"
                 type="button"
-                variant="outlined"
-                onClick={() => appendProjects({})}>
+                variant="contained"
+                onClick={() =>
+                  appendProjects({
+                    projectName: "",
+                    desc: "",
+                    technologies: [],
+                  })
+                }>
                 Add Projects
               </Button>
             )}
           </Stack>
-
+        </form>
+      </CustomTabPanel>
+      <CustomTabPanel value={tabvalue} index={2}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={1}>
             <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
               Experience
@@ -616,114 +730,116 @@ const CvCreatorForm = () => {
             <Button
               className="md:w-[20%] w-full text-sm"
               type="button"
-              variant="outlined"
+              variant="contained"
               onClick={() => appendExperience({})}>
               Add Experience
             </Button>
-          </Stack>
-          <Stack spacing={1}>
-            <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
-              Certifications
-            </div>
-            {certificationsFields.map((field, index) => (
-              <Box className="grid md:grid-cols-3 gap-2" key={field.id}>
-                <TextField
-                  {...register(`certifications.${index}.name`)}
-                  margin="dense"
-                  label="Certification Name"
-                  variant="outlined"
-                />
-                <TextField
-                  {...register(`certifications.${index}.organization`)}
-                  margin="dense"
-                  focused={id.editId ? true : false}
-                  label="Organization"
-                  variant="outlined"
-                />
+          </Stack>{" "}
+        </form>
+      </CustomTabPanel>
+      <CustomTabPanel value={tabvalue} index={3}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Stack spacing={2}>
+            <Stack spacing={1}>
+              <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
+                Certifications
+              </div>
+              {certificationsFields.map((field, index) => (
+                <Box className="grid md:grid-cols-3 gap-2" key={field.id}>
+                  <TextField
+                    {...register(`certifications.${index}.name`)}
+                    margin="dense"
+                    label="Certification Name"
+                    variant="outlined"
+                  />
+                  <TextField
+                    {...register(`certifications.${index}.organization`)}
+                    margin="dense"
+                    focused={id.editId ? true : false}
+                    label="Organization"
+                    variant="outlined"
+                  />
 
-                <TextField
-                  {...register(`certifications.${index}.date`)}
-                  margin="dense"
-                  focused={id.editId ? true : false}
-                  label="Date"
-                  variant="outlined"
-                />
+                  <TextField
+                    {...register(`certifications.${index}.date`)}
+                    margin="dense"
+                    focused={id.editId ? true : false}
+                    label="Date"
+                    variant="outlined"
+                  />
 
-                <Button
-                  onClick={() => handleRemoveCertification(index)}
-                  color="error"
-                  className="w-[30%]">
-                  {" "}
-                  <CloseIcon />
-                </Button>
-              </Box>
-            ))}
+                  <Button
+                    onClick={() => handleRemoveCertification(index)}
+                    color="error"
+                    className="w-[30%]">
+                    {" "}
+                    <CloseIcon />
+                  </Button>
+                </Box>
+              ))}
+              <Button
+                type="button"
+                className="md:w-[20%] w-full text-sm"
+                variant="contained"
+                onClick={() => appendCertification({})}>
+                Add Certification
+              </Button>
+            </Stack>
+            <Stack sx={{ marginTop: "20px" }} spacing={1}>
+              <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
+                Skills
+              </div>
+            </Stack>
+            <Box className="grid grid-cols-3" sx={{ minWidth: 120 }}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label"> Skill</InputLabel>
+                <Select
+                  className="bg-slate-1000"
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={selectedTechSkills}
+                  label="skill"
+                  multiple=""
+                  onChange={handleSkillSelect}>
+                  {techSkills.map((skill, index) => (
+                    <MenuItem key={index} value={skill}>
+                      {skill}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {selectedTechSkills && (
+                  <div>
+                    {selectedTechSkills.map((skill, index) => (
+                      <div
+                        className="p-2 border-2 inset-3 m-1 rounded-md bg-slate-200 "
+                        key={index}>
+                        <span key={index} className="selected-skill max-w-sm">
+                          <span className="px-1"> {skill}</span>
+                          <CloseIcon
+                            className="text-red-800"
+                            onClick={() => handleSkillRemove(index)}
+                          />
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </FormControl>
+            </Box>
             <Button
-              type="button"
-              className="md:w-[20%] w-full text-sm"
-              variant="outlined"
-              onClick={() => appendCertification({})}>
-              Add Certification
+              className="w-[10%] "
+              type="submit"
+              variant="contained"
+              color="primary">
+              {loading ? (
+                <CircularProgress sx={{ color: "inherit" }} />
+              ) : (
+                "Submit"
+              )}
             </Button>
           </Stack>
-          <Stack spacing={1}>
-            <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
-              Skills
-            </div>
-          </Stack>
-
-          <Box className="grid grid-cols-3" sx={{ minWidth: 120 }}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label"> Skill</InputLabel>
-              <Select
-                className="bg-slate-1000"
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={selectedTechSkills}
-                label="skill"
-                multiple=""
-                onChange={handleSkillSelect}>
-                {techSkills.map((skill, index) => (
-                  <MenuItem key={index} value={skill}>
-                    {skill}
-                  </MenuItem>
-                ))}
-              </Select>
-              {selectedTechSkills && (
-                <div>
-                  {selectedTechSkills.map((skill, index) => (
-                    <div
-                      className="p-2 border-2 inset-3 m-1 rounded-md bg-slate-200 "
-                      key={index}>
-                      <span key={index} className="selected-skill max-w-sm">
-                        <span className="px-1"> {skill}</span>
-                        <CloseIcon
-                          className="text-red-800"
-                          onClick={() => handleSkillRemove(index)}
-                        />
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </FormControl>
-          </Box>
-
-          <Button
-            className="w-[10%]"
-            type="submit"
-            variant="contained"
-            color="primary">
-            {loading ? (
-              <CircularProgress sx={{ color: "inherit" }} />
-            ) : (
-              "Submit"
-            )}
-          </Button>
-        </Stack>
-      </form>
-    </>
+        </form>
+      </CustomTabPanel>
+    </Box>
   );
-};
-
-export default CvCreatorForm;
+}
