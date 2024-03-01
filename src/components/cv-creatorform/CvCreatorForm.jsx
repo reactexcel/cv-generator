@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   CircularProgress,
+  IconButton,
   MenuItem,
   Stack,
   TextField,
@@ -261,8 +262,8 @@ const CvCreatorForm = () => {
                   sx={{ backgroundColor: "white" }}
                   label={id.editId ? "" : "First Name"}
                   variant="outlined"
-                  focused={id.editId ? true : false}
                   disabled={id.editId ? true : false}
+                  focused={id.editId ? true : false}
                 />
                 <p className=" px-2">
                   {errors.personalInfo?.firstName && (
@@ -472,7 +473,7 @@ const CvCreatorForm = () => {
                 </Box>
                 <Button
                   onClick={() => handleRemoveEducation(index)}
-                  className="w-[30%]"
+                  className="w-[5%]"
                   color="error">
                   <CloseIcon />
                 </Button>
@@ -528,7 +529,7 @@ const CvCreatorForm = () => {
                 </Box>
                 <Button
                   onClick={() => handleRemoveProjects(index)}
-                  className="w-[30%]"
+                  className="w-[5%]"
                   color="error">
                   <CloseIcon />
                 </Button>
@@ -605,7 +606,7 @@ const CvCreatorForm = () => {
 
                   <Button
                     onClick={() => handleRemoveExperience(index)}
-                    className="w-[30%]"
+                    className="w-[5%]"
                     color="error">
                     <CloseIcon />
                   </Button>
@@ -652,7 +653,7 @@ const CvCreatorForm = () => {
                 <Button
                   onClick={() => handleRemoveCertification(index)}
                   color="error"
-                  className="w-[30%]">
+                  className="w-[5%]">
                   {" "}
                   <CloseIcon />
                 </Button>
