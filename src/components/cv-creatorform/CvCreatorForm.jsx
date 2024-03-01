@@ -162,6 +162,10 @@ const CvCreatorForm = () => {
 
   const handleSkillSelect = (e) => {
     const skill = e.target.value;
+    if (selectedTechSkills.includes(skill)) {
+      toast.error("Skill already selected!");
+      return;
+    }
     setSelectedTechSkills([...selectedTechSkills, skill]);
   };
   const handleSkillRemove = (index) => {
@@ -506,6 +510,24 @@ const CvCreatorForm = () => {
                     focused={id.editId ? true : false}
                     variant="outlined"
                   />
+                  <TextField
+                    {...register(`experience.${index}.responsibilities`)}
+                    margin="dense"
+                    label="Achivements"
+                    multiline
+                    rows={3}
+                    focused={id.editId ? true : false}
+                    variant="outlined"
+                  />
+                  <TextField
+                    {...register(`experience.${index}.environments`)}
+                    margin="dense"
+                    label="Technologies"
+                    multiline
+                    rows={3}
+                    focused={id.editId ? true : false}
+                    variant="outlined"
+                  />
 
                   <Button
                     onClick={() => handleRemoveExperience(index)}
@@ -544,15 +566,15 @@ const CvCreatorForm = () => {
                   label="Organization"
                   variant="outlined"
                 />
-                <div className="mt-2">
-                  <TextField
-                    {...register(`certifications.${index}.date`)}
-                    margin="dense"
-                    focused={id.editId ? true : false}
-                    label="Date"
-                    variant="outlined"
-                  />
-                </div>
+
+                <TextField
+                  {...register(`certifications.${index}.date`)}
+                  margin="dense"
+                  focused={id.editId ? true : false}
+                  label="Date"
+                  variant="outlined"
+                />
+
                 <Button
                   onClick={() => handleRemoveCertification(index)}
                   color="error"
@@ -566,7 +588,7 @@ const CvCreatorForm = () => {
               type="button"
               className="md:w-[20%] w-full text-sm"
               variant="outlined"
-              onClick={appendCertification}>
+              onClick={() => appendCertification({})}>
               Add Certification
             </Button>
           </Stack>
