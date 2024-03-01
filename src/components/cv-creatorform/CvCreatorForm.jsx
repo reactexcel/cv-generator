@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { DevTool } from "@hookform/devtools";
+import { useForm, useFieldArray} from "react-hook-form";
 
 import {
   Box,
@@ -12,10 +11,6 @@ import {
 } from "@mui/material";
 import ApiFetching from "../../services/ApiFetching";
 import CloseIcon from "@mui/icons-material/Close";
-
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -23,9 +18,6 @@ import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import { setSingleUserData } from "../../redux/slices/CvSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { DatePicker } from "@mui/x-date-pickers";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 
 const CvCreatorForm = () => {
   const [loading, setLoading] = useState(false);
@@ -212,7 +204,7 @@ const CvCreatorForm = () => {
 
       setValue("certifications", certifications || []);
 
-      const languagesData = SingleUserData.languages.map((language) => ({
+      const languagesData = languages.map((language) => ({
         language: language.language,
         proficiency: language.proficiency,
       }));
@@ -408,7 +400,6 @@ const CvCreatorForm = () => {
               </Box>
             ))}
           </Stack>
-          {/* education */}
           <Stack spacing={1}>
             <div className="font-poppins md:text-xl text-sm font-semibold md:font-medium">
               Education Detail
@@ -477,7 +468,6 @@ const CvCreatorForm = () => {
             )}
           </Stack>
 
-          {/* Experience Detail */}
           <Stack spacing={1}>
             <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
               Experience
@@ -535,7 +525,6 @@ const CvCreatorForm = () => {
               Add Experience
             </Button>
           </Stack>
-          {/* Certifications */}
           <Stack spacing={1}>
             <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
               Certifications
@@ -637,7 +626,6 @@ const CvCreatorForm = () => {
           </Button>
         </Stack>
       </form>
-      <DevTool control={control} />
     </>
   );
 };

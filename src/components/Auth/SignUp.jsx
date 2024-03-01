@@ -43,7 +43,7 @@ const SignUp = () => {
         <img
           className="h-[100dvh] md:blur-sm blur-0 brightness-95 w-full"
           src={loginassets}
-          alt=""
+          alt="loginbg"
         />
         <div className="absolute lg:top-16  backdrop-blur-sm w-full top-0 flex flex-col md:flex-row ">
           <div className="lg:flex hidden w-1/2 font-poppins bg-no-repeat bg-cover items-center">

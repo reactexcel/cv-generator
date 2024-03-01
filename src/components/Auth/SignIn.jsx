@@ -42,7 +42,6 @@ const SignIn = () => {
 
   return (
     <>
-      {/* component */}
       <section className="min-h-screen flex flex-col items-stretch text-white">
         <img
           className="h-[100dvh] md:blur-sm blur-0 brightness-95 w-full"
