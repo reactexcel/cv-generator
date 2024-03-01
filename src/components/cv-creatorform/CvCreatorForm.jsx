@@ -262,6 +262,7 @@ const CvCreatorForm = () => {
                   sx={{ backgroundColor: "white" }}
                   label={id.editId ? "" : "First Name"}
                   variant="outlined"
+                  disabled={id.editId ? true : false}
                   focused={id.editId ? true : false}
                 />
                 <p className=" px-2">
