@@ -100,7 +100,7 @@ const CvTemplate = () => {
   if (loading) {
     return <Refereshing />;
   }
-  console.log(SingleUserData);
+
   return (
     <Stack width={{ sm: "100%", xs: "80%" }} m={"auto"}>
       <Stack
@@ -134,7 +134,7 @@ const CvTemplate = () => {
                         <LinkedInIcon />
                       )}
                     </a>
-                    <div className="ml-2 truncate">
+                    <div className="ml-2">
                       {SingleUserData?.personalInfo?.links?.linkedin}
                     </div>
                   </div>
@@ -158,7 +158,9 @@ const CvTemplate = () => {
                       target="_blank">
                       {SingleUserData?.personalInfo?.email && <EmailIcon />}
                     </a>
-                    <div>{SingleUserData?.personalInfo?.email}</div>
+                    <div className="ml-2">
+                      {SingleUserData?.personalInfo?.email}
+                    </div>
                   </div>
                   <div className="flex items-center my-1 gap-2">
                     <a
@@ -199,27 +201,28 @@ const CvTemplate = () => {
                     return (
                       <div key={i} className="flex flex-col">
                         <p className="font-semibold text-xs text-gray-700">
-                          <p className="text-lg font-poppins">
+                          <p className="text-2xl font-poppins">
                             {e.institution}
                           </p>
-                          <div className="flex gap-10">
-                            {" "}
-                            <div> {e.startDate}</div>
-                            <div>{e.endDate}</div>
-                          </div>
                         </p>
                         <p className="text-sm font-medium">
-                          <span className="text-green-700">
+                          <span className="text-slate-500">
                             <div className="flex gap-2 ">
                               {" "}
-                              <div className="text-base font-medium">
-                                Courses
+                              <div className="text-xl font-medium">
+                                {e.degree}
                               </div>
-                              <div>{e.degree}</div>
                             </div>
-                            <div>{e.fieldOfStudy}</div>
+                            <div className="text-lg font-medium">
+                              {e.fieldOfStudy}
+                            </div>
                           </span>
                         </p>
+                        <div className="flex gap-10 ">
+                          {" "}
+                          <div className="font-thin"> {e.startDate}</div>
+                          <div className="font-thin">{e.endDate}</div>
+                        </div>
                       </div>
                     );
                   })}
@@ -240,18 +243,24 @@ const CvTemplate = () => {
                           <div className="text-lg font-poppins font-semibold">
                             {e.projectName}
                           </div>
-                          <div className="flex  flex-col leading-3">
+                          <div className="flex flex-col">
                             {" "}
-                            <div className="font-medium text-sm font-poppins">
-                              Description :-
+                            <div className="flex flex-row leading-3">
+                              {" "}
+                              <div className="font-medium flex text-sm font-poppins">
+                                <div> Desc</div>
+                                <div className="font-poppins font-normal text-sm">
+                                  {" "}
+                                  : {e.desc}
+                                </div>{" "}
+                              </div>
                             </div>
-                            <div className="font-poppins text-sm">{e.desc}</div>{" "}
-                          </div>
-                          <div className="font-medium text-sm font-poppins">
-                            Technologies used:-{" "}
-                            <div className="font-poppins font-normal text-sm">
-                              {e.technologies}
-                            </div>{" "}
+                            <div className="font-medium flex text-sm font-poppins">
+                              <div> Technologies used</div>{" "}
+                              <div className="font-poppins font-normal text-sm">
+                                <span> : {e.technologies}</span>
+                              </div>{" "}
+                            </div>
                           </div>
                         </p>
                       </div>
@@ -272,9 +281,7 @@ const CvTemplate = () => {
                           {e.company} | {e.position} | {e.startDate} |{" "}
                           {e.endDate}
                         </p>
-                        <p className="font-semibold text-sm text-gray-700">
-                          <div> </div>
-                        </p>
+
                         <div className="font-medium text-sm font-poppins">
                           Achivements/Tasks :{" "}
                           <span className="font-poppins font-normal text-sm">
@@ -303,11 +310,13 @@ const CvTemplate = () => {
                     return (
                       <div key={i} className="flex flex-col">
                         <p className="text-lg font-semibold text-gray-700">
-                          {e.name}
+                          <div className="font-poppins"> {e.organization}</div>
                         </p>
                         <p className="font-normal text-md text-gray-700 mb-1 pl-2">
-                          <div> {e.organization}</div>
-                          <div>{e.date}</div>
+                          <div className="flex gap-10">
+                            <div className="font-poppins"> {e.name}</div>
+                            <div>{e.date}</div>
+                          </div>
                         </p>
                       </div>
                     );
@@ -322,7 +331,10 @@ const CvTemplate = () => {
         direction={"row"}
         spacing={2}
         sx={{ justifyContent: "center", alignItems: "center", mt: "10px" }}>
-        <Button onClick={handleSave} variant="contained" sx={{height:'40px',width:'100px'}}>
+        <Button
+          onClick={handleSave}
+          variant="contained"
+          sx={{ height: "40px", width: "100px" }}>
           {Btnloading ? (
             <CircularProgress sx={{ color: "inherit" }} />
           ) : (
