@@ -262,6 +262,7 @@ const CvCreatorForm = () => {
                   label={id.editId ? "" : "First Name"}
                   variant="outlined"
                   focused={id.editId ? true : false}
+                  disabled={id.editId ? true : false}
                 />
                 <p className=" px-2">
                   {errors.personalInfo?.firstName && (
