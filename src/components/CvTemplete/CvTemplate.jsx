@@ -15,7 +15,7 @@ import Refereshing from "../Refereshing/Refereshing";
 
 const CvTemplate = () => {
   const [loading, setLoading] = useState(false);
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const userId = useParams();
   const dispatch = useDispatch();
   const [Btnloading, setBtnloading] = useState(false);
@@ -46,7 +46,7 @@ const CvTemplate = () => {
   const handleSave = async () => {
     const input = componentRef.current;
 
-    const approximatePdfSize = 2500 * 3500;
+    const approximatePdfSize = 1000 * 1000;
 
     html2canvas(input, { scale: 2 }).then(async (canvas) => {
       let imgData = canvas.toDataURL("image/jpeg", 1.0);
@@ -60,7 +60,7 @@ const CvTemplate = () => {
           unit: "px",
           format: "a4",
         });
-        const imgWidth = 600;
+        const imgWidth = 450;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
         pdf.addImage(imgData, "JPEG", 0, 0, imgWidth, imgHeight);
@@ -88,8 +88,7 @@ const CvTemplate = () => {
       const res = await ApiFetching("POST", "user/upload", formData);
       if (res.status === 200) {
         toast.success("Your resume saved successfully");
-        navigate('../library')
-
+        navigate("../library");
       } else {
         toast.error("Something went wrong");
       }
@@ -101,7 +100,7 @@ const CvTemplate = () => {
   if (loading) {
     return <Refereshing />;
   }
-
+  console.log(SingleUserData);
   return (
     <Stack width={{ sm: "100%", xs: "80%" }} m={"auto"}>
       <Stack
@@ -230,14 +229,35 @@ const CvTemplate = () => {
             <div className="flex flex-col sm:w-2/3 order-first sm:order-none sm:-mt-10">
               <div className="py-3">
                 <h2 className="text-lg font-poppins font-bold text-top-color">
-                  About Me
+                  Projects Details
                 </h2>
                 <div className="border-2 w-20 border-top-color my-3" />
-                <p>
-                  To get a career opportunity which would help me to utilize my
-                  academic background to assist me to gain experience, employ my
-                  excellent skills, and enable me to make positive contribution.
-                </p>
+                <div className="flex flex-col">
+                  {SingleUserData?.projects?.map((e, i) => {
+                    return (
+                      <div key={i} className="flex flex-col">
+                        <p className="text-lg  text-gray-700">
+                          <div className="text-lg font-poppins font-semibold">
+                            {e.projectName}
+                          </div>
+                          <div className="flex  flex-col leading-3">
+                            {" "}
+                            <div className="font-medium text-sm font-poppins">
+                              Description :-
+                            </div>
+                            <div className="font-poppins text-sm">{e.desc}</div>{" "}
+                          </div>
+                          <div className="font-medium text-sm font-poppins">
+                            Technologies used:-{" "}
+                            <div className="font-poppins font-normal text-sm">
+                              {e.technologies}
+                            </div>{" "}
+                          </div>
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
               <div className="py-3">
                 <h2 className="text-lg font-poppins font-bold text-top-color">
@@ -255,12 +275,18 @@ const CvTemplate = () => {
                         <p className="font-semibold text-sm text-gray-700">
                           <div> </div>
                         </p>
-                        <div className="text-wrap font-medium">
-                          Achivements/Tasks : <span>{e.responsibilities}</span>
+                        <div className="font-medium text-sm font-poppins">
+                          Achivements/Tasks :{" "}
+                          <span className="font-poppins font-normal text-sm">
+                            {e.responsibilities}
+                          </span>
                         </div>
                         <br />
-                        <div className="text-wrap font-medium">
-                          Technologies work on: <span>{e.environments}</span>
+                        <div className="font-medium text-sm font-poppins">
+                          Technologies work on:{" "}
+                          <span className="font-poppins font-normal text-sm">
+                            {e.environments}
+                          </span>
                         </div>
                       </div>
                     );
@@ -296,7 +322,7 @@ const CvTemplate = () => {
         direction={"row"}
         spacing={2}
         sx={{ justifyContent: "center", alignItems: "center", mt: "10px" }}>
-        <Button onClick={handleSave} variant="contained">
+        <Button onClick={handleSave} variant="contained" sx={{height:'40px',width:'100px'}}>
           {Btnloading ? (
             <CircularProgress sx={{ color: "inherit" }} />
           ) : (

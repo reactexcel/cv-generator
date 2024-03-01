@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useForm, useFieldArray} from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 
 import {
   Box,
@@ -38,6 +38,7 @@ const CvCreatorForm = () => {
         phone: "",
         address: "",
       },
+      projects: [],
       education: [],
       experience: [],
       certifications: [],
@@ -54,6 +55,16 @@ const CvCreatorForm = () => {
     control,
     name: "education",
   });
+
+  const {
+    fields: projectsFields,
+    append: appendProjects,
+    remove: removeProjects,
+  } = useFieldArray({
+    control,
+    name: "projects",
+  });
+
   const {
     fields: experienceFields,
     append: appendExperience,
@@ -75,6 +86,9 @@ const CvCreatorForm = () => {
 
   const handleRemoveExperience = (index) => {
     removeExperience(index);
+  };
+  const handleRemoveProjects = (index) => {
+    removeProjects(index);
   };
   const handleRemoveEducation = (index) => {
     removeEducation(index);
@@ -193,6 +207,7 @@ const CvCreatorForm = () => {
     if (id.editId && SingleUserData._id) {
       const {
         personalInfo,
+        projects,
         education,
         experience,
         certifications,
@@ -201,6 +216,8 @@ const CvCreatorForm = () => {
       } = SingleUserData;
 
       setValue("personalInfo", { ...personalInfo });
+
+      setValue("projects", projects || []);
 
       setValue("education", education || []);
 
@@ -212,6 +229,7 @@ const CvCreatorForm = () => {
         language: language.language,
         proficiency: language.proficiency,
       }));
+
       setLanguagesFields(languagesData);
       setSelectedTechSkills(SingleUserData.skills);
 
@@ -468,6 +486,62 @@ const CvCreatorForm = () => {
                 variant="outlined"
                 onClick={() => appendEducation({})}>
                 Add Education
+              </Button>
+            )}
+          </Stack>
+
+          <Stack spacing={1}>
+            <div className="font-poppins md:text-xl text-sm font-semibold md:font-medium">
+              Projects Detail
+            </div>
+            {projectsFields.map((field, index) => (
+              <>
+                <div className="font-poppins text-sm font-medium">
+                  {`Projects Detail ${index + 1}`}
+                </div>
+                <Box
+                  className="grid md:grid-cols-3 grid-cols-1 gap-2"
+                  key={field.id}>
+                  <TextField
+                    {...register(`projects[${index}].projectName`)}
+                    margin="dense"
+                    focused={id.editId ? true : false}
+                    label="projectName"
+                    variant="outlined"
+                  />
+                  <TextField
+                    {...register(`projects[${index}].desc`)}
+                    margin="dense"
+                    focused={id.editId ? true : false}
+                    label="Description"
+                    multiple
+                    rows={3}
+                    variant="outlined"
+                  />
+                  <TextField
+                    {...register(`projects[${index}].technologies`)}
+                    margin="dense"
+                    focused={id.editId ? true : false}
+                    label="Technologies"
+                    variant="outlined"
+                  />
+                </Box>
+                <Button
+                  onClick={() => handleRemoveProjects(index)}
+                  className="w-[30%]"
+                  color="error">
+                  <CloseIcon />
+                </Button>
+              </>
+            ))}
+
+            {projectsFields.length <= 2 && (
+              <Button
+                className="md:w-[20%] w-full text-sm"
+                type="button"
+                variant="outlined"
+                onClick={() => appendProjects({})}>
+                Add Projects
               </Button>
             )}
           </Stack>

@@ -34,6 +34,10 @@ const Library = () => {
     document.body.removeChild(anchor);
   };
 
+  const handleEdit=(link)=>{
+    navigate(`../editCvGenerator/${link.templetId}`)
+  }
+
   const handleDeleteFile = async (id) => {
     const response = await ApiFetching("DELETE", `user/cv/delete/${id}`, null);
     if (response) {
@@ -134,7 +138,7 @@ const Library = () => {
                     </div>
                     <Stack direction={"row"}>
                       <Tooltip title="View Pdf">
-                        <IconButton>
+                        <IconButton> 
                           <ModalComponent link={link.link} />
                         </IconButton>
                       </Tooltip>
@@ -150,19 +154,19 @@ const Library = () => {
                       <Button
                         disabled={!link.templetId}
                         onClick={() =>
-                          navigate(`../editCvGenerator/${link.templetId}`)
+                          handleEdit(link)
                         }>
                         <Tooltip title="Edit">
                           <IconButton>
                             <EditIcon
-                              color={!link.templetId ? "error" : "primary"}
+                              color={!link.templetId ? "error" : "secondary"}
                             />
                           </IconButton>
                         </Tooltip>
                       </Button>
                       <Button onClick={() => handleDeleteFile(link._id)}>
-                        <Tooltip title="Delete">
-                          <IconButton>
+                        <Tooltip title="Delete" >
+                          <IconButton color="error">
                             <DeleteIcon />
                           </IconButton>
                         </Tooltip>
