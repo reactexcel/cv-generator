@@ -86,7 +86,7 @@ export default function BasicTabs() {
         {
           projectName: "",
           desc: "",
-          technologies: [],
+          technologies: "",
         },
       ],
       education: [
@@ -222,9 +222,6 @@ export default function BasicTabs() {
     ]);
   };
   const onSubmit = async (data) => {
-    data.projects.forEach((project) => {
-      project.technologies = project.technologies.join(", ");
-    });
     const requestData = {
       ...data,
       languages: languagesFields.map((language) => ({
@@ -336,8 +333,8 @@ export default function BasicTabs() {
           <Tab label="Certifications & Skills" {...a11yProps(3)} />
         </Tabs>
       </Box>
-      <CustomTabPanel value={tabvalue} index={0}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <CustomTabPanel value={tabvalue} index={0}>
           <div className="py-2 text-wrap">
             We suggest including an email and phone number.
           </div>
@@ -450,7 +447,7 @@ export default function BasicTabs() {
             </Stack>
             <Stack spacing={1}>
               <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
-                Social Link
+                Websites, Portfolios, Profiles
               </div>
               <Box className="grid md:grid-cols-3 grid-cols-1 gap-2">
                 <TextField
@@ -478,7 +475,7 @@ export default function BasicTabs() {
             </Stack>
             <Stack spacing={1}>
               <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
-                Languages
+                What languages do you know?
               </div>
               {languagesFields.map((field, index) => (
                 <Box
@@ -522,19 +519,18 @@ export default function BasicTabs() {
               ))}
             </Stack>
           </Stack>
-        </form>
-      </CustomTabPanel>
-      <CustomTabPanel value={tabvalue} index={1}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        </CustomTabPanel>
+        <CustomTabPanel value={tabvalue} index={1}>
           <Stack spacing={1}>
-            <div className="font-poppins md:text-xl text-sm font-semibold md:font-medium">
-              Education Details
+            <div className="font-poppins md:text-2xl text-sm font-semibold md:font-medium">
+              Tell us about your education
+            </div>
+            <div className="font-poppins text-sm font-normal">
+              Enter your education experience so far, even if you are a current
+              student or did not graduate
             </div>
             {educationFields.map((field, index) => (
               <>
-                <div className="font-poppins text-sm font-medium">
-                  {`Education Detail ${index + 1}`}
-                </div>
                 <Box
                   className="grid md:grid-cols-3 grid-cols-1 gap-2"
                   key={field.id}>
@@ -597,14 +593,15 @@ export default function BasicTabs() {
           </Stack>
 
           <Stack sx={{ marginTop: "20px" }} spacing={1}>
-            <div className="font-poppins md:text-xl text-sm font-semibold md:font-medium">
+            <div className="font-poppins md:text-2xl text-sm font-semibold md:font-medium">
               Projects Details
+            </div>
+            <div className="font-poppins text-sm font-normal">
+              Let's dive into your projects! Tell us about your latest
+              creations.
             </div>
             {projectsFields.map((field, index) => (
               <>
-                <div className="font-poppins text-sm font-medium">
-                  {`Projects Detail ${index + 1}`}
-                </div>
                 <Box
                   className="grid md:grid-cols-3 grid-cols-1 gap-2"
                   key={field.id}>
@@ -612,7 +609,7 @@ export default function BasicTabs() {
                     {...register(`projects[${index}].projectName`)}
                     margin="dense"
                     focused={id.editId ? true : false}
-                    label="projectName"
+                    label="Project Name"
                     variant="outlined"
                   />
                   <TextField
@@ -628,7 +625,7 @@ export default function BasicTabs() {
                     {...register(`projects[${index}].technologies`)}
                     margin="dense"
                     focused={id.editId ? true : false}
-                    label="Technologies"
+                    label="Technologies Used"
                     variant="outlined"
                   />
                 </Box>
@@ -650,26 +647,22 @@ export default function BasicTabs() {
                   appendProjects({
                     projectName: "",
                     desc: "",
-                    technologies: [],
+                    technologies: "",
                   })
                 }>
                 Add Projects
               </Button>
             )}
           </Stack>
-        </form>
-      </CustomTabPanel>
-      <CustomTabPanel value={tabvalue} index={2}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        </CustomTabPanel>
+        <CustomTabPanel value={tabvalue} index={2}>
           <Stack spacing={1}>
-            <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
-              Experience
+            <div className="font-poppins text-2xl font-normal">
+              Tell us about your most recent job
             </div>
+
             {experienceFields.map((field, index) => (
               <>
-                <div className="font-poppins text-sm font-medium">
-                  {`Experience Detail ${index + 1}`}
-                </div>
                 <Box className="grid md:grid-cols-3 gap-2" key={field.id}>
                   <TextField
                     {...register(`experience.${index}.company`)}
@@ -736,10 +729,8 @@ export default function BasicTabs() {
               Add Experience
             </Button>
           </Stack>{" "}
-        </form>
-      </CustomTabPanel>
-      <CustomTabPanel value={tabvalue} index={3}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        </CustomTabPanel>
+        <CustomTabPanel value={tabvalue} index={3}>
           <Stack spacing={2}>
             <Stack spacing={1}>
               <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
@@ -787,8 +778,11 @@ export default function BasicTabs() {
               </Button>
             </Stack>
             <Stack sx={{ marginTop: "20px" }} spacing={1}>
-              <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
+              <div className="font-poppins md:text-2xl text-sm font-semibold md:font-medium">
                 Skills
+              </div>
+              <div className="font-poppins md:text-lg text-sm font-normal md:font-normal">
+                What skills would you like to highlight? Select Below
               </div>
             </Stack>
             <Box className="grid grid-cols-3" sx={{ minWidth: 120 }}>
@@ -839,8 +833,8 @@ export default function BasicTabs() {
               )}
             </Button>
           </Stack>
-        </form>
-      </CustomTabPanel>
+        </CustomTabPanel>
+      </form>
     </Box>
   );
 }
