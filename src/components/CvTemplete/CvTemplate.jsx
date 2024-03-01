@@ -46,8 +46,8 @@ const CvTemplate = () => {
   const handleSave = async () => {
     const input = componentRef.current;
 
-    const approximatePdfSize = 1000 * 1000;
-
+    const approximatePdfSize = 50 * 1000;
+    setBtnloading(true);
     html2canvas(input, { scale: 2 }).then(async (canvas) => {
       let imgData = canvas.toDataURL("image/jpeg", 1.0);
       let pdf;
@@ -55,6 +55,7 @@ const CvTemplate = () => {
       let quality = 1.0;
 
       const calculatePdfSize = () => {
+       
         pdf = new jsPDF({
           orientation: "portrait",
           unit: "px",
@@ -70,7 +71,7 @@ const CvTemplate = () => {
       };
 
       let size = calculatePdfSize();
-
+     
       while (size > approximatePdfSize && quality > 0) {
         quality -= 0.05;
         imgData = canvas.toDataURL("image/jpeg", quality);
@@ -83,7 +84,7 @@ const CvTemplate = () => {
         `${SingleUserData?.personalInfo?.firstName}.pdf`
       );
       formData.append("templetId", userId.cvTemplateId);
-      setBtnloading(true);
+     
 
       const res = await ApiFetching("POST", "user/upload", formData);
       if (res.status === 200) {

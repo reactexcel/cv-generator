@@ -7,25 +7,25 @@ import LibraryPage from "../pages/Home/librarypage/LibraryPage";
 import SignUp from "../components/Auth/SignUp";
 import CvTemplate from "../components/CvTemplete/CvTemplate";
 import CvCreatorForm from "../components/cv-creatorform/CvCreatorForm";
-export const router=createBrowserRouter([
-    {path:'/',element:<SignIn/>},
-    {path:'/signUp',element:<SignUp/>},
-    {
-        path:'/home',
-        element:<Layout/>,
-        children:[{
-            path:'',
-            element:<AddCV/>   
-        },
-        {path:"cvGenerator",element:<CvGenerator/>},
-    {
-        path:'library',
-        element:<LibraryPage/>
-    },
-    {path:'cvTemlate/:cvTemplateId',
-element:<CvTemplate/>}
-,{path:'editCvGenerator/:editId',
-element:<CvCreatorForm/>}
-]
-    }
-])
+export const router = createBrowserRouter([
+  { path: "/", element: <SignIn /> },
+  { path: "/signUp", element: <SignUp /> },
+  {
+    path: "/home",
+    element: <Layout />,
+    children: [
+      {
+        path: "",
+        element: <AddCV />,
+      },
+      { path: "cvGenerator", element: <CvGenerator /> },
+      {
+        path: "library",
+        element: <LibraryPage />,
+      },
+      { path: "cvTemlate/:cvTemplateId", element: <CvTemplate /> },
+      { path: "editCvGenerator/:editId", element: <CvCreatorForm /> },
+      { path: "tabcvGenerator", element: <CvCreatorForm /> },
+    ],
+  },
+]);
