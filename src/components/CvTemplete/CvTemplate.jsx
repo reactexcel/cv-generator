@@ -117,7 +117,6 @@ const CvTemplate = () => {
                 " " +
                 SingleUserData?.personalInfo?.lastName}
             </p>
-            <p className="text-heading">Software Engineer</p>
           </div>
         </div>
         {/* main content */}
@@ -255,15 +254,19 @@ const CvTemplate = () => {
                     return (
                       <div key={i} className="flex flex-col">
                         <p className="text-lg font-bold text-gray-700">
-                          {e.company} | {e.position}
+                          {e.company} | {e.position} | {e.startDate} |{" "}
+                          {e.endDate}
                         </p>
                         <p className="font-semibold text-sm text-gray-700">
-                          <div>
-                            {" "}
-                            <div>Start Date: {e.startDate}</div>
-                            <div>End Date :{e.endDate}</div>
-                          </div>
+                          <div> </div>
                         </p>
+                        <div className="text-wrap font-medium">
+                          Achivements/Tasks : <span>{e.responsibilities}</span>
+                        </div>
+                        <br />
+                        <div className="text-wrap font-medium">
+                          Technologies work on: <span>{e.environments}</span>
+                        </div>
                       </div>
                     );
                   })}

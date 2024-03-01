@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 
 import {
@@ -13,9 +13,6 @@ import {
 import ApiFetching from "../../services/ApiFetching";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -23,9 +20,6 @@ import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import { setSingleUserData } from "../../redux/slices/CvSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { DatePicker } from "@mui/x-date-pickers";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 
 const CvCreatorForm = () => {
   const [loading, setLoading] = useState(false);
@@ -170,6 +164,10 @@ const CvCreatorForm = () => {
 
   const handleSkillSelect = (e) => {
     const skill = e.target.value;
+    if (selectedTechSkills.includes(skill)) {
+      toast.error("Skill already selected!");
+      return;
+    }
     setSelectedTechSkills([...selectedTechSkills, skill]);
   };
   const handleSkillRemove = (index) => {
@@ -516,6 +514,24 @@ const CvCreatorForm = () => {
                     focused={id.editId ? true : false}
                     variant="outlined"
                   />
+                  <TextField
+                    {...register(`experience.${index}.responsibilities`)}
+                    margin="dense"
+                    label="Achivements"
+                    multiline
+                    rows={3}
+                    focused={id.editId ? true : false}
+                    variant="outlined"
+                  />
+                  <TextField
+                    {...register(`experience.${index}.environments`)}
+                    margin="dense"
+                    label="Technologies"
+                    multiline
+                    rows={3}
+                    focused={id.editId ? true : false}
+                    variant="outlined"
+                  />
 
                   <Button
                     onClick={() => handleRemoveExperience(index)}
@@ -555,15 +571,15 @@ const CvCreatorForm = () => {
                   label="Organization"
                   variant="outlined"
                 />
-                <div className="mt-2">
-                  <TextField
-                    {...register(`certifications.${index}.date`)}
-                    margin="dense"
-                    focused={id.editId ? true : false}
-                    label="Date"
-                    variant="outlined"
-                  />
-                </div>
+
+                <TextField
+                  {...register(`certifications.${index}.date`)}
+                  margin="dense"
+                  focused={id.editId ? true : false}
+                  label="Date"
+                  variant="outlined"
+                />
+
                 <Button
                   onClick={() => handleRemoveCertification(index)}
                   color="error"
@@ -577,7 +593,7 @@ const CvCreatorForm = () => {
               type="button"
               className="md:w-[20%] w-full text-sm"
               variant="outlined"
-              onClick={appendCertification}>
+              onClick={() => appendCertification({})}>
               Add Certification
             </Button>
           </Stack>
