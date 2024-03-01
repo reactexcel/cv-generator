@@ -23,7 +23,6 @@ const style = {
   boxShadow: 24,
   p: 4,
   width:{md:"auto",xs:'90%'}
-  // width:""
 };
 
 

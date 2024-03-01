@@ -10,12 +10,12 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import EmailIcon from "@mui/icons-material/Email";
 import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Refereshing from "../Refereshing/Refereshing";
-import moment from "moment";
 
 const CvTemplate = () => {
   const [loading, setLoading] = useState(false);
+  const navigate=useNavigate()
   const userId = useParams();
   const dispatch = useDispatch();
   const [Btnloading, setBtnloading] = useState(false);
@@ -88,6 +88,8 @@ const CvTemplate = () => {
       const res = await ApiFetching("POST", "user/upload", formData);
       if (res.status === 200) {
         toast.success("Your resume saved successfully");
+        navigate('../library')
+
       } else {
         toast.error("Something went wrong");
       }
@@ -106,7 +108,6 @@ const CvTemplate = () => {
         className="border-1 shadow-lg shadow-gray-700 rounded-lg"
         id={"pdf"}
         ref={componentRef}>
-        {/* top content */}
         <div className="flex rounded-t-lg bg-red-600 text-white sm:px-2 w-full">
           <div className="h-40 w-40 overflow-hidden sm:rounded-full sm:relative sm:p-0 top-10 left-5 p-3">
             <img src="https://images.app.goo.gl/KCP3CC2JTAnybUnx8" />
@@ -117,14 +118,11 @@ const CvTemplate = () => {
                 " " +
                 SingleUserData?.personalInfo?.lastName}
             </p>
-            <p className="text-heading">Software Engineer</p>
           </div>
         </div>
-        {/* main content */}
         <Stack className="p-5">
           <div className="flex flex-col sm:flex-row sm:mt-10">
             <div className="flex flex-col sm:w-1/3">
-              {/* My contact */}
               <div className="py-3 sm:order-none order-3">
                 <h2 className="text-lg font-poppins font-bold text-top-color">
                   My Contact
@@ -177,7 +175,6 @@ const CvTemplate = () => {
                   </div>
                 </div>
               </div>
-              {/* Skills */}
               <div className="py-3 sm:order-none order-2">
                 <h2 className="text-lg font-poppins font-bold text-top-color">
                   Skills
@@ -193,7 +190,6 @@ const CvTemplate = () => {
                   })}
                 </div>
               </div>
-              {/* Education Background */}
               <div className="py-3 sm:order-none order-1">
                 <h2 className="text-lg font-poppins font-bold text-top-color">
                   Education Background
@@ -232,7 +228,6 @@ const CvTemplate = () => {
               </div>
             </div>
             <div className="flex flex-col sm:w-2/3 order-first sm:order-none sm:-mt-10">
-              {/* About me */}
               <div className="py-3">
                 <h2 className="text-lg font-poppins font-bold text-top-color">
                   About Me
@@ -244,7 +239,6 @@ const CvTemplate = () => {
                   excellent skills, and enable me to make positive contribution.
                 </p>
               </div>
-              {/* Professional Experience */}
               <div className="py-3">
                 <h2 className="text-lg font-poppins font-bold text-top-color">
                   Professional Experience
@@ -255,21 +249,24 @@ const CvTemplate = () => {
                     return (
                       <div key={i} className="flex flex-col">
                         <p className="text-lg font-bold text-gray-700">
-                          {e.company} | {e.position}
+                          {e.company} | {e.position} | {e.startDate} |{" "}
+                          {e.endDate}
                         </p>
                         <p className="font-semibold text-sm text-gray-700">
-                          <div>
-                            {" "}
-                            <div>Start Date: {e.startDate}</div>
-                            <div>End Date :{e.endDate}</div>
-                          </div>
+                          <div> </div>
                         </p>
+                        <div className="text-wrap font-medium">
+                          Achivements/Tasks : <span>{e.responsibilities}</span>
+                        </div>
+                        <br />
+                        <div className="text-wrap font-medium">
+                          Technologies work on: <span>{e.environments}</span>
+                        </div>
                       </div>
                     );
                   })}
                 </div>
               </div>
-              {/* Projects */}
               <div className="py-3">
                 <h2 className="text-lg font-poppins font-bold text-top-color">
                   Certificates
