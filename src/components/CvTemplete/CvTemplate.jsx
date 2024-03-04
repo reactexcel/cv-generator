@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import Refereshing from "../Refereshing/Refereshing";
 import HomeIcon from "@mui/icons-material/Home";
-
+import PublicIcon from "@mui/icons-material/Public";
 const CvTemplate = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -117,9 +117,6 @@ const CvTemplate = () => {
                 " " +
                 SingleUserData?.personalInfo?.lastName}
             </p>
-            <p className="font-poppins text-sm">
-              {SingleUserData?.experience?.map((e) => e.position)}
-            </p>
           </div>
         </div>
         <Stack className="p-5">
@@ -137,7 +134,7 @@ const CvTemplate = () => {
                         <LinkedInIcon />
                       )}
                     </a>
-                    <div className="ml-2">
+                    <div className="ml-2 leading-3">
                       {SingleUserData?.personalInfo?.links?.linkedin}
                     </div>
                   </div>
@@ -152,6 +149,18 @@ const CvTemplate = () => {
                       )}
                     </a>
                     <div>{SingleUserData?.personalInfo?.links?.github}</div>
+                  </div>
+                  <div className="flex items-center my-1 gap-2">
+                    <a
+                      className="w-6 text-gray-700 hover:text-orange-600"
+                      aria-label="Visit TrendyMinds Twitter"
+                      href=""
+                      target="_blank">
+                      {SingleUserData?.personalInfo?.links?.website && (
+                        <PublicIcon />
+                      )}
+                    </a>
+                    <div>{SingleUserData?.personalInfo?.links?.website}</div>
                   </div>
                   <div className="flex items-center my-1 gap-2">
                     <a
@@ -192,9 +201,11 @@ const CvTemplate = () => {
                 </div>
               </div>
               <div className="py-3 sm:order-none order-2">
-                <h2 className="text-lg font-poppins font-bold text-top-color">
-                  Skills
-                </h2>
+                {SingleUserData?.skills?.length > 1 ? (
+                  <h2 className="text-lg font-poppins font-bold text-top-color">
+                    Skills
+                  </h2>
+                ) : null}
                 <div className="border-2 w-20 border-top-color my-3" />
                 <div>
                   {SingleUserData?.skills?.map((e, i) => {
@@ -206,10 +217,33 @@ const CvTemplate = () => {
                   })}
                 </div>
               </div>
+              <div className="py-3 sm:order-none order-2">
+                {SingleUserData?.languages?.length > 1 ? (
+                  <h2 className="text-lg font-poppins font-bold text-top-color">
+                    Languages
+                  </h2>
+                ) : null}
+
+                <div className="border-2 w-20 border-top-color my-3" />
+                <div>
+                  {SingleUserData?.languages?.map((e, i) => {
+                    return (
+                      <div
+                        className="flex  font-poppins items-center my-1"
+                        key={i}>
+                        <div className="ml-2">{e.language}</div>
+                        <div className="ml-2">{e.proficiency}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
               <div className="py-3 sm:order-none order-1">
-                <h2 className="text-lg font-poppins font-bold text-top-color">
-                  Education Background
-                </h2>
+                {SingleUserData?.education?.length > 1 ? (
+                  <h2 className="text-lg font-poppins font-bold text-top-color">
+                    Education Background
+                  </h2>
+                ) : null}
                 <div className="border-2 w-20 border-top-color my-3" />
                 <div className="flex flex-col space-y-1">
                   {SingleUserData?.education?.map((e, i) => {
@@ -246,9 +280,11 @@ const CvTemplate = () => {
             </div>
             <div className="flex flex-col sm:w-2/3 order-first sm:order-none sm:-mt-10">
               <div className="py-3">
-                <h2 className="text-lg font-poppins font-bold text-top-color">
-                  Projects Details
-                </h2>
+                {SingleUserData?.projects?.length > 1 ? (
+                  <h2 className="text-lg font-poppins font-bold text-top-color">
+                    Projects Details
+                  </h2>
+                ) : null}
                 <div className="border-2 w-20 border-top-color my-3" />
                 <div className="flex flex-col">
                   {SingleUserData?.projects?.map((e, i) => {
@@ -259,23 +295,26 @@ const CvTemplate = () => {
                             {e.projectName}
                           </div>
                           <div className="flex flex-col">
-                            {" "}
-                            <div className="flex flex-row leading-3">
-                              {" "}
-                              <div className="font-medium flex text-sm font-poppins">
-                                <div> Desc</div>
-                                <div className="font-poppins font-normal text-sm">
+                            {SingleUserData?.projects?.length > 1 ? (
+                              <>
+                                <div className="flex flex-row leading-3">
                                   {" "}
-                                  : {e.desc}
-                                </div>{" "}
-                              </div>
-                            </div>
-                            <div className="font-medium flex text-sm font-poppins">
-                              <div> Technologies used</div>{" "}
-                              <div className="font-poppins font-normal text-sm">
-                                <span> : {e.technologies}</span>
-                              </div>{" "}
-                            </div>
+                                  <div className="font-medium flex text-sm font-poppins">
+                                    <div> Desc</div>
+                                    <div className="font-poppins font-normal text-sm">
+                                      {" "}
+                                      : {e.desc}
+                                    </div>{" "}
+                                  </div>
+                                </div>
+                                <div className="font-medium flex text-sm font-poppins">
+                                  <div> Technologies used</div>{" "}
+                                  <div className="font-poppins font-normal text-sm">
+                                    <span> : {e.technologies}</span>
+                                  </div>{" "}
+                                </div>
+                              </>
+                            ) : null}
                           </div>
                         </p>
                       </div>
@@ -284,41 +323,47 @@ const CvTemplate = () => {
                 </div>
               </div>
               <div className="py-3">
-                <h2 className="text-lg font-poppins font-bold text-top-color">
-                  Professional Experience
-                </h2>
-                <div className="border-2 w-20 border-top-color my-3" />
+                {SingleUserData?.experience?.length > 1 ? (
+                  <h2 className="text-lg font-poppins font-bold text-top-color">
+                    Experience
+                  </h2>
+                ) : null}
                 <div className="flex flex-col">
                   {SingleUserData?.experience?.map((e, i) => {
                     return (
                       <div key={i} className="flex flex-col">
-                        <p className="text-lg font-bold text-gray-700">
-                          {e.company} | {e.position} | {e.startDate} |{" "}
-                          {e.endDate}
-                        </p>
-
-                        <div className="font-medium text-sm font-poppins">
-                          Achivements/Tasks :{" "}
-                          <span className="font-poppins font-normal text-sm">
-                            {e.responsibilities}
-                          </span>
-                        </div>
-                        <br />
-                        <div className="font-medium text-sm font-poppins">
-                          Technologies work on:{" "}
-                          <span className="font-poppins font-normal text-sm">
-                            {e.environments}
-                          </span>
-                        </div>
+                        <>
+                          <p className="text-lg font-bold text-gray-700">
+                            {e.company} | {e.position} | {e.startDate} |{" "}
+                            {e.endDate}
+                          </p>
+                          <div className="border-2 w-20 border-top-color my-3" />
+                          <div className="font-medium text-sm font-poppins">
+                            Achivements/Tasks :{" "}
+                            <span className="font-poppins font-normal text-sm">
+                              {e.responsibilities}
+                            </span>
+                          </div>
+                          <br />
+                          <div className="font-medium text-sm font-poppins">
+                            Technologies work on:{" "}
+                            <span className="font-poppins font-normal text-sm">
+                              {e.environments}
+                            </span>
+                          </div>
+                        </>
                       </div>
                     );
                   })}
                 </div>
               </div>
               <div className="py-3">
-                <h2 className="text-lg font-poppins font-bold text-top-color">
-                  Certificates
-                </h2>
+                {SingleUserData?.certifications?.length > 1 ? (
+                  <h2 className="text-lg font-poppins font-bold text-top-color">
+                    Certificates
+                  </h2>
+                ) : null}
+                <h2 className="text-lg font-poppins font-bold text-top-color"></h2>
                 <div className="border-2 w-20  my-3" />
                 <div className="flex flex-col">
                   {SingleUserData?.certifications?.map((e, i) => {

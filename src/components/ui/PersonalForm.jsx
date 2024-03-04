@@ -13,6 +13,7 @@ function PersonalComponent({ register, errors, id }) {
             margin="dense"
             sx={{ backgroundColor: "white" }}
             label={id.editId ? "" : "First Name"}
+            
             variant="outlined"
             focused={id.editId ? true : false}
             disabled={id.editId ? true : false}
