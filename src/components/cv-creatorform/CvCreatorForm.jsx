@@ -33,18 +33,19 @@ function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
-    <div
+    <Stack 
+    sx={{width:'100%'}}
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
       {...other}>
       {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
+        <Stack width={'95%'}>
+          {children}
+        </Stack>
       )}
-    </div>
+    </Stack>
   );
 }
 
@@ -338,20 +339,24 @@ export default function BasicTabs() {
   }, [id.editId, SingleUserData._id]);
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+    <Stack >
+      <Stack sx={{ borderBottom: 1, borderColor: "divider",width:'95%' }}>
         <Tabs
           value={tabvalue}
           onChange={handleChange}
-          aria-label="basic tabs example">
+          
+  variant="scrollable"
+  scrollButtons="auto"
+  aria-label="scrollable auto tabs example" className="md:text-xs">
           <Tab label="Personal" {...a11yProps(0)} />
           <Tab label="Education & Project Details" {...a11yProps(1)} />
           <Tab label="Experience Details" {...a11yProps(2)} />
           <Tab label="Certifications & Skills" {...a11yProps(3)} />
         </Tabs>
-      </Box>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <CustomTabPanel value={tabvalue} index={0}>
+      </Stack>
+      <form style={{width:"95%"}} onSubmit={handleSubmit(onSubmit)}>
+        <Stack sx={{width:'100%'}}>
+        <CustomTabPanel value={tabvalue} index={0} >
           <div className="py-2 text-wrap">
             We suggest including an email and phone number.
           </div>
@@ -705,7 +710,7 @@ export default function BasicTabs() {
                 )}
               </FormControl>
             </Box>
-            {errors.personalInfo?<Typography color={'error'}>Opps Some Field is Required</Typography>:null}
+            {errors.personalInfo?<Typography color={'error'}>Opps ! Some Required field is not valid</Typography>:null}
             <Button
               className="w-[10%] "
               type="submit"
@@ -719,7 +724,8 @@ export default function BasicTabs() {
             </Button>
           </Stack>
         </CustomTabPanel>
+        </Stack>
       </form>
-    </Box>
+    </Stack>
   );
 }

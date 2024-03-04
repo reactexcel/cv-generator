@@ -133,7 +133,7 @@ const Library = () => {
                     direction={{ md: "row", xs: "column" }}
                     sx={{ alignItems: "center" }}>
                     <div className="text-xs  font-light opacity-95 ">
-                      Last Updated:{" "}
+                    Uploaded at:{" "}
                       {moment(link.updatedAt).format("DD, MMMM hh:mm A")}
                     </div>
                     <Stack direction={"row"}>
