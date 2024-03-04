@@ -1,6 +1,5 @@
 import { TextField } from "@mui/material";
 import PropTypes from "prop-types";
-import { ErrorMessage } from "@hookform/error-message";
 function PersonalComponent({ register, errors, id }) {
   return (
     <>

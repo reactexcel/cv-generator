@@ -705,6 +705,7 @@ export default function BasicTabs() {
                 )}
               </FormControl>
             </Box>
+            {errors.personalInfo?<Typography color={'error'}>Opps Some Field is Required</Typography>:null}
             <Button
               className="w-[10%] "
               type="submit"
