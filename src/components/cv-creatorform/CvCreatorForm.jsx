@@ -6,6 +6,9 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import schema from "../Validation/validation";
 
 import {
   Button,
@@ -24,6 +27,7 @@ import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import { setSingleUserData } from "../../redux/slices/CvSlice";
 import { useDispatch, useSelector } from "react-redux";
+import PersonalComponent from "../ui/PersonalForm";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -74,6 +78,8 @@ export default function BasicTabs() {
     formState: { errors },
     setValue,
   } = useForm({
+    shouldUseNativeValidation: true,
+    resolver: yupResolver(schema),
     defaultValues: {
       personalInfo: {
         firstName: "",
@@ -113,6 +119,7 @@ export default function BasicTabs() {
       skills: [],
     },
   });
+
 
   const {
     fields: educationFields,
@@ -222,36 +229,46 @@ export default function BasicTabs() {
     ]);
   };
   const onSubmit = async (data) => {
-    const requestData = {
-      ...data,
-      languages: languagesFields.map((language) => ({
-        language: language.language,
-        proficiency: language.proficiency,
-      })),
-      skills: selectedTechSkills,
-    };
+    try {
+      const requestData = {
+        ...data,
+        languages: languagesFields.map((language) => ({
+          language: language.language,
+          proficiency: language.proficiency,
+        })),
+        skills: selectedTechSkills,
+      };
 
-    if (id.editId) {
-      const res = await ApiFetching(
-        "PUT",
-        `user/cv/update/${id.editId}`,
-        requestData
-      );
-      if (res.status === 200) {
-        toast.success("CV updated successfully");
-        navigate(`../cvTemlate/${res.data.data._id}`);
+      if (id.editId) {
+        const res = await ApiFetching(
+          "PUT",
+          `user/cv/update/${id.editId}`,
+          requestData
+        );
+        if (res.status === 200) {
+          toast.success("CV updated successfully");
+          navigate(`../cvTemlate/${res.data.data._id}`);
+        }
+      } else {
+        setLoading(true);
+        const dataToSend = await ApiFetching(
+          "POST",
+          "user/cv/create",
+          requestData
+        );
+        if (dataToSend.status === 200) {
+          toast.success("CV Created Successfully");
+          navigate(`../cvTemlate/${dataToSend.data.data._id}`);
+          setLoading(false);
+        }
       }
-    } else {
-      setLoading(true);
-      const dataToSend = await ApiFetching(
-        "POST",
-        "user/cv/create",
-        requestData
-      );
-      if (dataToSend.status === 200) {
-        toast.success("CV Created Successfully");
-        navigate(`../cvTemlate/${dataToSend.data.data._id}`);
-        setLoading(false);
+    } catch (error) {
+      if (error instanceof yup.ValidationError) {
+        error.inner.forEach((validationError) => {
+          toast.error(validationError.message);
+        });
+      } else {
+        console.error("Error:", error);
       }
     }
   };
@@ -339,140 +356,7 @@ export default function BasicTabs() {
             We suggest including an email and phone number.
           </div>
           <Stack spacing={2}>
-            <Stack spacing={1}>
-              <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
-                Personal information
-              </div>
-              <Box className="grid md:grid-cols-3 grid-cols-1 gap-2">
-                <div className="flex flex-col">
-                  <TextField
-                    {...register("personalInfo.firstName", {
-                      required: true,
-                      maxLength: 10,
-                    })}
-                    margin="dense"
-                    required
-                    sx={{ backgroundColor: "white" }}
-                    label={id.editId ? "" : "First Name"}
-                    variant="outlined"
-                    focused={id.editId ? true : false}
-                    disabled={id.editId ? true : false}
-                  />
-                  <p className=" px-2">
-                    {errors.personalInfo?.firstName && (
-                      <p className="text-red-500">
-                        Please check the First Name
-                      </p>
-                    )}
-                  </p>
-                </div>
-
-                <div className="flex flex-col">
-                  <TextField
-                    {...register("personalInfo.lastName", {
-                      required: true,
-                      maxLength: 10,
-                    })}
-                    margin="dense"
-                    label={id.editId ? "" : "Last Name"}
-                    variant="outlined"
-                    focused={id.editId ? true : false}
-                    disabled={id.editId ? true : false}
-                  />
-                  <p className=" px-2">
-                    {errors.personalInfo?.lastName && (
-                      <p className="text-red-500">Please check the Last Name</p>
-                    )}
-                  </p>
-                </div>
-
-                <div className="flex flex-col">
-                  <TextField
-                    {...register("personalInfo.email", {
-                      required: true,
-                      pattern:
-                        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                    })}
-                    type="email"
-                    margin="dense"
-                    required
-                    label="Email"
-                    variant="outlined"
-                    focused={id.editId ? true : false}
-                  />
-                  <p className=" px-2">
-                    {errors.personalInfo?.email && (
-                      <p className="text-red-500">Please check your email</p>
-                    )}
-                  </p>
-                </div>
-
-                <div className="flex flex-col">
-                  <TextField
-                    {...register("personalInfo.phone", {
-                      required: "Phone number is required",
-                      pattern: {
-                        value: /^[0-9]*$/,
-                        message: "Please enter only digits",
-                      },
-                      maxLength: {
-                        value: 10,
-                        message: "Phone number cannot exceed 10 digits",
-                      },
-                    })}
-                    margin="dense"
-                    required
-                    label="Phone"
-                    variant="outlined"
-                    focused={id.editId ? true : false}
-                  />
-                  <p className=" px-2">
-                    {errors.personalInfo?.phone && (
-                      <p className="text-red-500">
-                        {errors.personalInfo.phone.message}
-                      </p>
-                    )}
-                  </p>
-                </div>
-                <TextField
-                  {...register("personalInfo.address")}
-                  margin="dense"
-                  label="Address"
-                  variant="outlined"
-                  multiline
-                  rows={2}
-                  focused={id.editId ? true : false}
-                />
-              </Box>
-            </Stack>
-            <Stack spacing={1}>
-              <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
-                Websites, Portfolios, Profiles
-              </div>
-              <Box className="grid md:grid-cols-3 grid-cols-1 gap-2">
-                <TextField
-                  {...register("personalInfo.links.github")}
-                  margin="dense"
-                  label="Github"
-                  variant="outlined"
-                  focused={id.editId ? true : false}
-                />
-                <TextField
-                  {...register("personalInfo.links.linkedin")}
-                  margin="dense"
-                  label="LinkedIn"
-                  variant="outlined"
-                  focused={id.editId ? true : false}
-                />
-                <TextField
-                  {...register("personalInfo.links.website")}
-                  margin="dense"
-                  label="Website"
-                  variant="outlined"
-                  focused={id.editId ? true : false}
-                />
-              </Box>
-            </Stack>
+            <PersonalComponent register={register} errors={errors} id={id} />
             <Stack spacing={1}>
               <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
                 What languages do you know?

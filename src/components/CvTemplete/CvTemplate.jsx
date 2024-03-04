@@ -12,6 +12,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import Refereshing from "../Refereshing/Refereshing";
+import HomeIcon from "@mui/icons-material/Home";
 
 const CvTemplate = () => {
   const [loading, setLoading] = useState(false);
@@ -55,7 +56,6 @@ const CvTemplate = () => {
       let quality = 1.0;
 
       const calculatePdfSize = () => {
-       
         pdf = new jsPDF({
           orientation: "portrait",
           unit: "px",
@@ -71,7 +71,7 @@ const CvTemplate = () => {
       };
 
       let size = calculatePdfSize();
-     
+
       while (size > approximatePdfSize && quality > 0) {
         quality -= 0.05;
         imgData = canvas.toDataURL("image/jpeg", quality);
@@ -84,7 +84,6 @@ const CvTemplate = () => {
         `${SingleUserData?.personalInfo?.firstName}.pdf`
       );
       formData.append("templetId", userId.cvTemplateId);
-     
 
       const res = await ApiFetching("POST", "user/upload", formData);
       if (res.status === 200) {
@@ -118,6 +117,9 @@ const CvTemplate = () => {
                 " " +
                 SingleUserData?.personalInfo?.lastName}
             </p>
+            <p className="font-poppins text-sm">
+              {SingleUserData?.experience?.map((e) => e.position)}
+            </p>
           </div>
         </div>
         <Stack className="p-5">
@@ -125,7 +127,7 @@ const CvTemplate = () => {
             <div className="flex flex-col sm:w-1/3">
               <div className="py-3 sm:order-none order-3">
                 <h2 className="text-lg font-poppins font-bold text-top-color">
-                  My Contact
+                  Contact & Social Links
                 </h2>
                 <div className="border-2 w-20 border-top-color my-3" />
                 <div>
@@ -138,6 +140,18 @@ const CvTemplate = () => {
                     <div className="ml-2">
                       {SingleUserData?.personalInfo?.links?.linkedin}
                     </div>
+                  </div>
+                  <div className="flex items-center my-1 gap-2">
+                    <a
+                      className="w-6 text-gray-700 hover:text-orange-600"
+                      aria-label="Visit TrendyMinds Twitter"
+                      href=""
+                      target="_blank">
+                      {SingleUserData?.personalInfo?.links?.github && (
+                        <GitHubIcon />
+                      )}
+                    </a>
+                    <div>{SingleUserData?.personalInfo?.links?.github}</div>
                   </div>
                   <div className="flex items-center my-1 gap-2">
                     <a
@@ -163,17 +177,17 @@ const CvTemplate = () => {
                       {SingleUserData?.personalInfo?.email}
                     </div>
                   </div>
-                  <div className="flex items-center my-1 gap-2">
+                  <div className="flex items-center my-1">
                     <a
                       className="w-6 text-gray-700 hover:text-orange-600"
-                      aria-label="Visit TrendyMinds Twitter"
+                      aria-label="Visit TrendyMinds Facebook"
                       href=""
                       target="_blank">
-                      {SingleUserData?.personalInfo?.links?.github && (
-                        <GitHubIcon />
-                      )}
+                      {SingleUserData?.personalInfo?.address && <HomeIcon />}
                     </a>
-                    <div>{SingleUserData?.personalInfo?.links?.github}</div>
+                    <div className="ml-2">
+                      {SingleUserData?.personalInfo?.address}
+                    </div>
                   </div>
                 </div>
               </div>
