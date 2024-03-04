@@ -9,25 +9,21 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import schema from "../Validation/validation";
+import SummaryComponent from "../ui/Summary";
+import Select from "@mui/joy/Select";
+import Option from "@mui/joy/Option";
 
-import {
-  Button,
-  CircularProgress,
-  IconButton,
-  MenuItem,
-  Stack,
-  TextField,
-} from "@mui/material";
+import { Button, CircularProgress, MenuItem, Stack } from "@mui/material";
 import ApiFetching from "../../services/ApiFetching";
 import CloseIcon from "@mui/icons-material/Close";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import { setSingleUserData } from "../../redux/slices/CvSlice";
 import { useDispatch, useSelector } from "react-redux";
 import PersonalComponent from "../ui/PersonalForm";
+import Input from "@mui/joy/Input";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -87,7 +83,9 @@ export default function BasicTabs() {
         email: "",
         phone: "",
         address: "",
+        designation: "",
       },
+      summary: "",
       projects: [
         {
           projectName: "",
@@ -119,7 +117,6 @@ export default function BasicTabs() {
       skills: [],
     },
   });
-
 
   const {
     fields: educationFields,
@@ -156,6 +153,7 @@ export default function BasicTabs() {
     control,
     name: "experience",
   });
+
   const [languagesFields, setLanguagesFields] = React.useState([
     { language: "", proficiency: "" },
     { language: "", proficiency: "" },
@@ -183,11 +181,13 @@ export default function BasicTabs() {
       date: "",
     },
   ]);
-  const [selectedTechSkills, setSelectedTechSkills] = React.useState([]);
+
+  const [selectedTechSkills, setSelectedTechSkills] = useState([]);
   const navigate = useNavigate();
   const SingleUserData = useSelector(
     (state) => state.CvSlice.getSingleUserData
   );
+
   const languageOptions = ["English", "Spanish", "French", "German", "Chinese"];
   const proficiencyOptions = ["Beginner", "Intermediate", "Advanced", "Fluent"];
   const techSkills = [
@@ -274,13 +274,15 @@ export default function BasicTabs() {
   };
 
   const handleSkillSelect = (e) => {
+    if (e && e.target) {
     const skill = e.target.value;
-    if (selectedTechSkills.includes(skill)) {
-      toast.error("Skill already selected!");
-      return;
-    }
+    console.log("Selected Skill:", skill);
+   if (selectedTechSkills.includes(skill)) {
+        toast.error("Skill already selected!");
+        return;
+      }
     setSelectedTechSkills([...selectedTechSkills, skill]);
-  };
+  }};
   const handleSkillRemove = (index) => {
     const updatedSkills = selectedTechSkills.filter((_, i) => i !== index);
     setSelectedTechSkills(updatedSkills);
@@ -345,14 +347,15 @@ export default function BasicTabs() {
           onChange={handleChange}
           aria-label="basic tabs example">
           <Tab label="Personal" {...a11yProps(0)} />
-          <Tab label="Education & Project Details" {...a11yProps(1)} />
-          <Tab label="Experience Details" {...a11yProps(2)} />
-          <Tab label="Certifications & Skills" {...a11yProps(3)} />
+          <Tab label="Summary" {...a11yProps(1)} />
+          <Tab label="Education & Project Details" {...a11yProps(2)} />
+          <Tab label="Experience Details" {...a11yProps(3)} />
+          <Tab label="Certifications & Skills" {...a11yProps(4)} />
         </Tabs>
       </Box>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CustomTabPanel value={tabvalue} index={0}>
-          <div className="py-2 text-wrap">
+          <div className="py-2 text-wrap font-poppins">
             We suggest including an email and phone number.
           </div>
           <Stack spacing={2}>
@@ -365,51 +368,60 @@ export default function BasicTabs() {
                 <Box
                   className="grid md:grid-cols-4 grid-cols-1 gap-2"
                   key={index}>
-                  <TextField
-                    select
+                  <Select
                     label="Language"
                     variant="outlined"
+                    placeholder="Select a Language"
                     value={field.language}
-                    focused={id.editId ? true : false}
                     onChange={(e) => {
-                      const updatedFields = [...languagesFields];
-                      updatedFields[index].language = e.target.value;
-                      setLanguagesFields(updatedFields);
+                      if (e && e.target) {
+                        const updatedFields = [...languagesFields];
+
+                        updatedFields[index].language = e.target.value;
+                        setLanguagesFields(updatedFields);
+                      }
                     }}>
                     {languageOptions.map((option) => (
-                      <MenuItem key={option} value={option}>
+                      <Option key={option} value={option}>
                         {option}
-                      </MenuItem>
+                      </Option>
                     ))}
-                  </TextField>
-                  <TextField
-                    select
+                  </Select>
+                  <Select
                     label="Proficiency"
                     variant="outlined"
+                    placeholder="Select your Proficiency"
                     value={field.proficiency}
-                    focused={id.editId ? true : false}
                     onChange={(e) => {
-                      const updatedFields = [...languagesFields];
-                      updatedFields[index].proficiency = e.target.value;
-                      setLanguagesFields(updatedFields);
+                      if (e && e.target) {
+                        const updatedFields = [...languagesFields];
+                        console.log(updatedFields);
+                        updatedFields[index].proficiency = e.target.value;
+                        setLanguagesFields(updatedFields);
+                      }
                     }}>
                     {proficiencyOptions.map((option) => (
-                      <MenuItem key={option} value={option}>
+                      <Option key={option} value={option}>
                         {option}
-                      </MenuItem>
+                      </Option>
                     ))}
-                  </TextField>
+                  </Select>
                 </Box>
               ))}
             </Stack>
           </Stack>
         </CustomTabPanel>
         <CustomTabPanel value={tabvalue} index={1}>
+          <Stack spacing={2}>
+            <SummaryComponent register={register} errors={errors} id={id} />
+          </Stack>
+        </CustomTabPanel>
+        <CustomTabPanel value={tabvalue} index={2}>
           <Stack spacing={1}>
             <div className="font-poppins md:text-2xl text-sm font-semibold md:font-medium">
               Tell us about your education
             </div>
-            <div className="font-poppins text-sm font-normal">
+            <div className="font-poppins py-2 text-wrap">
               Enter your education experience so far, even if you are a current
               student or did not graduate
             </div>
@@ -418,41 +430,67 @@ export default function BasicTabs() {
                 <Box
                   className="grid md:grid-cols-3 grid-cols-1 gap-2"
                   key={field.id}>
-                  <TextField
-                    {...register(`education[${index}].institution`)}
-                    margin="dense"
-                    focused={id.editId ? true : false}
-                    label="Institution"
-                    variant="outlined"
-                  />
-                  <TextField
-                    {...register(`education[${index}].degree`)}
-                    margin="dense"
-                    focused={id.editId ? true : false}
-                    label="Degree"
-                    variant="outlined"
-                  />
-                  <TextField
-                    {...register(`education[${index}].fieldOfStudy`)}
-                    margin="dense"
-                    focused={id.editId ? true : false}
-                    label="Field of Study"
-                    variant="outlined"
-                  />
-                  <TextField
-                    {...register(`education[${index}].startDate`)}
-                    margin="dense"
-                    focused={id.editId ? true : false}
-                    label="Start Year"
-                    variant="outlined"
-                  />
-                  <TextField
-                    {...register(`education[${index}].endDate`)}
-                    margin="dense"
-                    focused={id.editId ? true : false}
-                    label="End Year "
-                    variant="outlined"
-                  />
+                  <div>
+                    {" "}
+                    <label
+                      className="font-poppins font-medium"
+                      htmlFor="Institution">
+                      Institution
+                    </label>
+                    <Input
+                      {...register(`education[${index}].institution`)}
+                      placeholder="e.g Bundelkhand University"
+                      id="Institution"
+                    />
+                  </div>
+                  <div>
+                    {" "}
+                    <label
+                      className="font-poppins font-medium"
+                      htmlFor="Degree">
+                      Degree
+                    </label>
+                    <Input
+                      {...register(`education[${index}].degree`)}
+                      id="Degree"
+                      placeholder="e.g Bachelor of Technology"
+                    />
+                  </div>
+                  <div>
+                    <label className="font-poppins font-medium" htmlFor="field">
+                      Field of study
+                    </label>
+                    <Input
+                      {...register(`education[${index}].fieldOfStudy`)}
+                      id="field"
+                      placeholder="e.g Computer Science"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      className="font-poppins font-medium"
+                      htmlFor="StartYear">
+                      Start Year
+                    </label>
+                    <Input
+                      {...register(`education[${index}].startDate`)}
+                      placeholder="e.g 2019"
+                      id="StartYear"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      className="font-poppins font-medium"
+                      htmlFor="EndYear">
+                      End Year
+                    </label>
+                    <Input
+                      {...register(`education[${index}].endDate`)}
+                      id="EndYear"
+                      placeholder="e.g 2023"
+                      variant="outlined"
+                    />
+                  </div>
                 </Box>
                 <Button
                   onClick={() => handleRemoveEducation(index)}
@@ -480,7 +518,7 @@ export default function BasicTabs() {
             <div className="font-poppins md:text-2xl text-sm font-semibold md:font-medium">
               Projects Details
             </div>
-            <div className="font-poppins text-sm font-normal">
+            <div className="font-poppins py-2 text-wrap">
               Let's dive into your projects! Tell us about your latest
               creations.
             </div>
@@ -489,29 +527,45 @@ export default function BasicTabs() {
                 <Box
                   className="grid md:grid-cols-3 grid-cols-1 gap-2"
                   key={field.id}>
-                  <TextField
-                    {...register(`projects[${index}].projectName`)}
-                    margin="dense"
-                    focused={id.editId ? true : false}
-                    label="Project Name"
-                    variant="outlined"
-                  />
-                  <TextField
-                    {...register(`projects[${index}].desc`)}
-                    margin="dense"
-                    focused={id.editId ? true : false}
-                    label="Description"
-                    multiple
-                    rows={3}
-                    variant="outlined"
-                  />
-                  <TextField
-                    {...register(`projects[${index}].technologies`)}
-                    margin="dense"
-                    focused={id.editId ? true : false}
-                    label="Technologies Used"
-                    variant="outlined"
-                  />
+                  <div>
+                    <label
+                      className="font-poppins font-medium"
+                      htmlFor="projectName">
+                      Project Name{" "}
+                    </label>
+                    <Input
+                      {...register(`projects[${index}].projectName`)}
+                      placeholder="e.g Todo-App"
+                      id="projectName"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      className="font-poppins font-medium"
+                      htmlFor="description">
+                      Description
+                    </label>
+                    <Input
+                      {...register(`projects[${index}].desc`)}
+                      placeholder="About your project description....  "
+                      id="description"
+                      multiple
+                      rows={3}
+                      variant="outlined"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      className="font-poppins font-medium my-2"
+                      htmlFor="technologies">
+                      Technologies Used
+                    </label>
+                    <Input
+                      {...register(`projects[${index}].technologies`)}
+                      id="technologies"
+                      placeholder="e.g React Js"
+                    />
+                  </div>
                 </Box>
                 <Button
                   onClick={() => handleRemoveProjects(index)}
@@ -539,7 +593,7 @@ export default function BasicTabs() {
             )}
           </Stack>
         </CustomTabPanel>
-        <CustomTabPanel value={tabvalue} index={2}>
+        <CustomTabPanel value={tabvalue} index={3}>
           <Stack spacing={1}>
             <div className="font-poppins text-2xl font-normal">
               Tell us about your most recent job
@@ -547,53 +601,99 @@ export default function BasicTabs() {
 
             {experienceFields.map((field, index) => (
               <>
-                <Box className="grid md:grid-cols-3 gap-2" key={field.id}>
-                  <TextField
-                    {...register(`experience.${index}.company`)}
-                    margin="dense"
-                    label="Company"
-                    focused={id.editId ? true : false}
-                    variant="outlined"
-                  />
-                  <TextField
-                    {...register(`experience.${index}.position`)}
-                    margin="dense"
-                    label="Position"
-                    focused={id.editId ? true : false}
-                    variant="outlined"
-                  />
-                  <TextField
-                    {...register(`experience.${index}.startDate`)}
-                    margin="dense"
-                    label="Start Date"
-                    focused={id.editId ? true : false}
-                    variant="outlined"
-                  />
-                  <TextField
-                    {...register(`experience.${index}.endDate`)}
-                    margin="dense"
-                    label="End Date"
-                    focused={id.editId ? true : false}
-                    variant="outlined"
-                  />
-                  <TextField
-                    {...register(`experience.${index}.responsibilities`)}
-                    margin="dense"
-                    label="Achivements"
-                    multiline
-                    rows={3}
-                    focused={id.editId ? true : false}
-                    variant="outlined"
-                  />
-                  <TextField
-                    {...register(`experience.${index}.environments`)}
-                    margin="dense"
-                    label="Technologies"
-                    multiline
-                    rows={3}
-                    focused={id.editId ? true : false}
-                    variant="outlined"
-                  />
+                <Box className="grid md:grid-cols-3 gap-10" key={field.id}>
+                  <div>
+                    <label
+                      className="font-poppins font-medium"
+                      htmlFor="Company">
+                      Company
+                    </label>
+
+                    <Input
+                      {...register(`experience.${index}.company`)}
+                      margin="dense"
+                      id="Company"
+                      placeholder="e.g Google"
+                    />
+                  </div>
+                  <div>
+                    {" "}
+                    <label
+                      className="font-poppins font-medium"
+                      htmlFor="Position">
+                      Position
+                    </label>
+                    <Input
+                      {...register(`experience.${index}.position`)}
+                      margin="dense"
+                      id="Position"
+                      placeholder="e.g Softawre Engineer"
+                    />
+                  </div>
+                  <div>
+                    {" "}
+                    <label
+                      className="font-poppins font-medium"
+                      htmlFor="StartDate">
+                      Start Date
+                    </label>
+                    <Input
+                      {...register(`experience.${index}.startDate`)}
+                      margin="dense"
+                      id="StartDate"
+                      placeholder="e.g 10/2020"
+                    />
+                  </div>
+                  <div>
+                    {" "}
+                    <label
+                      className="font-poppins font-medium"
+                      htmlFor="EndDate">
+                      End Date
+                    </label>
+                    <Input
+                      {...register(`experience.${index}.endDate`)}
+                      margin="dense"
+                      id="EndDate"
+                      placeholder="e.g 10/2023"
+                    />
+                  </div>
+                  <div>
+                    {" "}
+                    <label
+                      className="font-poppins font-medium"
+                      htmlFor="Achivements">
+                      Achivements
+                    </label>
+                    <Input
+                      {...register(`experience.${index}.responsibilities`)}
+                      margin="dense"
+                      id="Achivements"
+                      placeholder="e.g Like Identified a problem and solved it."
+                      multiline
+                      rows={3}
+                      variant="outlined"
+                    />
+                  </div>
+
+                  <div>
+                    {" "}
+                    <label
+                      className="font-poppins font-medium"
+                      htmlFor="Technologies">
+                      Technologies
+                    </label>
+                    <Input
+                      {...register(`experience.${index}.environments`)}
+                      margin="dense"
+                      id="Technologies"
+                      placeholder="e.g JavaScript"
+                      multiline
+                      rows={3}
+                      focused={id.editId ? true : false}
+                      variant="outlined"
+                    />
+                  </div>
 
                   <Button
                     onClick={() => handleRemoveExperience(index)}
@@ -614,7 +714,7 @@ export default function BasicTabs() {
             </Button>
           </Stack>{" "}
         </CustomTabPanel>
-        <CustomTabPanel value={tabvalue} index={3}>
+        <CustomTabPanel value={tabvalue} index={4}>
           <Stack spacing={2}>
             <Stack spacing={1}>
               <div className="font-poppins md:text-xl  text-sm font-semibold md:font-medium">
@@ -622,27 +722,51 @@ export default function BasicTabs() {
               </div>
               {certificationsFields.map((field, index) => (
                 <Box className="grid md:grid-cols-3 gap-2" key={field.id}>
-                  <TextField
-                    {...register(`certifications.${index}.name`)}
-                    margin="dense"
-                    label="Certification Name"
-                    variant="outlined"
-                  />
-                  <TextField
-                    {...register(`certifications.${index}.organization`)}
-                    margin="dense"
-                    focused={id.editId ? true : false}
-                    label="Organization"
-                    variant="outlined"
-                  />
+                  <div>
+                    <label
+                      className="font-poppins font-medium"
+                      htmlFor="CertificationName">
+                      Certification Name
+                    </label>
+                    <Input
+                      {...register(`certifications.${index}.name`)}
+                      margin="dense"
+                      placeholder="e.g Web Development"
+                      id="CertificationName"
+                      variant="outlined"
+                    />
+                  </div>
+                  <div>
+                    {" "}
+                    <label
+                      className="font-poppins font-medium"
+                      htmlFor="Organization">
+                      Organization
+                    </label>
+                    <Input
+                      {...register(`certifications.${index}.organization`)}
+                      margin="dense"
+                      placeholder="e.g Coursera"
+                      focused={id.editId ? true : false}
+                      id="Organization"
+                      variant="outlined"
+                    />
+                  </div>
 
-                  <TextField
-                    {...register(`certifications.${index}.date`)}
-                    margin="dense"
-                    focused={id.editId ? true : false}
-                    label="Date"
-                    variant="outlined"
-                  />
+                  <div>
+                    {" "}
+                    <label className="font-poppins font-medium" htmlFor="Date">
+                      Date
+                    </label>
+                    <Input
+                      {...register(`certifications.${index}.date`)}
+                      margin="dense"
+                      placeholder="e.g 04/03/2024"
+                      focused={id.editId ? true : false}
+                      id="Date"
+                      variant="outlined"
+                    />
+                  </div>
 
                   <Button
                     onClick={() => handleRemoveCertification(index)}
@@ -665,17 +789,16 @@ export default function BasicTabs() {
               <div className="font-poppins md:text-2xl text-sm font-semibold md:font-medium">
                 Skills
               </div>
-              <div className="font-poppins md:text-lg text-sm font-normal md:font-normal">
+              <div className="font-poppins py-2 text-wrap">
                 What skills would you like to highlight? Select Below
               </div>
             </Stack>
             <Box className="grid grid-cols-3" sx={{ minWidth: 120 }}>
               <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label"> Skill</InputLabel>
+                <label id="skills"> Skill</label>
                 <Select
                   className="bg-slate-1000"
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
+                  id="skills"
                   value={selectedTechSkills}
                   label="skill"
                   multiple=""
@@ -705,7 +828,11 @@ export default function BasicTabs() {
                 )}
               </FormControl>
             </Box>
-            {errors.personalInfo?<Typography color={'error'}>Opps Some Field is Required</Typography>:null}
+            {errors.personalInfo ? (
+              <Typography color={"error"}>
+                Opps Some Field is Required
+              </Typography>
+            ) : null}
             <Button
               className="w-[10%] "
               type="submit"

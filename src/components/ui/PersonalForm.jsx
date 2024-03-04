@@ -1,5 +1,8 @@
-import { TextField } from "@mui/material";
+import Input from "@mui/joy/Input";
 import PropTypes from "prop-types";
+import Textarea from "@mui/joy/Textarea";
+// import CustomInputField from "./CustomInputField";
+
 function PersonalComponent({ register, errors, id }) {
   return (
     <>
@@ -8,17 +11,15 @@ function PersonalComponent({ register, errors, id }) {
       </div>
       <div className="grid md:grid-cols-3 grid-cols-1 gap-2">
         <div className="flex flex-col">
-          <TextField
+          <label className="font-poppins font-medium" htmlFor="firstName">
+            First Name
+          </label>
+          <Input
             {...register("personalInfo.firstName")}
-            margin="dense"
-            sx={{ backgroundColor: "white" }}
-            label={id.editId ? "" : "First Name"}
-            variant="outlined"
-            focused={id.editId ? true : false}
+            id="firstName"
             disabled={id.editId ? true : false}
-            placeholder="First name"
+            placeholder="e.g  Amit"
           />
-
           <p className=" px-2">
             {errors.personalInfo?.firstName && (
               <p className="text-red-500">
@@ -29,11 +30,13 @@ function PersonalComponent({ register, errors, id }) {
         </div>
 
         <div className="flex flex-col">
-          <TextField
+          <label className="font-poppins font-medium" htmlFor="lastName">
+            Last Name
+          </label>
+          <Input
             {...register("personalInfo.lastName")}
-            margin="dense"
             label={id.editId ? "" : "Last Name"}
-            variant="outlined"
+            placeholder="e.g  Paswan"
             focused={id.editId ? true : false}
             disabled={id.editId ? true : false}
           />
@@ -48,18 +51,19 @@ function PersonalComponent({ register, errors, id }) {
         </div>
 
         <div className="flex flex-col">
-          <TextField
+          <label className="font-poppins font-medium" htmlFor="lastName">
+            Email
+          </label>
+          <Input
             {...register("personalInfo.email", {
               required: true,
               pattern:
                 /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             })}
             type="email"
-            margin="dense"
             required
-            label="Email"
-            variant="outlined"
-            focused={id.editId ? true : false}
+            id="email"
+            placeholder="e.g  example@example.com"
           />
           <p className=" px-2">
             {errors.personalInfo?.email && (
@@ -72,11 +76,13 @@ function PersonalComponent({ register, errors, id }) {
         </div>
 
         <div className="flex flex-col">
-          <TextField
+          <label className="font-poppins font-medium" htmlFor="Phone">
+            Phone
+          </label>
+          <Input
             {...register("personalInfo.phone")}
-            margin="dense"
             required
-            label="Phone"
+            placeholder="e.g  +91 1234567890"
             variant="outlined"
             focused={id.editId ? true : false}
           />
@@ -89,41 +95,55 @@ function PersonalComponent({ register, errors, id }) {
             )}
           </p>
         </div>
-        <TextField
-          {...register("personalInfo.address")}
-          margin="dense"
-          label="Address"
-          variant="outlined"
-          multiline
-          rows={2}
-          focused={id.editId ? true : false}
-        />
+        <div>
+          <label className="font-poppins font-medium" htmlFor="Address">
+            Address
+          </label>
+          <Textarea
+            {...register("personalInfo.address")}
+            placeholder="e.g Sector-8, Noida, Uttar Pradesh 201301"
+            multiline
+            rows={2}
+            focused={id.editId ? true : false}
+          />
+        </div>
       </div>
       <div className="font-poppins md:text-xl text-sm font-semibold md:font-medium">
         Websites, Portfolios, Profiles
       </div>
       <div className="grid md:grid-cols-3 grid-cols-1 gap-2">
-        <TextField
-          {...register("personalInfo.links.github")}
-          margin="dense"
-          label="Github"
-          variant="outlined"
-          focused={id.editId ? true : false}
-        />
-        <TextField
-          {...register("personalInfo.links.linkedin")}
-          margin="dense"
-          label="LinkedIn"
-          variant="outlined"
-          focused={id.editId ? true : false}
-        />
-        <TextField
-          {...register("personalInfo.links.website")}
-          margin="dense"
-          label="Website"
-          variant="outlined"
-          focused={id.editId ? true : false}
-        />
+        <div>
+          {" "}
+          <label className="font-poppins font-medium" htmlFor="firstName">
+            Github
+          </label>
+          <Input
+            {...register("personalInfo.links.github")}
+            name="Github"
+            placeholder="Github"
+            variant="outlined"
+            focused={id.editId ? true : false}
+          />
+        </div>
+        <div>
+          <label className="font-poppins font-medium" htmlFor="firstName">
+            Linkdin
+          </label>
+          <Input
+            {...register("personalInfo.links.linkedin")}
+            placeholder="Linkdin"
+          />
+        </div>
+        <div>
+          <label className="font-poppins font-medium" htmlFor="Website">
+            Website
+          </label>
+          <Input
+            {...register("personalInfo.links.website")}
+            placeholder="Website"
+            name="Website"
+          />
+        </div>
       </div>
     </>
   );
