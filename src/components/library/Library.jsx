@@ -34,9 +34,9 @@ const Library = () => {
     document.body.removeChild(anchor);
   };
 
-  const handleEdit=(link)=>{
-    navigate(`../editCvGenerator/${link.templetId}`)
-  }
+  const handleEdit = (link) => {
+    navigate(`../editCvGenerator/${link.templetId}`);
+  };
 
   const handleDeleteFile = async (id) => {
     const response = await ApiFetching("DELETE", `user/cv/delete/${id}`, null);
@@ -133,12 +133,12 @@ const Library = () => {
                     direction={{ md: "row", xs: "column" }}
                     sx={{ alignItems: "center" }}>
                     <div className="text-xs  font-light opacity-95 ">
-                    Uploaded at:{" "}
+                      Uploaded at:{" "}
                       {moment(link.updatedAt).format("DD, MMMM hh:mm A")}
                     </div>
                     <Stack direction={"row"}>
                       <Tooltip title="View Pdf">
-                        <IconButton> 
+                        <IconButton>
                           <ModalComponent link={link.link} />
                         </IconButton>
                       </Tooltip>
@@ -153,9 +153,7 @@ const Library = () => {
                       </Tooltip>
                       <Button
                         disabled={!link.templetId}
-                        onClick={() =>
-                          handleEdit(link)
-                        }>
+                        onClick={() => handleEdit(link)}>
                         <Tooltip title="Edit">
                           <IconButton>
                             <EditIcon
@@ -165,7 +163,7 @@ const Library = () => {
                         </Tooltip>
                       </Button>
                       <Button onClick={() => handleDeleteFile(link._id)}>
-                        <Tooltip title="Delete" >
+                        <Tooltip title="Delete">
                           <IconButton color="error">
                             <DeleteIcon />
                           </IconButton>
