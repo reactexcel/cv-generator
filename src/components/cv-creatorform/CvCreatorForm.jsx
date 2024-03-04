@@ -556,9 +556,7 @@ export default function BasicTabs() {
               <div className="font-poppins text-2xl font-normal">
                 Tell us about your most recent job
               </div>
-
               {experienceFields.map((field, index) => (
-                <>
                   <Box className="grid md:grid-cols-3 gap-2" key={field.id}>
                     <TextField
                       {...register(`experience.${index}.company`)}
@@ -615,7 +613,7 @@ export default function BasicTabs() {
                       <CloseIcon />
                     </Button>
                   </Box>
-                </>
+                
               ))}
 
               <Button
