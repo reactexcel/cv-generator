@@ -117,9 +117,6 @@ const CvTemplate = () => {
                 " " +
                 SingleUserData?.personalInfo?.lastName}
             </p>
-            <p className="font-poppins text-sm">
-              {SingleUserData?.experience?.map((e) => e.position)}
-            </p>
           </div>
         </div>
         <Stack className="p-5">
@@ -137,7 +134,7 @@ const CvTemplate = () => {
                         <LinkedInIcon />
                       )}
                     </a>
-                    <div className="ml-2">
+                    <div className="ml-2 leading-3">
                       {SingleUserData?.personalInfo?.links?.linkedin}
                     </div>
                   </div>
@@ -328,35 +325,33 @@ const CvTemplate = () => {
               <div className="py-3">
                 {SingleUserData?.experience?.length > 1 ? (
                   <h2 className="text-lg font-poppins font-bold text-top-color">
-                    Projects Details
+                    Experience
                   </h2>
                 ) : null}
-                <div className="border-2 w-20 border-top-color my-3" />
                 <div className="flex flex-col">
                   {SingleUserData?.experience?.map((e, i) => {
                     return (
                       <div key={i} className="flex flex-col">
-                        {SingleUserData?.experience?.length > 1 ? (
-                          <>
-                            <p className="text-lg font-bold text-gray-700">
-                              {e.company} | {e.position} | {e.startDate} |{" "}
-                              {e.endDate}
-                            </p>
-                            <div className="font-medium text-sm font-poppins">
-                              Achivements/Tasks :{" "}
-                              <span className="font-poppins font-normal text-sm">
-                                {e.responsibilities}
-                              </span>
-                            </div>
-                            <br />
-                            <div className="font-medium text-sm font-poppins">
-                              Technologies work on:{" "}
-                              <span className="font-poppins font-normal text-sm">
-                                {e.environments}
-                              </span>
-                            </div>
-                          </>
-                        ) : null}
+                        <>
+                          <p className="text-lg font-bold text-gray-700">
+                            {e.company} | {e.position} | {e.startDate} |{" "}
+                            {e.endDate}
+                          </p>
+                          <div className="border-2 w-20 border-top-color my-3" />
+                          <div className="font-medium text-sm font-poppins">
+                            Achivements/Tasks :{" "}
+                            <span className="font-poppins font-normal text-sm">
+                              {e.responsibilities}
+                            </span>
+                          </div>
+                          <br />
+                          <div className="font-medium text-sm font-poppins">
+                            Technologies work on:{" "}
+                            <span className="font-poppins font-normal text-sm">
+                              {e.environments}
+                            </span>
+                          </div>
+                        </>
                       </div>
                     );
                   })}
