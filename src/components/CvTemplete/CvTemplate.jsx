@@ -117,6 +117,12 @@ const CvTemplate = () => {
                 " " +
                 SingleUserData?.personalInfo?.lastName}
             </p>
+            <p className="font-poppins font-bold text-heading sm:text-2xl text-xl">
+              {SingleUserData?.personalInfo?.designation}
+            </p>
+            <div className="font-poppins text-xs py-2 ">
+              {SingleUserData?.summary}
+            </div>
           </div>
         </div>
         <Stack className="p-5">
