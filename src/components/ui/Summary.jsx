@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import Input from "@mui/joy/Input";
 import { Textarea } from "@mui/joy";
-function SummaryComponent({ register, errors, id }) {
+function SummaryComponent({ register }) {
   return (
     <>
       <div className="font-poppins md:text-xl text-sm font-semibold md:font-medium">

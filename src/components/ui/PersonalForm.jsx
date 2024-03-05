@@ -1,7 +1,6 @@
 import Input from "@mui/joy/Input";
 import PropTypes from "prop-types";
 import Textarea from "@mui/joy/Textarea";
-// import CustomInputField from "./CustomInputField";
 
 function PersonalComponent({ register, errors, id }) {
   return (
@@ -16,16 +15,10 @@ function PersonalComponent({ register, errors, id }) {
           </label>
           <Input
             {...register("personalInfo.firstName")}
-            margin="dense"
-            sx={{ backgroundColor: "white" }}
-            label={id.editId ? "" : "First Name"}
-            
-            variant="outlined"
-            focused={id.editId ? true : false}
             id="firstName"
             className="mt-2"
             disabled={id.editId ? true : false}
-            placeholder="e.g  Amit"
+            placeholder="e.g  Ankit"
           />
           <p className=" px-2">
             {errors.personalInfo?.firstName && (
@@ -43,7 +36,7 @@ function PersonalComponent({ register, errors, id }) {
           <Input
             {...register("personalInfo.lastName")}
             className="mt-2"
-            placeholder="e.g  Paswan"
+            placeholder="e.g  Singh"
             id="lastName"
             disabled={id.editId ? true : false}
           />
