@@ -13,10 +13,9 @@ import SummaryComponent from "../ui/Summary";
 import Select from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
 
-import { Button, CircularProgress, MenuItem, Stack } from "@mui/material";
+import { Button, CircularProgress, Stack } from "@mui/material";
 import ApiFetching from "../../services/ApiFetching";
 import CloseIcon from "@mui/icons-material/Close";
-import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
@@ -190,6 +189,7 @@ export default function BasicTabs() {
 
   const languageOptions = ["English", "Spanish", "French", "German", "Chinese"];
   const proficiencyOptions = ["Beginner", "Intermediate", "Advanced", "Fluent"];
+
   const techSkills = [
     "JavaScript",
     "HTML",
@@ -222,6 +222,7 @@ export default function BasicTabs() {
     "Artificial Intelligence",
     "Blockchain",
   ];
+
   const appendCertification = () => {
     setCertificationsFields([
       ...certificationsFields,
@@ -273,16 +274,16 @@ export default function BasicTabs() {
     }
   };
 
-  const handleSkillSelect = (e) => {
-    if (e && e.target) {
-    const skill = e.target.value;
-    console.log("Selected Skill:", skill);
-   if (selectedTechSkills.includes(skill)) {
-        toast.error("Skill already selected!");
+  const handleSkillSelect = (e, newValue) => {
+    newValue.forEach((skill) => {
+      if (!selectedTechSkills.includes(skill)) {
+        setSelectedTechSkills([...selectedTechSkills, skill]);
+      } else {
         return;
       }
-    setSelectedTechSkills([...selectedTechSkills, skill]);
-  }};
+    });
+  };
+
   const handleSkillRemove = (index) => {
     const updatedSkills = selectedTechSkills.filter((_, i) => i !== index);
     setSelectedTechSkills(updatedSkills);
@@ -376,7 +377,6 @@ export default function BasicTabs() {
                     onChange={(e) => {
                       if (e && e.target) {
                         const updatedFields = [...languagesFields];
-
                         updatedFields[index].language = e.target.value;
                         setLanguagesFields(updatedFields);
                       }
@@ -389,11 +389,12 @@ export default function BasicTabs() {
                   </Select>
                   <Select
                     label="Proficiency"
-                    variant="outlined"
                     placeholder="Select your Proficiency"
                     value={field.proficiency}
-                    onChange={(e) => {
+                    onChange={(e, newvalue) => {
                       if (e && e.target) {
+                        console.log(e.target.value);
+                        console.log(newvalue);
                         const updatedFields = [...languagesFields];
                         console.log(updatedFields);
                         updatedFields[index].proficiency = e.target.value;
@@ -440,6 +441,7 @@ export default function BasicTabs() {
                     <Input
                       {...register(`education[${index}].institution`)}
                       placeholder="e.g Bundelkhand University"
+                      className="mt-2"
                       id="Institution"
                     />
                   </div>
@@ -453,6 +455,7 @@ export default function BasicTabs() {
                     <Input
                       {...register(`education[${index}].degree`)}
                       id="Degree"
+                      className="mt-2"
                       placeholder="e.g Bachelor of Technology"
                     />
                   </div>
@@ -463,10 +466,11 @@ export default function BasicTabs() {
                     <Input
                       {...register(`education[${index}].fieldOfStudy`)}
                       id="field"
+                      className="mt-2"
                       placeholder="e.g Computer Science"
                     />
                   </div>
-                  <div>
+                  <div className="my-2">
                     <label
                       className="font-poppins font-medium"
                       htmlFor="StartYear">
@@ -475,29 +479,33 @@ export default function BasicTabs() {
                     <Input
                       {...register(`education[${index}].startDate`)}
                       placeholder="e.g 2019"
+                      className="mt-2"
                       id="StartYear"
                     />
                   </div>
-                  <div>
+                  <div className="my-2">
                     <label
                       className="font-poppins font-medium"
                       htmlFor="EndYear">
                       End Year
                     </label>
-                    <Input
-                      {...register(`education[${index}].endDate`)}
-                      id="EndYear"
-                      placeholder="e.g 2023"
-                      variant="outlined"
-                    />
+                    <div className="flex mt-2">
+                      {" "}
+                      <Input
+                        {...register(`education[${index}].endDate`)}
+                        id="EndYear"
+                        placeholder="e.g 2023"
+                        className="w-full"
+                      />
+                      <Button
+                        onClick={() => handleRemoveEducation(index)}
+                        className="w-[5%]"
+                        color="error">
+                        <CloseIcon />
+                      </Button>
+                    </div>
                   </div>
                 </Box>
-                <Button
-                  onClick={() => handleRemoveEducation(index)}
-                  className="w-[5%]"
-                  color="error">
-                  <CloseIcon />
-                </Button>
               </>
             ))}
 
@@ -536,6 +544,7 @@ export default function BasicTabs() {
                     <Input
                       {...register(`projects[${index}].projectName`)}
                       placeholder="e.g Todo-App"
+                      className="mt-2"
                       id="projectName"
                     />
                   </div>
@@ -549,9 +558,9 @@ export default function BasicTabs() {
                       {...register(`projects[${index}].desc`)}
                       placeholder="About your project description....  "
                       id="description"
+                      className="mt-2"
                       multiple
                       rows={3}
-                      variant="outlined"
                     />
                   </div>
                   <div>
@@ -560,19 +569,22 @@ export default function BasicTabs() {
                       htmlFor="technologies">
                       Technologies Used
                     </label>
-                    <Input
-                      {...register(`projects[${index}].technologies`)}
-                      id="technologies"
-                      placeholder="e.g React Js"
-                    />
+                    <div className="flex ">
+                      <Input
+                        {...register(`projects[${index}].technologies`)}
+                        id="technologies"
+                        className="mt-2 w-full"
+                        placeholder="e.g React Js"
+                      />
+                      <Button
+                        onClick={() => handleRemoveProjects(index)}
+                        className="w-[5%]"
+                        color="error">
+                        <CloseIcon />
+                      </Button>
+                    </div>
                   </div>
                 </Box>
-                <Button
-                  onClick={() => handleRemoveProjects(index)}
-                  className="w-[5%]"
-                  color="error">
-                  <CloseIcon />
-                </Button>
               </>
             ))}
 
@@ -630,34 +642,7 @@ export default function BasicTabs() {
                       placeholder="e.g Softawre Engineer"
                     />
                   </div>
-                  <div>
-                    {" "}
-                    <label
-                      className="font-poppins font-medium"
-                      htmlFor="StartDate">
-                      Start Date
-                    </label>
-                    <Input
-                      {...register(`experience.${index}.startDate`)}
-                      margin="dense"
-                      id="StartDate"
-                      placeholder="e.g 10/2020"
-                    />
-                  </div>
-                  <div>
-                    {" "}
-                    <label
-                      className="font-poppins font-medium"
-                      htmlFor="EndDate">
-                      End Date
-                    </label>
-                    <Input
-                      {...register(`experience.${index}.endDate`)}
-                      margin="dense"
-                      id="EndDate"
-                      placeholder="e.g 10/2023"
-                    />
-                  </div>
+
                   <div>
                     {" "}
                     <label
@@ -694,13 +679,44 @@ export default function BasicTabs() {
                       variant="outlined"
                     />
                   </div>
-
-                  <Button
-                    onClick={() => handleRemoveExperience(index)}
-                    className="w-[5%]"
-                    color="error">
-                    <CloseIcon />
-                  </Button>
+                  <div>
+                    {" "}
+                    <label
+                      className="font-poppins font-medium"
+                      htmlFor="StartDate">
+                      Start Date
+                    </label>
+                    <Input
+                      {...register(`experience.${index}.startDate`)}
+                      margin="dense"
+                      id="StartDate"
+                      placeholder="e.g 10/2020"
+                    />
+                  </div>
+                  <div>
+                    {" "}
+                    <label
+                      className="font-poppins font-medium"
+                      htmlFor="EndDate">
+                      End Date
+                    </label>
+                    <div className="flex gap-1">
+                      {" "}
+                      <Input
+                        {...register(`experience.${index}.endDate`)}
+                        margin="dense"
+                        className="w-full"
+                        id="EndDate"
+                        placeholder="e.g 10/2023"
+                      />
+                      <Button
+                        onClick={() => handleRemoveExperience(index)}
+                        className="w-fit"
+                        color="error">
+                        <CloseIcon />
+                      </Button>
+                    </div>
+                  </div>
                 </Box>
               </>
             ))}
@@ -758,23 +774,23 @@ export default function BasicTabs() {
                     <label className="font-poppins font-medium" htmlFor="Date">
                       Date
                     </label>
-                    <Input
-                      {...register(`certifications.${index}.date`)}
-                      margin="dense"
-                      placeholder="e.g 04/03/2024"
-                      focused={id.editId ? true : false}
-                      id="Date"
-                      variant="outlined"
-                    />
+                    <div className="flex gap-1">
+                      <Input
+                        {...register(`certifications.${index}.date`)}
+                        margin="dense"
+                        placeholder="e.g 04/03/2024"
+                        className="w-full"
+                        id="Date"
+                      />
+                      <Button
+                        onClick={() => handleRemoveCertification(index)}
+                        color="error"
+                        className="w-fit">
+                        {" "}
+                        <CloseIcon />
+                      </Button>
+                    </div>
                   </div>
-
-                  <Button
-                    onClick={() => handleRemoveCertification(index)}
-                    color="error"
-                    className="w-[30%]">
-                    {" "}
-                    <CloseIcon />
-                  </Button>
                 </Box>
               ))}
               <Button
@@ -799,14 +815,17 @@ export default function BasicTabs() {
                 <Select
                   className="bg-slate-1000"
                   id="skills"
+                  multiple
                   value={selectedTechSkills}
                   label="skill"
-                  multiple=""
-                  onChange={handleSkillSelect}>
+                  onChange={handleSkillSelect}
+                  sx={{
+                    minWidth: "13rem",
+                  }}>
                   {techSkills.map((skill, index) => (
-                    <MenuItem key={index} value={skill}>
+                    <Option key={index} value={skill}>
                       {skill}
-                    </MenuItem>
+                    </Option>
                   ))}
                 </Select>
                 {selectedTechSkills && (
@@ -815,13 +834,18 @@ export default function BasicTabs() {
                       <div
                         className="p-2 border-2 inset-3 m-1 rounded-md bg-slate-200 "
                         key={index}>
-                        <span key={index} className="selected-skill max-w-sm">
-                          <span className="px-1"> {skill}</span>
-                          <CloseIcon
-                            className="text-red-800"
-                            onClick={() => handleSkillRemove(index)}
-                          />
-                        </span>
+                        <div
+                          key={index}
+                          className="selected-skill flex justify-between px-2 border-2 max-w-sm">
+                          <div className="px-1"> {skill}</div>
+                          <div>
+                            {" "}
+                            <CloseIcon
+                              className="text-red-800"
+                              onClick={() => handleSkillRemove(index)}
+                            />
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>

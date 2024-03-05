@@ -19,8 +19,9 @@ function SummaryComponent({ register, errors, id }) {
             </label>
             <Input
               {...register("personalInfo.designation")}
-              placeholder="Front end Developer"
+              placeholder="e.g Front end Developer"
               id="desigination"
+              className="mt-2"
             />
           </div>
         </div>
@@ -33,10 +34,8 @@ function SummaryComponent({ register, errors, id }) {
             {...register("summary")}
             name="summary"
             id="summary"
-            placeholder="Write your profile summary"
-            variant="outlined"
-            size="md"
-            focused={id.editId ? true : false}
+            placeholder="Write your profile summary...."
+            className="mt-2"
           />
         </div>
       </div>
