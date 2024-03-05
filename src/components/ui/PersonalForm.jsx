@@ -16,17 +16,14 @@ function PersonalComponent({ register, errors, id }) {
           </label>
           <Input
             {...register("personalInfo.firstName")}
-<<<<<<< HEAD
             margin="dense"
             sx={{ backgroundColor: "white" }}
             label={id.editId ? "" : "First Name"}
             
             variant="outlined"
             focused={id.editId ? true : false}
-=======
             id="firstName"
             className="mt-2"
->>>>>>> 6214fb5ff3b9f556d772988d8c7e30a951e33991
             disabled={id.editId ? true : false}
             placeholder="e.g  Amit"
           />

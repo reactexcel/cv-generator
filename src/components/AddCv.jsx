@@ -38,14 +38,14 @@ const AddCv = () => {
       setSubmitting(false);
     },
   });
-  const [numPages, setNumPages] = useState(null);
-  const [pageNumber, setPageNumber] = useState(1);
+  // const [numPages, setNumPages] = useState(null);
+  // const [pageNumber, setPageNumber] = useState(1);
   const [pdfFile, setPdfFile] = useState(null);
 
-  function onDocumentLoadSuccess({ numPages }) {
-    setNumPages(numPages);
-    setPageNumber(1);
-  }
+  // function onDocumentLoadSuccess({ numPages }) {
+  //   setNumPages(numPages);
+  //   setPageNumber(1);
+  // }
 
   return (
     <div>
@@ -84,12 +84,12 @@ const AddCv = () => {
                     : "border-gray-300 border"
                 } rounded-lg h-60 p-10 group text-center`}>
                 <label className="flex flex-col rounded-lg w-full h-full">
-                  <div className="h-full w-full text-center flex flex-col items-center  justify-center">
+                  <div className="h-full w-full text-center flex flex-col items-center  cursor-pointer justify-center">
                     {pdfFile ? (
                       <div className="md:h-[200px] md:w-[150px] w-full h-fit overflow-hidden">
                         <Document
                           file={pdfFile}
-                          onLoadSuccess={onDocumentLoadSuccess}>
+                          >
                           <Page pageNumber={1} />
                         </Document>
                       </div>

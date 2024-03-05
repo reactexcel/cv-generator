@@ -11,9 +11,9 @@ export const SignInScheema = yup.object().shape({
 
 export const SignUpSchema = yup.object().shape({
   firstname: yup.string()
-    .required('First Name is required'),
+    .required('First Name is required').min(4,'Too short'),
   lastname: yup.string()
-    .required('Last Name is required'),
+    .required('Last Name is required').min(4,'Too short'),
   email: yup.string()
     .email('Invalid email address')
     .required('Email is required'),

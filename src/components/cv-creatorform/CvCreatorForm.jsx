@@ -13,7 +13,7 @@ import SummaryComponent from "../ui/Summary";
 import Select from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
 
-import { Button, CircularProgress, Stack } from "@mui/material";
+import { Button, CircularProgress, Divider, Stack } from "@mui/material";
 import ApiFetching from "../../services/ApiFetching";
 import CloseIcon from "@mui/icons-material/Close";
 import FormControl from "@mui/material/FormControl";
@@ -23,10 +23,8 @@ import { setSingleUserData } from "../../redux/slices/CvSlice";
 import { useDispatch, useSelector } from "react-redux";
 import PersonalComponent from "../ui/PersonalForm";
 import Input from "@mui/joy/Input";
-
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
-
   return (
     <Stack
       role="tabpanel"
