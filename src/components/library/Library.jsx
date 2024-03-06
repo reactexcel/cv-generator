@@ -136,7 +136,7 @@ const Library = () => {
                       alignItems: "center",
                     }}>
                     <Stack direction={"row"} sx={{ alignItems: "center" }}>
-                      <div className="px-2"> {index + 1}.</div>
+                    <div className="px-2">{page * rowsPerPage + index + 1}.</div> 
 
                       <div className="text-sm">
                         {typeof link.link === "string" &&
