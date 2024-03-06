@@ -1,25 +1,25 @@
-import { TextField } from "@mui/material";
+import Input from "@mui/joy/Input";
 import PropTypes from "prop-types";
+import Textarea from "@mui/joy/Textarea";
+
 function PersonalComponent({ register, errors, id }) {
   return (
     <>
       <div className="font-poppins md:text-xl text-sm font-semibold md:font-medium">
         Personal information
       </div>
-      <div className="grid md:grid-cols-3 grid-cols-1 gap-2">
-        <div className="flex flex-col">
-          <TextField
+      <div className="grid md:grid-cols-3 grid-cols-1 gap-2 mt-2">
+        <div className="flex flex-col ">
+          <label className="font-poppins font-medium" htmlFor="firstName">
+            First Name
+          </label>
+          <Input
             {...register("personalInfo.firstName")}
-            margin="dense"
-            sx={{ backgroundColor: "white" }}
-            label={id.editId ? "" : "First Name"}
-            
-            variant="outlined"
-            focused={id.editId ? true : false}
+            id="firstName"
+            className="mt-2"
             disabled={id.editId ? true : false}
-            placeholder="First name"
+            placeholder="e.g  Ankit"
           />
-
           <p className=" px-2">
             {errors.personalInfo?.firstName && (
               <p className="text-red-500">
@@ -30,12 +30,14 @@ function PersonalComponent({ register, errors, id }) {
         </div>
 
         <div className="flex flex-col">
-          <TextField
+          <label className="font-poppins font-medium" htmlFor="lastName">
+            Last Name
+          </label>
+          <Input
             {...register("personalInfo.lastName")}
-            margin="dense"
-            label={id.editId ? "" : "Last Name"}
-            variant="outlined"
-            focused={id.editId ? true : false}
+            className="mt-2"
+            placeholder="e.g  Singh"
+            id="lastName"
             disabled={id.editId ? true : false}
           />
           <p className=" px-2">
@@ -49,18 +51,20 @@ function PersonalComponent({ register, errors, id }) {
         </div>
 
         <div className="flex flex-col">
-          <TextField
+          <label className="font-poppins font-medium" htmlFor="email">
+            Email
+          </label>
+          <Input
             {...register("personalInfo.email", {
               required: true,
               pattern:
                 /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             })}
             type="email"
-            margin="dense"
+            className="mt-2"
             required
-            label="Email"
-            variant="outlined"
-            focused={id.editId ? true : false}
+            id="email"
+            placeholder="e.g  example@example.com"
           />
           <p className=" px-2">
             {errors.personalInfo?.email && (
@@ -73,13 +77,15 @@ function PersonalComponent({ register, errors, id }) {
         </div>
 
         <div className="flex flex-col">
-          <TextField
+          <label className="font-poppins font-medium" htmlFor="Phone">
+            Phone
+          </label>
+          <Input
             {...register("personalInfo.phone")}
-            margin="dense"
             required
-            label="Phone"
-            variant="outlined"
-            focused={id.editId ? true : false}
+            placeholder="e.g  +91 1234567890"
+            className="mt-2"
+            id="Phone"
           />
           <p className=" px-2">
             {errors.personalInfo?.phone && (
@@ -90,41 +96,59 @@ function PersonalComponent({ register, errors, id }) {
             )}
           </p>
         </div>
-        <TextField
-          {...register("personalInfo.address")}
-          margin="dense"
-          label="Address"
-          variant="outlined"
-          multiline
-          rows={2}
-          focused={id.editId ? true : false}
-        />
+        <div>
+          <label className="font-poppins font-medium" htmlFor="Address">
+            Address
+          </label>
+          <Textarea
+            {...register("personalInfo.address")}
+            placeholder="e.g Sector-8, Noida, Uttar Pradesh 201301"
+            multiline
+            rows={2}
+            className="mt-2"
+          />
+        </div>
       </div>
-      <div className="font-poppins md:text-xl text-sm font-semibold md:font-medium">
+      <div className="font-poppins md:text-xl text-sm font-semibold mt-2 md:font-medium">
         Websites, Portfolios, Profiles
       </div>
       <div className="grid md:grid-cols-3 grid-cols-1 gap-2">
-        <TextField
-          {...register("personalInfo.links.github")}
-          margin="dense"
-          label="Github"
-          variant="outlined"
-          focused={id.editId ? true : false}
-        />
-        <TextField
-          {...register("personalInfo.links.linkedin")}
-          margin="dense"
-          label="LinkedIn"
-          variant="outlined"
-          focused={id.editId ? true : false}
-        />
-        <TextField
-          {...register("personalInfo.links.website")}
-          margin="dense"
-          label="Website"
-          variant="outlined"
-          focused={id.editId ? true : false}
-        />
+        <div>
+          {" "}
+          <label className="font-poppins font-medium" htmlFor="github">
+            Github
+          </label>
+          <Input
+            {...register("personalInfo.links.github")}
+            name="Github"
+            id="github"
+            className="mt-2"
+            placeholder="Github"
+          />
+        </div>
+        <div>
+          <label className="font-poppins font-medium" htmlFor="linkedin">
+            Linkdin
+          </label>
+          <Input
+            {...register("personalInfo.links.linkedin")}
+            placeholder="Linkdin"
+            className="mt-2"
+            id="linkedin"
+          />
+        </div>
+        <div className="mb-2">
+          <label className="font-poppins font-medium" htmlFor="Website">
+            Website
+          </label>
+          <Input
+            {...register("personalInfo.links.website")}
+            placeholder="Website"
+            name="Website"
+            id="Website"
+            className="mt-2"
+          />
+        </div>
       </div>
     </>
   );
