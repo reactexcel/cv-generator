@@ -63,7 +63,6 @@ export default function BasicTabs() {
   };
 
   const [loading, setLoading] = useState(false);
-  const [textArea, setTextArea] = useState("");
 
   const id = useParams();
 

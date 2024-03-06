@@ -96,11 +96,10 @@ const Library = () => {
     <Stack
       sx={{
         wordBreak: "break-all",
-        bgcolor: "#1B146412",
         width: "100%",
         m: "auto",
         boxShadow:
-          "rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset",
+          "rgba(0, 0, 0, 0.2) 0px 12px 18px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset",
       }}
       className="font-poppins  h-fit shadow-sm rounded-md flex flex-col">
       <Stack
@@ -125,7 +124,7 @@ const Library = () => {
             .map((link, index) => (
               <Stack
                 sx={{ width: "96%", m: "auto" }}
-                className="  border-2 border-gray-300  rounded-md "
+                className=" border-2 border-slate-100  rounded-md "
                 key={index}>
                 <div className="flex font-medium w-full justify-between ">
                   <Stack
