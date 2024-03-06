@@ -68,6 +68,7 @@ const ExperienceComp = ({
               <Input
                 {...register(`experience.${index}.environments`)}
                 id="Technologies"
+                className="mt-2"
                 placeholder="e.g JavaScript"
                 rows={3}
               />
@@ -80,6 +81,7 @@ const ExperienceComp = ({
               <Input
                 {...register(`experience.${index}.startDate`)}
                 id="StartDate"
+                className="mt-2"
                 placeholder="e.g 10/2020"
               />
             </div>
@@ -93,7 +95,7 @@ const ExperienceComp = ({
                 <Input
                   {...register(`experience.${index}.endDate`)}
                   margin="dense"
-                  className="w-full"
+                  className="mt-2 w-full"
                   id="EndDate"
                   placeholder="e.g 10/2023"
                 />
