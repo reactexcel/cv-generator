@@ -33,6 +33,7 @@ const SkillsComp = ({
       <Box className="grid grid-cols-3 gap-2 mb-4 " sx={{ minWidth: 120 }}>
         <FormControl fullWidth>
           <Select
+            placeholder="Select a Skill"
             className="bg-slate-1000"
             id="skills"
             multiple
