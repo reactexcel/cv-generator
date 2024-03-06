@@ -63,6 +63,8 @@ export default function BasicTabs() {
   };
 
   const [loading, setLoading] = useState(false);
+  const [textArea, setTextArea] = useState("");
+
   const id = useParams();
 
   const {
@@ -240,9 +242,14 @@ export default function BasicTabs() {
         education,
         experience,
         certifications,
+        summary,
         languages,
         skills,
       } = SingleUserData;
+
+      setValue("personalInfo", { ...personalInfo });
+
+      setValue("summary", summary || "");
 
       setValue("personalInfo", { ...personalInfo });
 
