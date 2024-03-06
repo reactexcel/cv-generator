@@ -81,7 +81,9 @@ const CvTemplate = () => {
       formData.append(
         "resume",
         blob,
-        `${SingleUserData?.personalInfo?.firstName}.pdf`
+        `${
+          SingleUserData?.personalInfo?.firstName +
+          SingleUserData?.personalInfo?.lastName}.pdf`
       );
       formData.append("templetId", userId.cvTemplateId);
 
