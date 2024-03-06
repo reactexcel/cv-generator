@@ -16,7 +16,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
   import.meta.url
 ).toString();
-const itemsPerPage = 10; 
+const itemsPerPage = 10;
 const Library = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -50,7 +50,7 @@ const Library = () => {
         if (data.success === true) {
           dispatch(setCvData(data.user));
           if (data.user.cvLink.length <= page * rowsPerPage) {
-            setPage(page-1)
+            setPage(page - 1);
           }
         }
       } catch (error) {
@@ -64,13 +64,11 @@ const Library = () => {
     const getData = async () => {
       try {
         setLoading(true);
-  
+
         const response = await ApiFetching("GET", "user/get", null);
         const data = response.data;
         if (data.success === true) {
           dispatch(setCvData(data.user));
-  
-
         }
       } catch (error) {
         console.log(error, "afsasd");
@@ -80,15 +78,16 @@ const Library = () => {
     };
     getData();
   }, []);
-  
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset page to 0 when changing rows per page
+    setPage(0);
   };
+
   if (loading) {
     return <Refereshing />;
   }
@@ -100,7 +99,8 @@ const Library = () => {
         bgcolor: "#1B146412",
         width: "100%",
         m: "auto",
-        boxShadow: 'rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset'
+        boxShadow:
+          "rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset",
       }}
       className="font-poppins  h-fit shadow-sm rounded-md flex flex-col">
       <Stack
@@ -136,7 +136,10 @@ const Library = () => {
                       alignItems: "center",
                     }}>
                     <Stack direction={"row"} sx={{ alignItems: "center" }}>
-                      <div className="px-2"> {index + 1}.</div>
+                      <div className="px-2">
+                        {" "}
+                        {page * rowsPerPage + index + 1}.
+                      </div>
 
                       <div className="text-sm">
                         {typeof link.link === "string" &&
@@ -200,7 +203,7 @@ const Library = () => {
         page={page}
         onPageChange={handleChangePage}
         rowsPerPage={rowsPerPage}
- onRowsPerPageChange={(e)=>handleChangeRowsPerPage(e)}
+        onRowsPerPageChange={(e) => handleChangeRowsPerPage(e)}
       />
     </Stack>
   );

@@ -4,8 +4,8 @@ import { Textarea } from "@mui/joy";
 function SummaryComponent({ register }) {
   return (
     <>
-      <div className="font-poppins md:text-xl text-sm font-semibold md:font-medium">
-        Summary
+      <div className="font-poppins md:text-xl pt-4 text-smfont-semibold md:font-medium">
+        Profile Summary
       </div>
       <div className="text-wrap font-poppins">
         Put your Desigination and summary details
@@ -36,6 +36,7 @@ function SummaryComponent({ register }) {
             id="summary"
             placeholder="Write your profile summary...."
             className="mt-2"
+            defaultValue={{ ...register("summary") }}
           />
         </div>
       </div>

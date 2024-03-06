@@ -36,7 +36,6 @@ const CvTemplate = () => {
         null
       );
       if (getSingleData.status === 200) {
-        console.log(getSingleData);
         dispatch(setSingleUserData(getSingleData.data.data));
       }
       setLoading(false);
@@ -83,7 +82,8 @@ const CvTemplate = () => {
         blob,
         `${
           SingleUserData?.personalInfo?.firstName +
-          SingleUserData?.personalInfo?.lastName}.pdf`
+          SingleUserData?.personalInfo?.lastName
+        }.pdf`
       );
       formData.append("templetId", userId.cvTemplateId);
 
